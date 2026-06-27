@@ -1,0 +1,35 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+
+node_modules/
+dist/
+build/
+coverage/
+.cache/
+
+# Large local/runtime vendor artifacts. Netlify rebuilds/copies the minimal Swiss runtime during build.
+vendor/swiss-ephemeris/
+vendor/swiss-ephemeris-netlify-src/
+netlify/swiss/
+
+*.log
+*.tmp
+*.bak
+
+# User/private data must never be committed.
+data/
+private/
+exports/
+user-data/
+birth-data/
+鑑定データ/
+個人情報/
+
+# Local server/runtime artifacts.
+*.sqlite
+*.sqlite3
+*.db
+sessions/
+uploads/
