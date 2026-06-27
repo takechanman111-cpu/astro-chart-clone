@@ -14,6 +14,12 @@ const ignoredDirs = new Set([
   '.cache'
 ]);
 
+const ignoredPathPrefixes = [
+  'vendor/swiss-ephemeris/',
+  'vendor/swiss-ephemeris-netlify-src/',
+  'netlify/swiss/'
+];
+
 const ignoredFiles = new Set([
   'vendor/astronomy-engine/astronomy.js',
   'vendor/astronomy-engine/astronomy.cjs'
@@ -59,6 +65,10 @@ function walk(dir, relativeBase = '') {
   const files = [];
   for (const entry of entries) {
     const rel = path.join(relativeBase, entry.name);
+    const normalizedRel = rel.split(path.sep).join('/');
+    if (ignoredPathPrefixes.some((prefix) => `${normalizedRel}/`.startsWith(prefix))) {
+      continue;
+    }
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       if (!ignoredDirs.has(entry.name)) files.push(...walk(full, rel));
@@ -79,7 +89,14 @@ function isTextLike(filePath) {
 
 function readMaybe(filePath) {
   const full = path.join(appDir, filePath);
-  const stat = fs.statSync(full);
+  let stat;
+  try {
+    stat = fs.lstatSync(full);
+  } catch (error) {
+    if (error?.code === 'ENOENT') return null;
+    throw error;
+  }
+  if (stat.isSymbolicLink()) return null;
   if (stat.size > 1024 * 1024) return null;
   if (!isTextLike(filePath)) return null;
   return fs.readFileSync(full, 'utf8');
