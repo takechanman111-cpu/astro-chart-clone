@@ -1,0 +1,179 @@
+{
+  "schema": "astrology-reference-fixture/v1",
+  "created_on": "2026-06-11",
+  "reference_site": "Astrology Readings Online",
+  "reference_url": "https://astrologyreadings.online/transits-progression/<redacted-chart-id>/2026/06/11/",
+  "method": "transits",
+  "test_input": {
+    "name": "TEST",
+    "birth_date": "1990-01-01",
+    "birth_time": "12:00",
+    "timezone": "Asia/Tokyo UTC+9",
+    "birthplace": "Osaka, Japan",
+    "latitude": 34.69,
+    "longitude": 135.5,
+    "target_date": "2026-06-11"
+  },
+  "tolerance": {
+    "planet_longitude_degrees": 0.1,
+    "note": "Sun and Moon may need a separate stricter time-of-day contract once the reference site's exact transit timestamp is confirmed."
+  },
+  "reference_extract": {
+    "transit_planets": [
+      {
+        "planet": "Sun",
+        "reference_text": "Gem 20° 06' 38\" (3)",
+        "reference_longitude": 80.1106
+      },
+      {
+        "planet": "Moon",
+        "reference_text": "Ari 22° 35' 28\" (1)",
+        "reference_longitude": 22.5911
+      },
+      {
+        "planet": "Mercury",
+        "reference_text": "Can 13° 55' 36\" (4)",
+        "reference_longitude": 103.9267
+      },
+      {
+        "planet": "Venus",
+        "reference_text": "Can 27° 08' 34\" (4)",
+        "reference_longitude": 117.1428
+      },
+      {
+        "planet": "Mars",
+        "reference_text": "Tau 17° 07' 32\" (1)",
+        "reference_longitude": 47.1256
+      },
+      {
+        "planet": "Jupiter",
+        "reference_text": "Can 26° 00' 37\" (4)",
+        "reference_longitude": 116.0103
+      },
+      {
+        "planet": "Saturn",
+        "reference_text": "Ari 13° 01' 42\" (12)",
+        "reference_longitude": 13.0283
+      },
+      {
+        "planet": "Uranus",
+        "reference_text": "Gem 02° 38' 11\" (2)",
+        "reference_longitude": 62.6364
+      },
+      {
+        "planet": "Neptune",
+        "reference_text": "Ari 04° 13' 41\" (12)",
+        "reference_longitude": 4.2281
+      },
+      {
+        "planet": "Pluto",
+        "reference_text": "Aqu 05° 14' 03\" R (11)",
+        "reference_longitude": 305.2342
+      }
+    ]
+  },
+  "local_extract": {
+    "calculation_time": "2026-06-11 12:00 UT in current local engine",
+    "transit_planets": [
+      {
+        "planet": "Sun",
+        "local_longitude": 80.5986
+      },
+      {
+        "planet": "Moon",
+        "local_longitude": 29.6859
+      },
+      {
+        "planet": "Mercury",
+        "local_longitude": 197.885
+      },
+      {
+        "planet": "Venus",
+        "local_longitude": 175.8961
+      },
+      {
+        "planet": "Mars",
+        "local_longitude": 24.1265
+      },
+      {
+        "planet": "Jupiter",
+        "local_longitude": 122.1753
+      },
+      {
+        "planet": "Saturn",
+        "local_longitude": 6.8957
+      },
+      {
+        "planet": "Uranus",
+        "local_longitude": 68.6902
+      },
+      {
+        "planet": "Neptune",
+        "local_longitude": 2.4909
+      },
+      {
+        "planet": "Pluto",
+        "local_longitude": 277.2596
+      }
+    ]
+  },
+  "comparisons": [
+    {
+      "field": "Transit Sun longitude",
+      "difference_degrees": 0.488,
+      "verdict": "NG"
+    },
+    {
+      "field": "Transit Moon longitude",
+      "difference_degrees": 7.0948,
+      "verdict": "NG"
+    },
+    {
+      "field": "Transit Mercury longitude",
+      "difference_degrees": 93.9583,
+      "verdict": "NG"
+    },
+    {
+      "field": "Transit Venus longitude",
+      "difference_degrees": 58.7533,
+      "verdict": "NG"
+    },
+    {
+      "field": "Transit Mars longitude",
+      "difference_degrees": 22.9991,
+      "verdict": "NG"
+    },
+    {
+      "field": "Transit Jupiter longitude",
+      "difference_degrees": 6.165,
+      "verdict": "NG"
+    },
+    {
+      "field": "Transit Saturn longitude",
+      "difference_degrees": 6.1326,
+      "verdict": "NG"
+    },
+    {
+      "field": "Transit Uranus longitude",
+      "difference_degrees": 6.0538,
+      "verdict": "NG"
+    },
+    {
+      "field": "Transit Neptune longitude",
+      "difference_degrees": 1.7372,
+      "verdict": "NG"
+    },
+    {
+      "field": "Transit Pluto longitude",
+      "difference_degrees": 27.9746,
+      "verdict": "NG"
+    }
+  ],
+  "verdict": "NG",
+  "deprecated_local_engine_comparison": true,
+  "unresolved_issues": [
+    "The old local lightweight timing engine did not match the source site.",
+    "This comparison is kept only as evidence that local timing calculation must not be used as the clone source.",
+    "The current clone path uses the source site's visible table output instead."
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "schema": "astrology-readings-online-additional-reference-values/v1",
+  "captured_on": "2026-06-11",
+  "target_date": "2026-06-11",
+  "security": {
+    "source_code_copied": false,
+    "interpretation_text_copied": false,
+    "saved_chart_ids_redacted": true,
+    "copied_surface": "visible table labels and numeric longitude values only"
+  },
+  "samples": [
+    {
+      "label": "sample2_tokyo_1985",
+      "source_urls": {
+        "transits": "https://astrologyreadings.online/transits-progression/<redacted-chart-id>/2026/06/11/",
+        "solar_return": "https://astrologyreadings.online/solar-return/<redacted-chart-id>/?start_year=2026",
+        "annual_profections": "https://astrologyreadings.online/time-lords/<redacted-chart-id>/"
+      },
+      "input": {
+        "year": 1985,
+        "month": 5,
+        "day": 17,
+        "hour": 6,
+        "minute": 30,
+        "timezoneOffset": 9,
+        "latitude": 35.6762,
+        "longitude": 139.6503
+      },
+      "natal_ascendant": {
+        "text": "Gem 25° 12' 40\"",
+        "longitude": 85.2111
+      },
+      "planets": [
+        { "planet": "Sun", "progressed_longitude": 95.2633, "transit_longitude": 80.1106 },
+        { "planet": "Moon", "progressed_longitude": 200.7919, "transit_longitude": 22.5911 },
+        { "planet": "Mercury", "progressed_longitude": 115.3944, "transit_longitude": 103.9267 },
+        { "planet": "Venus", "progressed_longitude": 50.1328, "transit_longitude": 117.1428 },
+        { "planet": "Mars", "progressed_longitude": 101.6097, "transit_longitude": 47.1256 },
+        { "planet": "Jupiter", "progressed_longitude": 316.1997, "transit_longitude": 116.0103 },
+        { "planet": "Saturn", "progressed_longitude": 232.1222, "transit_longitude": 13.0283 },
+        { "planet": "Uranus", "progressed_longitude": 255.1822, "transit_longitude": 62.6364 },
+        { "planet": "Neptune", "progressed_longitude": 272.1547, "transit_longitude": 4.2281 },
+        { "planet": "Pluto", "progressed_longitude": 211.99, "transit_longitude": 305.2342 }
+      ],
+      "solar_return": {
+        "sr_line": "SR on Saturday, May 16, 2026 at 19:26 UT",
+        "planets": [
+          { "planet": "Sun", "longitude": 55.9381 },
+          { "planet": "Moon", "longitude": 55.5933 },
+          { "planet": "Mercury", "longitude": 58.6342 },
+          { "planet": "Venus", "longitude": 87.3253 },
+          { "planet": "Mars", "longitude": 28.3986 },
+          { "planet": "Jupiter", "longitude": 111.3514 },
+          { "planet": "Saturn", "longitude": 10.8367 },
+          { "planet": "Uranus", "longitude": 61.1783 },
+          { "planet": "Neptune", "longitude": 3.7164 },
+          { "planet": "Pluto", "longitude": 305.4853 }
+        ]
+      },
+      "annual_profection": {
+        "age": 41,
+        "starts": "17 May 2026",
+        "house": 6,
+        "sign_en": "Scorpio",
+        "lord_en": "Mars"
+      }
+    },
+    {
+      "label": "sample3_new_york_1972",
+      "source_urls": {
+        "transits": "https://astrologyreadings.online/transits-progression/<redacted-chart-id>/2026/06/11/",
+        "solar_return": "https://astrologyreadings.online/solar-return/<redacted-chart-id>/?start_year=2026",
+        "annual_profections": "https://astrologyreadings.online/time-lords/<redacted-chart-id>/"
+      },
+      "input": {
+        "year": 1972,
+        "month": 9,
+        "day": 3,
+        "hour": 21,
+        "minute": 45,
+        "timezoneOffset": -4,
+        "latitude": 40.7128,
+        "longitude": -74.006
+      },
+      "natal_ascendant": {
+        "text": "Tau 11° 35' 27\"",
+        "longitude": 41.5908
+      },
+      "planets": [
+        { "planet": "Sun", "progressed_longitude": 214.5086, "transit_longitude": 80.1106 },
+        { "planet": "Moon", "progressed_longitude": 107.4083, "transit_longitude": 22.5911 },
+        { "planet": "Mercury", "progressed_longitude": 236.2794, "transit_longitude": 103.9267 },
+        { "planet": "Venus", "progressed_longitude": 176.3356, "transit_longitude": 117.1428 },
+        { "planet": "Mars", "progressed_longitude": 197.4478, "transit_longitude": 47.1256 },
+        { "planet": "Jupiter", "progressed_longitude": 274.2481, "transit_longitude": 116.0103 },
+        { "planet": "Saturn", "progressed_longitude": 80.025, "transit_longitude": 13.0283 },
+        { "planet": "Uranus", "progressed_longitude": 199.6997, "transit_longitude": 62.6364 },
+        { "planet": "Neptune", "progressed_longitude": 243.8814, "transit_longitude": 4.2281 },
+        { "planet": "Pluto", "progressed_longitude": 183.1078, "transit_longitude": 305.2342 }
+      ],
+      "solar_return": {
+        "sr_line": "SR on Friday, September 04, 2026 at 03:08 UT",
+        "planets": [
+          { "planet": "Sun", "longitude": 161.6236 },
+          { "planet": "Moon", "longitude": 69.0294 },
+          { "planet": "Mercury", "longitude": 168.5006 },
+          { "planet": "Venus", "longitude": 205.6053 },
+          { "planet": "Mars", "longitude": 105.3722 },
+          { "planet": "Jupiter", "longitude": 134.3539 },
+          { "planet": "Saturn", "longitude": 13.4986 },
+          { "planet": "Uranus", "longitude": 65.6778 },
+          { "planet": "Neptune", "longitude": 3.5883 },
+          { "planet": "Pluto", "longitude": 303.4564 }
+        ]
+      },
+      "annual_profection": {
+        "age": 53,
+        "starts": "3 Sep 2025",
+        "house": 6,
+        "sign_en": "Libra",
+        "lord_en": "Venus"
+      }
+    }
+  ]
+}

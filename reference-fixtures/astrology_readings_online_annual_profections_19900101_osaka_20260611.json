@@ -1,0 +1,239 @@
+{
+  "schema": "astrology-reference-fixture/v1",
+  "created_on": "2026-06-11",
+  "reference_site": "Astrology Readings Online",
+  "reference_url": "https://astrologyreadings.online/time-lords/<redacted-chart-id>/",
+  "method": "annual_profections",
+  "test_input": {
+    "name": "TEST",
+    "birth_date": "1990-01-01",
+    "birth_time": "12:00",
+    "timezone": "Asia/Tokyo UTC+9",
+    "birthplace": "Osaka, Japan",
+    "latitude": 34.69,
+    "longitude": 135.5,
+    "target_date": "2026-06-11"
+  },
+  "local_contract": {
+    "zodiac": "tropical",
+    "profection_houses": "whole sign from ASC sign",
+    "rulers": "traditional",
+    "ascendant_local": {
+      "longitude": 16.980542511363183,
+      "sign": "牡羊座",
+      "sign_index": 0
+    }
+  },
+  "reference_extract": {
+    "report_heading": "Time Lords / Annual Profections",
+    "rows_ages_30_to_36": [
+      {
+        "age": 30,
+        "label": "30",
+        "starts": "1 Jan 2020",
+        "houseAndSign": "7th houseLibra",
+        "lordOfYear": "Venus",
+        "link": "Solar Return"
+      },
+      {
+        "age": 31,
+        "label": "31",
+        "starts": "1 Jan 2021",
+        "houseAndSign": "8th houseScorpio",
+        "lordOfYear": "Mars",
+        "link": "Solar Return"
+      },
+      {
+        "age": 32,
+        "label": "32",
+        "starts": "1 Jan 2022",
+        "houseAndSign": "9th houseSagittarius",
+        "lordOfYear": "Jupiter",
+        "link": "Solar Return"
+      },
+      {
+        "age": 33,
+        "label": "33",
+        "starts": "1 Jan 2023",
+        "houseAndSign": "10th houseCapricorn",
+        "lordOfYear": "Saturn",
+        "link": "Solar Return"
+      },
+      {
+        "age": 34,
+        "label": "34",
+        "starts": "1 Jan 2024",
+        "houseAndSign": "11th houseAquarius",
+        "lordOfYear": "Saturn",
+        "link": "Solar Return"
+      },
+      {
+        "age": 35,
+        "label": "35",
+        "starts": "1 Jan 2025",
+        "houseAndSign": "12th housePisces",
+        "lordOfYear": "Jupiter",
+        "link": "Solar Return"
+      },
+      {
+        "age": 36,
+        "label": "36 now",
+        "starts": "1 Jan 2026",
+        "houseAndSign": "1st houseAries",
+        "lordOfYear": "Mars",
+        "link": "Solar Return"
+      }
+    ]
+  },
+  "comparisons": [
+    {
+      "reference": {
+        "age": 30,
+        "starts": "1 Jan 2020",
+        "houseAndSign": "7th houseLibra",
+        "lordOfYear": "Venus"
+      },
+      "local": {
+        "age": 30,
+        "starts": "1 Jan 2020",
+        "houseAndSign": "7th houseLibra",
+        "lordOfYear": "Venus"
+      },
+      "checks": {
+        "age": true,
+        "starts": true,
+        "houseAndSign": true,
+        "lordOfYear": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "reference": {
+        "age": 31,
+        "starts": "1 Jan 2021",
+        "houseAndSign": "8th houseScorpio",
+        "lordOfYear": "Mars"
+      },
+      "local": {
+        "age": 31,
+        "starts": "1 Jan 2021",
+        "houseAndSign": "8th houseScorpio",
+        "lordOfYear": "Mars"
+      },
+      "checks": {
+        "age": true,
+        "starts": true,
+        "houseAndSign": true,
+        "lordOfYear": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "reference": {
+        "age": 32,
+        "starts": "1 Jan 2022",
+        "houseAndSign": "9th houseSagittarius",
+        "lordOfYear": "Jupiter"
+      },
+      "local": {
+        "age": 32,
+        "starts": "1 Jan 2022",
+        "houseAndSign": "9th houseSagittarius",
+        "lordOfYear": "Jupiter"
+      },
+      "checks": {
+        "age": true,
+        "starts": true,
+        "houseAndSign": true,
+        "lordOfYear": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "reference": {
+        "age": 33,
+        "starts": "1 Jan 2023",
+        "houseAndSign": "10th houseCapricorn",
+        "lordOfYear": "Saturn"
+      },
+      "local": {
+        "age": 33,
+        "starts": "1 Jan 2023",
+        "houseAndSign": "10th houseCapricorn",
+        "lordOfYear": "Saturn"
+      },
+      "checks": {
+        "age": true,
+        "starts": true,
+        "houseAndSign": true,
+        "lordOfYear": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "reference": {
+        "age": 34,
+        "starts": "1 Jan 2024",
+        "houseAndSign": "11th houseAquarius",
+        "lordOfYear": "Saturn"
+      },
+      "local": {
+        "age": 34,
+        "starts": "1 Jan 2024",
+        "houseAndSign": "11th houseAquarius",
+        "lordOfYear": "Saturn"
+      },
+      "checks": {
+        "age": true,
+        "starts": true,
+        "houseAndSign": true,
+        "lordOfYear": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "reference": {
+        "age": 35,
+        "starts": "1 Jan 2025",
+        "houseAndSign": "12th housePisces",
+        "lordOfYear": "Jupiter"
+      },
+      "local": {
+        "age": 35,
+        "starts": "1 Jan 2025",
+        "houseAndSign": "12th housePisces",
+        "lordOfYear": "Jupiter"
+      },
+      "checks": {
+        "age": true,
+        "starts": true,
+        "houseAndSign": true,
+        "lordOfYear": true
+      },
+      "verdict": "PASS"
+    },
+    {
+      "reference": {
+        "age": 36,
+        "starts": "1 Jan 2026",
+        "houseAndSign": "1st houseAries",
+        "lordOfYear": "Mars"
+      },
+      "local": {
+        "age": 36,
+        "starts": "1 Jan 2026",
+        "houseAndSign": "1st houseAries",
+        "lordOfYear": "Mars"
+      },
+      "checks": {
+        "age": true,
+        "starts": true,
+        "houseAndSign": true,
+        "lordOfYear": true
+      },
+      "verdict": "PASS"
+    }
+  ],
+  "verdict": "PASS",
+  "unresolved_issues": []
+}

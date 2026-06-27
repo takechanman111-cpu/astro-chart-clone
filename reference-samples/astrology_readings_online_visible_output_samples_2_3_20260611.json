@@ -1,0 +1,126 @@
+{
+  "schema": "astrology-readings-online-visible-output-samples/v1",
+  "created_on": "2026-06-11",
+  "security": {
+    "source_code_copied": false,
+    "interpretation_text_copied": false,
+    "saved_chart_ids_redacted": true,
+    "copied_surface": "visible table labels and numeric values only"
+  },
+  "samples": [
+    {
+      "sample_label": "sample2",
+      "input": {
+        "birth_date": "1985-05-17",
+        "birth_time": "06:30",
+        "timezone": "Asia/Tokyo UTC+9",
+        "birthplace": "Tokyo, Japan",
+        "target_date": "2026-06-11"
+      },
+      "source_urls": {
+        "annual_profections": "https://astrologyreadings.online/time-lords/<redacted-chart-id>/",
+        "solar_return": "https://astrologyreadings.online/solar-return/<redacted-chart-id>/?start_year=2026",
+        "secondary_progressions": "https://astrologyreadings.online/tertiary-minor-progressions/<redacted-chart-id>/2026/06/11/",
+        "transits": "https://astrologyreadings.online/transits-progression/<redacted-chart-id>/2026/06/11/"
+      },
+      "annual_profections": [
+        { "age": 39, "label": "39", "starts": "17 May 2024", "houseAndSign": "4th houseVirgo", "lordOfYear": "Mercury", "link": "Solar Return" },
+        { "age": 40, "label": "40", "starts": "17 May 2025", "houseAndSign": "5th houseLibra", "lordOfYear": "Venus", "link": "Solar Return" },
+        { "age": 41, "label": "41 now", "starts": "17 May 2026", "houseAndSign": "6th houseScorpio", "lordOfYear": "Mars", "link": "Solar Return" }
+      ],
+      "solar_return_planets": [
+        { "planet": "Sun", "solar_return": "Tau 25° 56' 17\" (12)" },
+        { "planet": "Moon", "solar_return": "Tau 25° 35' 36\" (12)" },
+        { "planet": "Mercury", "solar_return": "Tau 28° 38' 03\" (12)" },
+        { "planet": "Venus", "solar_return": "Gem 27° 19' 31\" (1)" },
+        { "planet": "Mars", "solar_return": "Ari 28° 23' 55\" (11)" },
+        { "planet": "Jupiter", "solar_return": "Can 21° 21' 05\" (2)" },
+        { "planet": "Saturn", "solar_return": "Ari 10° 50' 12\" (11)" },
+        { "planet": "Uranus", "solar_return": "Gem 01° 10' 42\" (12)" },
+        { "planet": "Neptune", "solar_return": "Ari 03° 42' 59\" (10)" },
+        { "planet": "Pluto", "solar_return": "Aqu 05° 29' 07\" (8)" }
+      ],
+      "secondary_progressions": [
+        { "planet": "Sun", "secondary": "Can 05° 15' 48\" (1)" },
+        { "planet": "Moon", "secondary": "Lib 20° 47' 31\" (5)" },
+        { "planet": "Mercury", "secondary": "Can 25° 23' 40\" (2)" },
+        { "planet": "Venus", "secondary": "Tau 20° 07' 58\" (12)" },
+        { "planet": "Mars", "secondary": "Can 11° 36' 35\" (1)" },
+        { "planet": "Jupiter", "secondary": "Aqu 16° 11' 59\" R (9)" },
+        { "planet": "Saturn", "secondary": "Sco 22° 07' 20\" R (6)" },
+        { "planet": "Uranus", "secondary": "Sag 15° 10' 56\" R (6)" },
+        { "planet": "Neptune", "secondary": "Cap 02° 09' 17\" R (7)" },
+        { "planet": "Pluto", "secondary": "Sco 01° 59' 24\" R (5)" }
+      ],
+      "transits": [
+        { "planet": "Sun", "transit": "Gem 20° 06' 38\" (12)" },
+        { "planet": "Moon", "transit": "Ari 22° 35' 28\" (11)" },
+        { "planet": "Mercury", "transit": "Can 13° 55' 36\" (1)" },
+        { "planet": "Venus", "transit": "Can 27° 08' 34\" (2)" },
+        { "planet": "Mars", "transit": "Tau 17° 07' 32\" (11)" },
+        { "planet": "Jupiter", "transit": "Can 26° 00' 37\" (2)" },
+        { "planet": "Saturn", "transit": "Ari 13° 01' 42\" (11)" },
+        { "planet": "Uranus", "transit": "Gem 02° 38' 11\" (12)" },
+        { "planet": "Neptune", "transit": "Ari 04° 13' 41\" (10)" },
+        { "planet": "Pluto", "transit": "Aqu 05° 14' 03\" R (8)" }
+      ]
+    },
+    {
+      "sample_label": "sample3",
+      "input": {
+        "birth_date": "1972-09-03",
+        "birth_time": "21:45",
+        "timezone": "America/New_York",
+        "birthplace": "New York, USA",
+        "target_date": "2026-06-11"
+      },
+      "source_urls": {
+        "annual_profections": "https://astrologyreadings.online/time-lords/<redacted-chart-id>/",
+        "solar_return": "https://astrologyreadings.online/solar-return/<redacted-chart-id>/?start_year=2026",
+        "secondary_progressions": "https://astrologyreadings.online/tertiary-minor-progressions/<redacted-chart-id>/2026/06/11/",
+        "transits": "https://astrologyreadings.online/transits-progression/<redacted-chart-id>/2026/06/11/"
+      },
+      "annual_profections": [
+        { "age": 51, "label": "51", "starts": "3 Sep 2023", "houseAndSign": "4th houseLeo", "lordOfYear": "Sun", "link": "Solar Return" },
+        { "age": 52, "label": "52", "starts": "3 Sep 2024", "houseAndSign": "5th houseVirgo", "lordOfYear": "Mercury", "link": "Solar Return" },
+        { "age": 53, "label": "53 now", "starts": "3 Sep 2025", "houseAndSign": "6th houseLibra", "lordOfYear": "Venus", "link": "Solar Return" }
+      ],
+      "solar_return_planets": [
+        { "planet": "Sun", "solar_return": "Vir 11° 37' 25\" (5)" },
+        { "planet": "Moon", "solar_return": "Gem 09° 01' 46\" (1)" },
+        { "planet": "Mercury", "solar_return": "Vir 18° 30' 02\" (5)" },
+        { "planet": "Venus", "solar_return": "Lib 25° 36' 19\" (6)" },
+        { "planet": "Mars", "solar_return": "Can 15° 22' 20\" (3)" },
+        { "planet": "Jupiter", "solar_return": "Leo 14° 21' 14\" (4)" },
+        { "planet": "Saturn", "solar_return": "Ari 13° 29' 55\" (12)" },
+        { "planet": "Uranus", "solar_return": "Gem 05° 40' 40\" (1)" },
+        { "planet": "Neptune", "solar_return": "Ari 03° 35' 18\" (12)" },
+        { "planet": "Pluto", "solar_return": "Aqu 03° 27' 23\" (10)" }
+      ],
+      "secondary_progressions": [
+        { "planet": "Sun", "secondary": "Sco 04° 30' 31\" (6)" },
+        { "planet": "Moon", "secondary": "Can 17° 24' 30\" (3)" },
+        { "planet": "Mercury", "secondary": "Sco 26° 16' 46\" (7)" },
+        { "planet": "Venus", "secondary": "Vir 26° 20' 08\" (6)" },
+        { "planet": "Mars", "secondary": "Lib 17° 26' 52\" (6)" },
+        { "planet": "Jupiter", "secondary": "Cap 04° 14' 53\" (9)" },
+        { "planet": "Saturn", "secondary": "Gem 20° 01' 30\" R (2)" },
+        { "planet": "Uranus", "secondary": "Lib 19° 41' 59\" (6)" },
+        { "planet": "Neptune", "secondary": "Sag 03° 52' 53\" (7)" },
+        { "planet": "Pluto", "secondary": "Lib 03° 06' 28\" (6)" }
+      ],
+      "transits": [
+        { "planet": "Sun", "transit": "Gem 20° 06' 38\" (2)" },
+        { "planet": "Moon", "transit": "Ari 22° 35' 28\" (12)" },
+        { "planet": "Mercury", "transit": "Can 13° 55' 36\" (3)" },
+        { "planet": "Venus", "transit": "Can 27° 08' 34\" (4)" },
+        { "planet": "Mars", "transit": "Tau 17° 07' 32\" (1)" },
+        { "planet": "Jupiter", "transit": "Can 26° 00' 37\" (4)" },
+        { "planet": "Saturn", "transit": "Ari 13° 01' 42\" (12)" },
+        { "planet": "Uranus", "transit": "Gem 02° 38' 11\" (1)" },
+        { "planet": "Neptune", "transit": "Ari 04° 13' 41\" (12)" },
+        { "planet": "Pluto", "transit": "Aqu 05° 14' 03\" R (10)" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "schema": "astrology-reference-fixture/v1",
+  "created_on": "2026-06-11",
+  "reference_site": "Astrology Readings Online",
+  "reference_url": "https://astrologyreadings.online/tertiary-minor-progressions/<redacted-chart-id>/2026/06/11/",
+  "method": "secondary_progressions",
+  "test_input": {
+    "name": "TEST",
+    "birth_date": "1990-01-01",
+    "birth_time": "12:00",
+    "timezone": "Asia/Tokyo UTC+9",
+    "birthplace": "Osaka, Japan",
+    "latitude": 34.69,
+    "longitude": 135.5,
+    "target_date": "2026-06-11"
+  },
+  "tolerance": {
+    "planet_longitude_degrees": 0.1
+  },
+  "reference_extract": {
+    "secondary_progressed_planets": [
+      {
+        "planet": "Sun",
+        "reference_text": "Aqu 17° 30' 25\" (11)",
+        "reference_longitude": 317.5069
+      },
+      {
+        "planet": "Moon",
+        "reference_text": "Can 07° 01' 55\" (3)",
+        "reference_longitude": 97.0319
+      },
+      {
+        "planet": "Mercury",
+        "reference_text": "Cap 22° 57' 32\" (10)",
+        "reference_longitude": 292.9589
+      },
+      {
+        "planet": "Venus",
+        "reference_text": "Cap 20° 59' 19\" R (10)",
+        "reference_longitude": 290.9886
+      },
+      {
+        "planet": "Mars",
+        "reference_text": "Cap 05° 45' 34\" (9)",
+        "reference_longitude": 275.7594
+      }
+    ]
+  },
+  "local_extract": {
+    "progressed_date_utc": "1990-02-06 13:37:21",
+    "age_years": 36.443,
+    "secondary_progressed_planets": [
+      {
+        "planet": "Sun",
+        "local_longitude": 317.5126
+      },
+      {
+        "planet": "Moon",
+        "local_longitude": 97.0684
+      },
+      {
+        "planet": "Mercury",
+        "local_longitude": 227.9991
+      },
+      {
+        "planet": "Venus",
+        "local_longitude": 149.0159
+      },
+      {
+        "planet": "Mars",
+        "local_longitude": 249.9515
+      }
+    ]
+  },
+  "comparisons": [
+    {
+      "field": "Progressed Sun longitude",
+      "difference_degrees": 0.0057,
+      "verdict": "PASS"
+    },
+    {
+      "field": "Progressed Moon longitude",
+      "difference_degrees": 0.0365,
+      "verdict": "PASS"
+    },
+    {
+      "field": "Progressed Mercury longitude",
+      "difference_degrees": 64.9598,
+      "verdict": "NG"
+    },
+    {
+      "field": "Progressed Venus longitude",
+      "difference_degrees": 141.9727,
+      "verdict": "NG"
+    },
+    {
+      "field": "Progressed Mars longitude",
+      "difference_degrees": 25.8079,
+      "verdict": "NG"
+    }
+  ],
+  "verdict": "NG",
+  "deprecated_local_engine_comparison": true,
+  "unresolved_issues": [
+    "The old local lightweight timing engine did not match the source site.",
+    "This comparison is kept only as evidence that local timing calculation must not be used as the clone source.",
+    "The current clone path uses the source site's visible table output instead."
+  ]
+}

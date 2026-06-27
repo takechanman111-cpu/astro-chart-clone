@@ -1,0 +1,169 @@
+{
+  "schema": "astrology-timing-reference-clone-manifest/v1",
+  "created_on": "2026-06-11",
+  "status": "unapproved_wrong_reference_sample_path",
+  "current_artifact_unapproved": true,
+  "unapproved_reason": "The timing-reading area used captured visible table samples and a local lightweight timing engine path. The user requires cloning the calculation mechanism from an established implementation, not sample output matching or from-scratch approximations.",
+  "clone_policy": {
+    "copy_target": "public calculator behavior, calculation categories, output structure, and validation samples",
+    "not_copied": [
+      "site source code",
+      "site private APIs",
+      "site design",
+      "site copyrighted interpretation text",
+      "bot-protection bypasses",
+      "cookies or browser storage",
+      "saved chart ids",
+      "ads and analytics scripts",
+      "inline scripts",
+      "hidden input values"
+    ],
+    "reason": "The app must stop starting from zero. It first reproduces established free calculator behavior, then improves the Japanese reading layer."
+  },
+  "security_audit": {
+    "path": "REFERENCE_CLONE_SECURITY_AUDIT.md",
+    "safe_surface": "visible table fields and numeric values only",
+    "redacted_values": [
+      "saved chart id",
+      "dynamic report links"
+    ]
+  },
+  "source_adapter": {
+    "data_file": "reference-current-data.js",
+    "adapter_file": "reference-site-adapter.js",
+    "extractor_file": "scripts/extract_source_visible_tables.mjs",
+    "rule": "timing readings use source visible-output data first; local lightweight timing calculations are not used as clone results"
+  },
+  "source_output_samples": {
+    "production_scope": "source visible-output clone samples, not independent calculation engine",
+    "current_data_sample_count": 1,
+    "additional_samples_path": "reference-samples/astrology_readings_online_visible_output_samples_2_3_20260611.json",
+    "additional_sample_count": 2,
+    "total_sample_count": 3
+  },
+  "primary_reference_site": {
+    "name": "Astrology Readings Online",
+    "base_url": "https://astrologyreadings.online/",
+    "why_primary": "The public navigation exposes the four required timing methods in one site family.",
+    "method_pages": {
+      "transits": "https://astrologyreadings.online/transits-progression-chart-calculator/",
+      "secondary_progressions": "https://astrologyreadings.online/progression-chart-calculator/",
+      "solar_return": "https://astrologyreadings.online/solar-return-chart-calculator/",
+      "annual_profections": "https://astrologyreadings.online/time-lords-calculator/"
+    },
+    "adopted_output_categories": [
+      "transit and progressed chart",
+      "progression timeline",
+      "solar return chart",
+      "annual profection / time lord"
+    ]
+  },
+  "secondary_reference_sites": [
+    {
+      "name": "Astro-Seek",
+      "base_url": "https://horoscopes.astro-seek.com/",
+      "role": "cross-check when opened manually in a browser; automated fetch may show Cloudflare"
+    },
+    {
+      "name": "Astro.com / Astrodienst",
+      "base_url": "https://www.astro.com/cgi/genchart.cgi",
+      "role": "high-trust chart calculation sanity check"
+    },
+    {
+      "name": "Authority Astrology",
+      "base_url": "https://authorityastrology.com/calculators",
+      "role": "secondary public behavior reference for transit, progressed, and solar return calculators"
+    }
+  ],
+  "required_methods": {
+    "life_overall": [
+      "natal_chart_from_existing_app",
+      "secondary_progressions",
+      "long_term_transits"
+    ],
+    "ten_year_flow": [
+      "transits",
+      "secondary_progressions",
+      "annual_profections_by_year"
+    ],
+    "one_year_flow": [
+      "solar_return",
+      "annual_profection_for_active_year",
+      "within_year_transits"
+    ]
+  },
+  "compatibility_contract": {
+    "zodiac": "tropical",
+    "house_system_for_existing_natal_app": "equal house from ASC",
+    "house_system_for_annual_profections": "whole sign from ASC sign",
+    "profection_rulers": "traditional rulers",
+    "secondary_progression_rule": "one day after birth equals one year of life",
+    "solar_return_rule": "exact moment transiting Sun returns to natal Sun longitude",
+    "transit_rule": "current moving planets compared to natal points by major aspects"
+  },
+  "reference_fixtures": [
+    {
+      "method": "annual_profections",
+      "site": "Astrology Readings Online",
+      "source_url": "https://astrologyreadings.online/time-lords/<redacted-chart-id>/",
+      "fixture_path": "reference-fixtures/astrology_readings_online_annual_profections_19900101_osaka_20260611.json",
+      "test_input": "1990-01-01 12:00 Asia/Tokyo Osaka, Japan / target 2026-06-11",
+      "verified_fields": [
+        "age",
+        "start date",
+        "activated house",
+        "activated sign",
+        "lord of the year"
+      ],
+      "rows_checked": 7,
+      "verdict": "PASS"
+    },
+    {
+      "method": "solar_return",
+      "site": "Astrology Readings Online",
+      "source_url": "https://astrologyreadings.online/solar-return/<redacted-chart-id>/?start_year=2026",
+      "fixture_path": "reference-fixtures/astrology_readings_online_solar_return_19900101_osaka_2026.json",
+      "test_input": "1990-01-01 12:00 Asia/Tokyo Osaka, Japan / solar return year 2026",
+      "verified_fields": [
+        "solar return planet longitudes",
+        "solar return ascendant",
+        "solar return midheaven"
+      ],
+      "rows_checked": 12,
+      "verdict": "NG",
+      "repair_required": "do not use old lightweight local timing calculation; use source visible-output clone data instead"
+    },
+    {
+      "method": "secondary_progressions",
+      "site": "Astrology Readings Online",
+      "source_url": "https://astrologyreadings.online/tertiary-minor-progressions/<redacted-chart-id>/2026/06/11/",
+      "fixture_path": "reference-fixtures/astrology_readings_online_secondary_progressions_19900101_osaka_20260611.json",
+      "test_input": "1990-01-01 12:00 Asia/Tokyo Osaka, Japan / target 2026-06-11",
+      "verified_fields": [
+        "secondary progressed planet longitudes"
+      ],
+      "rows_checked": 5,
+      "verdict": "NG",
+      "repair_required": "do not use old lightweight local timing calculation; use source visible-output clone data instead"
+    },
+    {
+      "method": "transits",
+      "site": "Astrology Readings Online",
+      "source_url": "https://astrologyreadings.online/transits-progression/<redacted-chart-id>/2026/06/11/",
+      "fixture_path": "reference-fixtures/astrology_readings_online_transits_19900101_osaka_20260611.json",
+      "test_input": "1990-01-01 12:00 Asia/Tokyo Osaka, Japan / target 2026-06-11",
+      "verified_fields": [
+        "transit planet longitudes"
+      ],
+      "rows_checked": 10,
+      "verdict": "NG",
+      "repair_required": "do not use old lightweight local timing calculation; use source visible-output clone data instead"
+    }
+  ],
+  "production_blockers": [
+    "Adopt an established astrology calculation engine/library as the timing calculation source of truth.",
+    "Remove captured visible-output samples as the production calculation path.",
+    "Disable the local lightweight timing-engine.js path as production timing logic.",
+    "Rebuild transits, secondary progressions, solar returns, and annual profections around the adopted existing engine and validate against the reference site output."
+  ]
+}

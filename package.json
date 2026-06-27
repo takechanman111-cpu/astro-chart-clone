@@ -1,0 +1,22 @@
+{
+  "name": "astro-chart-clone",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/timing_server.mjs",
+    "start:public": "HOST=0.0.0.0 node scripts/timing_server.mjs",
+    "build:netlify": "bash scripts/setup_netlify_swiss.sh",
+    "setup:swiss": "bash scripts/setup_swiss_ephemeris.sh",
+    "check:public": "node scripts/check_public_release_safety.mjs",
+    "check:engine": "node scripts/check_established_engine_gate.mjs --phase=production",
+    "check:api": "node scripts/check_timing_api_contract.mjs",
+    "check:timing": "node scripts/check_established_timing_reference_gate.mjs",
+    "check:timing:strict": "node scripts/check_established_timing_reference_gate.mjs --strict",
+    "check:swiss": "node scripts/check_swiss_ephemeris_readiness.mjs",
+    "check:deploy": "npm run check:public && npm run check:api && npm run check:timing:strict"
+  },
+  "optionalDependencies": {
+    "swisseph": "*"
+  }
+}

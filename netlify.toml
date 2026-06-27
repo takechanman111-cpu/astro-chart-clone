@@ -1,0 +1,29 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+  command = "npm run build:netlify && npm run check:deploy"
+
+[build.environment]
+  NODE_VERSION = "22"
+  ASTRO_TIMING_ENGINE = "swetest"
+  SWETEST_PATH = "netlify/swiss/swetest"
+  SWISS_EPHEMERIS_PATH = "netlify/swiss/ephe"
+
+[functions]
+  node_bundler = "esbuild"
+  included_files = [
+    "netlify/swiss/**",
+    "vendor/astronomy-engine/astronomy.cjs",
+    "reference-fixtures/**",
+    "reference-additional-validation-data.json"
+  ]
+
+[[redirects]]
+  from = "/api/timing"
+  to = "/.netlify/functions/timing"
+  status = 200
+
+[[redirects]]
+  from = "/healthz"
+  to = "/.netlify/functions/healthz"
+  status = 200

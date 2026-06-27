@@ -1,0 +1,208 @@
+{
+  "schema": "astrology-reference-fixture/v1",
+  "created_on": "2026-06-11",
+  "reference_site": "Astrology Readings Online",
+  "reference_url": "https://astrologyreadings.online/solar-return/<redacted-chart-id>/?start_year=2026",
+  "method": "solar_return",
+  "test_input": {
+    "name": "TEST",
+    "birth_date": "1990-01-01",
+    "birth_time": "12:00",
+    "timezone": "Asia/Tokyo UTC+9",
+    "birthplace": "Osaka, Japan",
+    "latitude": 34.69,
+    "longitude": 135.5,
+    "solar_return_year": 2026
+  },
+  "tolerance": {
+    "planet_longitude_degrees": 0.1,
+    "angle_longitude_degrees": 0.5
+  },
+  "reference_extract": {
+    "solar_return_planets": [
+      {
+        "planet": "Sun",
+        "reference_text": "Cap 10° 25' 56\" (10)",
+        "reference_longitude": 280.4322
+      },
+      {
+        "planet": "Moon",
+        "reference_text": "Gem 04° 42' 37\" (2)",
+        "reference_longitude": 64.7103
+      },
+      {
+        "planet": "Mercury",
+        "reference_text": "Sag 28° 26' 51\" (9)",
+        "reference_longitude": 268.4475
+      },
+      {
+        "planet": "Venus",
+        "reference_text": "Cap 09° 02' 17\" (9)",
+        "reference_longitude": 279.0381
+      },
+      {
+        "planet": "Mars",
+        "reference_text": "Cap 12° 35' 08\" (10)",
+        "reference_longitude": 282.5856
+      },
+      {
+        "planet": "Jupiter",
+        "reference_text": "Can 21° 22' 30\" (4)",
+        "reference_longitude": 111.375
+      },
+      {
+        "planet": "Saturn",
+        "reference_text": "Pis 26° 09' 34\" (12)",
+        "reference_longitude": 356.1594
+      },
+      {
+        "planet": "Uranus",
+        "reference_text": "Tau 27° 57' 11\" (2)",
+        "reference_longitude": 57.9531
+      },
+      {
+        "planet": "Neptune",
+        "reference_text": "Pis 29° 30' 19\" (12)",
+        "reference_longitude": 359.5053
+      },
+      {
+        "planet": "Pluto",
+        "reference_text": "Aqu 02° 42' 53\" (10)",
+        "reference_longitude": 302.7147
+      }
+    ],
+    "solar_return_angles": {
+      "ascendant": {
+        "reference_text": "Sag 21° 19' 55\"",
+        "reference_longitude": 261.3319
+      },
+      "midheaven": {
+        "reference_text": "Lib 08° 28' 12\"",
+        "reference_longitude": 188.47
+      }
+    }
+  },
+  "local_extract": {
+    "exact_utc": "2025-12-31 20:44:48",
+    "sun_return_error_degrees": 0,
+    "solar_return_planets": [
+      {
+        "planet": "Sun",
+        "local_longitude": 280.4358
+      },
+      {
+        "planet": "Moon",
+        "local_longitude": 64.7433
+      },
+      {
+        "planet": "Mercury",
+        "local_longitude": 242.0647
+      },
+      {
+        "planet": "Venus",
+        "local_longitude": 276.8385
+      },
+      {
+        "planet": "Mars",
+        "local_longitude": 283.711
+      },
+      {
+        "planet": "Jupiter",
+        "local_longitude": 108.9711
+      },
+      {
+        "planet": "Saturn",
+        "local_longitude": 1.4495
+      },
+      {
+        "planet": "Uranus",
+        "local_longitude": 66.7879
+      },
+      {
+        "planet": "Neptune",
+        "local_longitude": 1.5178
+      },
+      {
+        "planet": "Pluto",
+        "local_longitude": 276.6181
+      }
+    ],
+    "solar_return_angles": {
+      "ascendant": {
+        "local_longitude": 260.8465
+      },
+      "midheaven": {
+        "local_longitude": 187.2283
+      }
+    }
+  },
+  "comparisons": [
+    {
+      "field": "Sun longitude",
+      "difference_degrees": 0.0036,
+      "verdict": "PASS"
+    },
+    {
+      "field": "Moon longitude",
+      "difference_degrees": 0.033,
+      "verdict": "PASS"
+    },
+    {
+      "field": "Mercury longitude",
+      "difference_degrees": 26.3828,
+      "verdict": "NG"
+    },
+    {
+      "field": "Venus longitude",
+      "difference_degrees": 2.1996,
+      "verdict": "NG"
+    },
+    {
+      "field": "Mars longitude",
+      "difference_degrees": 1.1254,
+      "verdict": "NG"
+    },
+    {
+      "field": "Jupiter longitude",
+      "difference_degrees": 2.4039,
+      "verdict": "NG"
+    },
+    {
+      "field": "Saturn longitude",
+      "difference_degrees": 5.2901,
+      "verdict": "NG"
+    },
+    {
+      "field": "Uranus longitude",
+      "difference_degrees": 8.8348,
+      "verdict": "NG"
+    },
+    {
+      "field": "Neptune longitude",
+      "difference_degrees": 2.0125,
+      "verdict": "NG"
+    },
+    {
+      "field": "Pluto longitude",
+      "difference_degrees": 26.0966,
+      "verdict": "NG"
+    },
+    {
+      "field": "Solar return ascendant",
+      "difference_degrees": 0.4854,
+      "verdict": "PASS"
+    },
+    {
+      "field": "Solar return midheaven",
+      "difference_degrees": 1.2417,
+      "verdict": "NG"
+    }
+  ],
+  "verdict": "NG",
+  "deprecated_local_engine_comparison": true,
+  "unresolved_issues": [
+    "The old local lightweight timing engine did not match the source site.",
+    "This comparison is kept only as evidence that local timing calculation must not be used as the clone source.",
+    "The current clone path uses the source site's visible table output instead."
+  ]
+}
