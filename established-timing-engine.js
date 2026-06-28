@@ -48,10 +48,20 @@
     return new Date(Date.UTC(date.year, date.month - 1, date.day, date.hour || 0, date.minute || 0, date.second || 0));
   }
 
+  function astronomyTimeValue(date) {
+    if (typeof date === 'number') return date;
+    if (date && typeof date.ut === 'number') return date;
+    if (date && typeof date.getTime === 'function') {
+      return (date.getTime() - Date.UTC(2000, 0, 1, 12, 0, 0)) / 86400000;
+    }
+    return date;
+  }
+
   function eclipticLongitude(body, date) {
     if (!Astronomy) throw new Error('Astronomy Engine is not loaded');
-    if (body === 'Moon') return Astronomy.EclipticGeoMoon(date).lon;
-    return Astronomy.Ecliptic(Astronomy.GeoVector(body, date, true)).elon;
+    const time = astronomyTimeValue(date);
+    if (body === 'Moon') return Astronomy.EclipticGeoMoon(time).lon;
+    return Astronomy.Ecliptic(Astronomy.GeoVector(body, time, true)).elon;
   }
 
   function searchSunLongitude(targetLongitude, searchStart, days) {
