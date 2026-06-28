@@ -36,6 +36,10 @@
     return ((value % 360) + 360) % 360;
   }
 
+  function signedAngularDiff(current, target) {
+    return ((normDeg(current) - normDeg(target) + 540) % 360) - 180;
+  }
+
   function dateFromLocal(input) {
     return new Date(Date.UTC(input.year, input.month - 1, input.day, input.hour - input.timezoneOffset, input.minute || 0, input.second || 0));
   }
@@ -49,6 +53,36 @@
     if (body === 'Moon') return Astronomy.EclipticGeoMoon(date).lon;
     return Astronomy.Ecliptic(Astronomy.GeoVector(body, date, true)).elon;
   }
+
+  function searchSunLongitude(targetLongitude, searchStart, days) {
+    const startMs = searchStart.getTime();
+    const endMs = startMs + days * 86400000;
+    const coarseStepMs = 6 * 3600000;
+    let bestMs = startMs;
+    let bestAbsDiff = Infinity;
+
+    for (let ms = startMs; ms <= endMs; ms += coarseStepMs) {
+      const diff = Math.abs(signedAngularDiff(eclipticLongitude('Sun', new Date(ms)), targetLongitude));
+      if (diff < bestAbsDiff) {
+        bestAbsDiff = diff;
+        bestMs = ms;
+      }
+    }
+
+    let lo = Math.max(startMs, bestMs - coarseStepMs);
+    let hi = Math.min(endMs, bestMs + coarseStepMs);
+    for (let i = 0; i < 80; i += 1) {
+      const left = lo + (hi - lo) / 3;
+      const right = hi - (hi - lo) / 3;
+      const leftDiff = Math.abs(signedAngularDiff(eclipticLongitude('Sun', new Date(left)), targetLongitude));
+      const rightDiff = Math.abs(signedAngularDiff(eclipticLongitude('Sun', new Date(right)), targetLongitude));
+      if (leftDiff < rightDiff) hi = right;
+      else lo = left;
+    }
+
+    return { date: new Date((lo + hi) / 2) };
+  }
+
 
   function longitudeParts(longitude) {
     const normalized = normDeg(longitude);
@@ -261,7 +295,7 @@
     const birthDate = dateFromLocal(input);
     const natalSunLongitude = eclipticLongitude('Sun', birthDate);
     const searchStart = new Date(Date.UTC(returnYear, input.month - 1, input.day - 10, 0, 0, 0));
-    const event = Astronomy.SearchSunLongitude(natalSunLongitude, searchStart, 25);
+    const event = searchSunLongitude(natalSunLongitude, searchStart, 25);
     return {
       method: 'solar_return',
       return_year: returnYear,
