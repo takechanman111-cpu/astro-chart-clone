@@ -229,18 +229,17 @@ function genericSearchSunLongitude(engine, targetLongitude, searchStart, days) {
 }
 
 export function createAstronomyEphemerisEngine() {
-  return {
+  const engine = {
     id: 'astronomy_engine',
     label: 'Astronomy Engine',
     source: 'vendor/astronomy-engine/astronomy.cjs',
     eclipticLongitude(body, date) {
       if (body === 'Moon') return Astronomy.EclipticGeoMoon(date).lon;
       return Astronomy.Ecliptic(Astronomy.GeoVector(body, date, true)).elon;
-    },
-    searchSunLongitude(targetLongitude, searchStart, days) {
-      return Astronomy.SearchSunLongitude(targetLongitude, searchStart, days);
     }
   };
+  engine.searchSunLongitude = (targetLongitude, searchStart, days) => genericSearchSunLongitude(engine, targetLongitude, searchStart, days);
+  return engine;
 }
 
 export function createSwissEphemerisEngine() {
