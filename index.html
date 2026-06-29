@@ -164,7 +164,7 @@ svg.horoscope{width:100%;max-width:360px;}
     </div>
     <div class="panel">
       <div class="panel-title">⏳ 時期読み（無料計算サイト互換クローン） <span class="panel-sub">出生図 + 4手法</span></div>
-      <div id="timingArea" class="timing-note">時期読みは未承認です。表示表の貼り合わせや自前の簡易計算ではなく、既存の確立済み計算エンジンを入れてから表示します。</div>
+      <div id="timingArea" class="timing-note">Swiss Ephemeris swetest APIで、出生図・ASC・MC・ハウス・感受点・時期読みを一括計算します。</div>
     </div>
     <div class="panel">
       <div class="panel-title">📝 時期読みライト鑑定文 <span class="panel-sub">人生全体・過去現在未来・直近1年・未来12か月</span></div>
@@ -180,17 +180,13 @@ svg.horoscope{width:100%;max-width:360px;}
   </div>
   <div class="source-notice" id="sourceNotice">
     このアプリの公開用ソースコード：<span id="publicSourceUrl">公開準備中</span><br>
-    現在の天体計算：Astronomy Engine（MIT License）。Swiss Ephemeris Free Editionを追加する場合はAGPL互換の公開ソースとして運用します。<br>
+    現在の天体計算：Swiss Ephemeris swetest に統一。出生図・ASC・MC・ハウス・感受点・時期読みを同じAPIで計算します。<br>
     <a href="NOTICE.md">Notice</a> /
     <a href="SECURITY.md">Security</a> /
     <a href="PRIVACY.md">Privacy</a>
   </div>
 </div>
 
-<script>window.exports={};</script>
-<script src="vendor/astronomy-engine/astronomy.js?v=20260628-timing-fix2"></script>
-<script>window.Astronomy=window.exports;</script>
-<script src="established-timing-engine.js?v=20260628-timing-fix2"></script>
 <script>
 // ─── 星背景 ───
 const starsEl=document.getElementById('stars');
@@ -308,92 +304,9 @@ function getSabian(lon){
   return {text:SABIAN[idx]||'—', num:sabNum};
 }
 
-// ─── 天文計算 ───
-function julianDay(y,m,d,ut){if(m<=2){y--;m+=12;}const A=Math.floor(y/100),B=2-A+Math.floor(A/4);return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524.5+ut/24;}
+// ─── 表示用ユーティリティ ───
 function normDeg(d){return((d%360)+360)%360;}
 function rad(d){return d*Math.PI/180;}
-function deg(r){return r*180/Math.PI;}
-
-function sunLon(T){const L0=normDeg(280.46646+36000.76983*T),M=normDeg(357.52911+35999.05029*T),Mr=rad(M),C=(1.914602-0.004817*T)*Math.sin(Mr)+(0.019993-0.000101*T)*Math.sin(2*Mr)+0.000289*Math.sin(3*Mr);return normDeg(L0+C);}
-function moonLon(T){const L=normDeg(218.3165+481267.8813*T),M=normDeg(357.5291+35999.0503*T),Mp=normDeg(134.9634+477198.8676*T),D=normDeg(297.8502+445267.1115*T),F=normDeg(93.2720+483202.0175*T);return normDeg(L+6.2886*Math.sin(rad(Mp))+1.2740*Math.sin(rad(2*D-Mp))+0.6583*Math.sin(rad(2*D))+0.2136*Math.sin(rad(2*Mp))-0.1851*Math.sin(rad(M))-0.1143*Math.sin(rad(2*F))+0.0588*Math.sin(rad(2*D-2*Mp))+0.0572*Math.sin(rad(2*D-M-Mp))+0.0533*Math.sin(rad(2*D+Mp)));}
-function mercuryLon(T){const L=normDeg(252.2509+149472.6674*T),M=normDeg(174.7948+149472.5153*T);return normDeg(L+23.4405*Math.sin(rad(M))+2.9818*Math.sin(rad(2*M))+0.5255*Math.sin(rad(3*M)));}
-function venusLon(T){const L=normDeg(181.9798+58517.8156*T),M=normDeg(50.4161+58517.8039*T);return normDeg(L+0.7758*Math.sin(rad(M))+0.0033*Math.sin(rad(2*M)));}
-function marsLon(T){const L=normDeg(355.4333+19140.2993*T),M=normDeg(19.3870+19139.8584*T);return normDeg(L+10.6912*Math.sin(rad(M))+0.6228*Math.sin(rad(2*M))+0.0503*Math.sin(rad(3*M)));}
-function jupiterLon(T){const L=normDeg(34.3515+3034.9057*T),M=normDeg(20.9154+3034.6963*T);return normDeg(L+5.5549*Math.sin(rad(M))+0.1683*Math.sin(rad(2*M)));}
-function saturnLon(T){const L=normDeg(50.0775+1222.1138*T),M=normDeg(317.0207+1222.1138*T);return normDeg(L+6.3585*Math.sin(rad(M))+0.2204*Math.sin(rad(2*M)));}
-function uranusMean(T){return normDeg(314.055+429.8666*T+0.97*Math.sin(rad(91.56+3.20*T)));}
-function neptuneMean(T){return normDeg(304.349+219.8833*T);}
-function plutoMean(T){return normDeg(238.929+144.96*T);}
-
-// ノースノード（Mean Node）
-function northNodeLon(T){return normDeg(125.0445-1934.1363*T+0.0020708*T*T);}
-// キロン（近似）
-function chironLon(T){const L=normDeg(209.67+0.0017*T*36525),M=normDeg(144.0+0.0015*T*36525);return normDeg(L+6.5*Math.sin(rad(M)));}
-// リリス（Mean Lilith / Black Moon Lilith）
-function lililthLon(T){return normDeg(83.3532+40.900822*T*36525/365.25);}
-
-// 逆行判定（微分で速度計算）
-function isRetrograde(lonFn,T){
-  const dt=0.001;
-  const v=(lonFn(T+dt)-lonFn(T-dt))/(2*dt);
-  return v<0;
-}
-
-function signedDegDiff(current,target){
-  return ((normDeg(current)-normDeg(target)+540)%360)-180;
-}
-
-function makeUtcDate(y,m,d,h,mn,tz){
-  return new Date(Date.UTC(y,m-1,d,h,mn)-tz*3600000);
-}
-
-function astronomyTimeValue(date){
-  return (date.getTime()-Date.UTC(2000,0,1,12,0,0))/86400000;
-}
-
-function astronomyLongitude(body,date){
-  if(!window.Astronomy)throw new Error('Astronomy Engine is not loaded');
-  const time=astronomyTimeValue(date);
-  if(body==='Moon')return normDeg(window.Astronomy.EclipticGeoMoon(time).lon);
-  return normDeg(window.Astronomy.Ecliptic(window.Astronomy.GeoVector(body,time,true)).elon);
-}
-
-function fallbackNatalLongitudes(T){
-  return [sunLon(T),moonLon(T),mercuryLon(T),venusLon(T),marsLon(T),jupiterLon(T),saturnLon(T),uranusMean(T),neptuneMean(T),plutoMean(T)];
-}
-
-function getNatalLongitudes(T,birthDate){
-  try{
-    const lons=ASTRO_BODIES.map(body=>astronomyLongitude(body,birthDate));
-    return {lons,engine:'Astronomy Engine',engineId:'astronomy_engine',source:'vendor/astronomy-engine/astronomy.js'};
-  }catch(error){
-    console.warn('natal Astronomy Engine fallback:',error);
-    return {lons:fallbackNatalLongitudes(T),engine:'内部簡易計算',engineId:'fallback_simple',source:'index.html fallback formulas'};
-  }
-}
-
-function getNatalRetrogrades(T,birthDate,natalEngineId){
-  if(natalEngineId==='astronomy_engine'){
-    const dayMs=86400000;
-    return ASTRO_BODIES.map((body,i)=>{
-      if(i<2)return false;
-      const prev=astronomyLongitude(body,new Date(birthDate.getTime()-dayMs));
-      const next=astronomyLongitude(body,new Date(birthDate.getTime()+dayMs));
-      return signedDegDiff(next,prev)<0;
-    });
-  }
-  const retroFns=[null,null,
-    T=>mercuryLon(T),T=>venusLon(T),T=>marsLon(T),
-    T=>jupiterLon(T),T=>saturnLon(T),T=>uranusMean(T),T=>neptuneMean(T),T=>plutoMean(T)];
-  return fallbackNatalLongitudes(T).map((_,i)=>retroFns[i]?isRetrograde(retroFns[i],T):false);
-}
-
-function calcASC(jd,lat,lon){
-  const T=(jd-2451545)/36525,gmst=normDeg(280.46061837+360.98564736629*(jd-2451545)+0.000387933*T*T),lst=normDeg(gmst+lon),e=rad(23.4393-0.0130042*T),latr=rad(lat);
-  return normDeg(deg(Math.atan2(Math.cos(rad(lst)),-(Math.sin(rad(lst))*Math.cos(e)+Math.tan(latr)*Math.sin(e)))));
-}
-function calcMC(jd,lon){const T=(jd-2451545)/36525,gmst=normDeg(280.46061837+360.98564736629*(jd-2451545)+0.000387933*T*T);return normDeg(gmst+lon);}
-function getHouses(asc){return Array.from({length:12},(_,i)=>normDeg(asc+i*30));}
 function getHouseNum(lon,houses){for(let i=0;i<12;i++){const c=houses[i],n=normDeg(houses[(i+1)%12]),l=normDeg(lon-c),w=normDeg(n-c);if(l<w)return i+1;}return 1;}
 
 function lonToSign(lon){
@@ -434,7 +347,7 @@ function calcDispositorChain(planetData){
 }
 
 // ─── チャート描画 ───
-function drawChart(lons,asc){
+function drawChart(lons,asc,houses){
   const svg=document.getElementById('chart'),cx=200,cy=200,r=175,rS=155,rI=120,rP=100;
   const sc=['#ff4444','#cc8844','#ffee44','#44aaff','#ff8800','#44cc88','#88aaff','#cc4466','#ee8833','#887799','#44ccee','#8866cc'];
   // 表示だけASC基準で回転する。ASC左固定で、第1Hが左下へ進む通常の向きにする。
@@ -452,7 +365,7 @@ function drawChart(lons,asc){
   }
 
   for(let i=0;i<12;i++){
-    const a=normDeg(asc+i*30),da=displayLon(a),x1=cx+rI*Math.cos(rad(da-90)),y1=cy+rI*Math.sin(rad(da-90)),x2=cx+r*Math.cos(rad(da-90)),y2=cy+r*Math.sin(rad(da-90));
+    const a=normDeg((houses&&houses[i]!=null)?houses[i]:asc+i*30),da=displayLon(a),x1=cx+rI*Math.cos(rad(da-90)),y1=cy+rI*Math.sin(rad(da-90)),x2=cx+r*Math.cos(rad(da-90)),y2=cy+r*Math.sin(rad(da-90));
     h+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#404070" stroke-width="1.1"/>`;
     const m=displayLon(a+15);
     h+=`<text x="${cx+78*Math.cos(rad(m-90))}" y="${cy+78*Math.sin(rad(m-90))}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#404070">${i+1}</text>`;
@@ -728,16 +641,22 @@ function generateTimingReading(natal,data){
 }
 
 async function fetchServerTiming(input,targetDate){
-  if(!window.fetch || location.protocol==='file:')return null;
-  const apiUrl=window.TIMING_API_URL||'/api/timing';
+  if(!window.fetch)throw new Error('このブラウザではSwiss Ephemeris APIへ接続できません。');
+  const apiUrl=window.TIMING_API_URL||(location.protocol==='file:'?'http://127.0.0.1:4173/api/timing':'/api/timing');
   const res=await fetch(apiUrl,{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({input,targetDate,ascLongitude:input.ascLongitude,engineMode:'auto'})
+    body:JSON.stringify({input,targetDate,engineMode:'swetest'})
   });
-  if(!res.ok)throw new Error(`timing API ${res.status}`);
+  if(!res.ok){
+    let detail='';
+    try{const err=await res.json();detail=err&&err.message?`：${err.message}`:'';}catch{}
+    throw new Error(`Swiss Ephemeris swetest API計算に失敗しました（HTTP ${res.status}）${detail}`);
+  }
   const data=await res.json();
   if(!data || data.schema!=='established-astrology-timing/v1')throw new Error('timing API schema mismatch');
+  if(!data.natal_chart || data.natal_chart.schema!=='swiss-natal-chart/v1')throw new Error('Swiss出生図データがAPIから返っていません。');
+  if(data.engine_id!=='swetest_cli' || data.natal_chart.engine_id!=='swetest_cli')throw new Error('計算エンジンがSwiss Ephemeris swetestに統一されていません。');
   return data;
 }
 
@@ -757,11 +676,11 @@ function renderTimingData(input,data,statusNote){
     ? monthlyRows.map(formatMonthlyTiming).join('')
     : '<li>月別データなし</li>';
   const engineNote=(data.engine_id||'').includes('swiss') || (data.engine_id||'').includes('swetest')
-    ? 'Swiss Ephemeris互換ランタイムの地心黄経計算を使用しています。'
-    : '現在は Astronomy Engine 互換モードです。Swiss Ephemeris strict モードはサーバー側ランタイム導入後に有効化します。';
+    ? '出生図・ASC・MC・ハウス・感受点・時期読みをSwiss Ephemeris swetestに統一しています。'
+    : '計算エンジンがSwiss Ephemeris swetestではありません。';
   el.innerHTML=`
     <div style="margin-bottom:10px">
-      <span class="timing-badge">計算エンジン：${escapeHtml(data.engine||'Astronomy Engine')}</span>
+      <span class="timing-badge">計算エンジン：${escapeHtml(data.engine||'Swiss Ephemeris swetest')}</span>
       <span class="timing-badge">${escapeHtml(statusNote||'ブラウザ計算')}</span>
       <span class="timing-badge">トランジット</span>
       <span class="timing-badge">セカンダリープログレス</span>
@@ -808,20 +727,13 @@ function renderTimingData(input,data,statusNote){
 }
 
 async function renderTimingClone(input,targetDate){
-  const el=document.getElementById('timingArea');
   try{
     const serverData=await fetchServerTiming(input,targetDate);
-    if(serverData)return renderTimingData(input,serverData,'サーバー/API計算');
+    return renderTimingData(input,serverData,'Swiss Ephemeris swetest API計算');
   }catch(error){
-    console.warn('timing API fallback:',error);
-  }
-  if(!window.EstablishedTimingCalculator){
     window.latestTimingCloneData=null;
-    el.innerHTML=`<div class="timing-card"><h3>計算エンジン未読込</h3><div>既存の確立済み計算エンジンが読み込めませんでした。</div></div>`;
-    return null;
+    throw new Error(`${error.message}。Swiss統一モードではブラウザ内の簡易計算には切り替えません。ローカルでは npm start を起動して http://127.0.0.1:4173/ から開いてください。`);
   }
-  const data=window.EstablishedTimingCalculator.calculate(input,targetDate,input.ascLongitude);
-  return renderTimingData(input,data,'ブラウザ互換計算');
 }
 
 // ─── メイン計算 ───
@@ -834,44 +746,57 @@ async function runHoroscopeCalculation(){
     day:+document.getElementById('targetDy').value
   };
   const pi=+document.getElementById('pref').value,pref=prefs[pi];
-  const ut=h+mn/60-tz,jd=julianDay(y,m,d,ut),T=(jd-2451545)/36525;
-  const birthDateUtc=makeUtcDate(y,m,d,h,mn,tz);
+  const apiInput={
+    year:y,
+    month:m,
+    day:d,
+    hour:h,
+    minute:mn,
+    timezoneOffset:tz,
+    latitude:pref.lat,
+    longitude:pref.lon
+  };
+  const timingCloneData=await renderTimingClone(apiInput,targetDate);
+  const natalChart=timingCloneData.natal_chart;
+  if(!natalChart || natalChart.engine_id!=='swetest_cli')throw new Error('Swiss Ephemeris swetest出生図データを取得できませんでした。');
+  const natalCalculation={
+    engine:natalChart.engine,
+    engineId:natalChart.engine_id,
+    source:natalChart.engine_source
+  };
 
-  // 10天体黄経
-  const natalCalculation=getNatalLongitudes(T,birthDateUtc);
-  const rawLons=natalCalculation.lons;
-  const ascLon=calcASC(jd,pref.lat,pref.lon),mcLon=calcMC(jd,pref.lon);
-  const houses=getHouses(ascLon);
-
-  // 逆行判定（太陽・月は常に順行）
-  const retros=getNatalRetrogrades(T,birthDateUtc,natalCalculation.engineId);
-
-  // 感受点
-  const nnLon=northNodeLon(T);
-  const snLon=normDeg(nnLon+180);
-  const chLon=chironLon(T);
-  const llLon=lililthLon(T);
-  const nnRetro=isRetrograde(northNodeLon,T);
-  const chRetro=isRetrograde(chironLon,T);
+  // 10天体・ASC・MC・ハウス・感受点はSwiss Ephemeris swetest APIの返却値に統一
+  const swissPlanets=natalChart.planets||[];
+  if(swissPlanets.length!==10)throw new Error('Swiss出生図の10天体データが不足しています。');
+  const rawLons=swissPlanets.map(row=>row.longitude);
+  const ascLon=natalChart.angles.ascendant.longitude;
+  const mcLon=natalChart.angles.mc.longitude;
+  const houses=(natalChart.houses||[]).map(row=>row.longitude);
+  if(houses.length!==12)throw new Error('Swiss出生図のハウスカスプデータが不足しています。');
+  const retros=swissPlanets.map(row=>!!row.retrograde);
 
   // ─── 天体データ（一元管理）───
   const planetData=rawLons.map((lon,i)=>{
     const s=lonToSign(lon);
-    return{...PLANETS[i],lon,signIdx:s.signIdx,signName:s.name,signSym:s.sym,elem:s.elem,qual:s.qual,deg:s.deg,min:s.min,house:getHouseNum(lon,houses),retro:retros[i]};
+    const swissRow=swissPlanets[i]||{};
+    return{...PLANETS[i],lon,signIdx:s.signIdx,signName:s.name,signSym:s.sym,elem:s.elem,qual:s.qual,deg:s.deg,min:s.min,house:swissRow.house||getHouseNum(lon,houses),retro:retros[i]};
   });
 
   const ascSign=lonToSign(ascLon),mcSign=lonToSign(mcLon);
 
   // 感受点データ
-  function makeExtra(name,sym,col,lon,retro){
-    const s=lonToSign(lon);
-    return{name,sym,col,lon,signIdx:s.signIdx,signName:s.name,signSym:s.sym,elem:s.elem,qual:s.qual,deg:s.deg,min:s.min,house:getHouseNum(lon,houses),retro};
+  const pointMap=new Map((natalChart.points||[]).map(row=>[row.point_ja,row]));
+  function makeExtra(name,sym,col){
+    const point=pointMap.get(name);
+    if(!point)throw new Error(`Swiss出生図の感受点データが不足しています：${name}`);
+    const s=lonToSign(point.longitude);
+    return{name,sym,col,lon:point.longitude,signIdx:s.signIdx,signName:s.name,signSym:s.sym,elem:s.elem,qual:s.qual,deg:s.deg,min:s.min,house:point.house||getHouseNum(point.longitude,houses),retro:!!point.retrograde};
   }
   const extras=[
-    makeExtra('ノースノード','☊','#88ffaa',nnLon,nnRetro),
-    makeExtra('サウスノード','☋','#ff8888',snLon,nnRetro),
-    makeExtra('キロン',      '⚷','#ddaa44',chLon,chRetro),
-    makeExtra('リリス',      '⚸','#cc66ff',llLon,false),
+    makeExtra('ノースノード','☊','#88ffaa'),
+    makeExtra('サウスノード','☋','#ff8888'),
+    makeExtra('キロン',      '⚷','#ddaa44'),
+    makeExtra('リリス',      '⚸','#cc66ff'),
   ];
 
   // ─── エレメント・クオリティ（10天体のみで集計）───
@@ -1025,17 +950,6 @@ async function runHoroscopeCalculation(){
   if(topHouse.length>0)stHtml+=`<div style="margin-top:4px;font-size:.78rem;color:var(--accent2)">ハウス集中（3天体以上）：${topHouse.map(([s,v])=>`第${s}ハウス（${v}天体）`).join('、')}</div>`;
   document.getElementById('structureArea').innerHTML=stHtml;
 
-  const timingCloneData=await renderTimingClone({
-    year:y,
-    month:m,
-    day:d,
-    hour:h,
-    minute:mn,
-    timezoneOffset:tz,
-    latitude:pref.lat,
-    longitude:pref.lon
-    ,ascLongitude:ascLon
-  },targetDate);
   const timingReading=timingCloneData?generateTimingReading({
     sun:planetData[0],
     moon:planetData[1],
@@ -1049,7 +963,7 @@ async function runHoroscopeCalculation(){
     :'時期読みデータを計算すると、ここに鑑定文が表示されます。';
 
   // チャート描画
-  drawChart(rawLons,ascLon);
+  drawChart(rawLons,ascLon,houses);
 
   // ─── 命式テキスト生成 ───
   let txt='';

@@ -7,9 +7,6 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const appDir = path.resolve(__dirname, '..');
 const require = createRequire(import.meta.url);
-const Astronomy = require(path.join(appDir, 'vendor/astronomy-engine/astronomy.cjs'));
-
-const astronomyEngine = createAstronomyEphemerisEngine();
 
 export const SIGNS = [
   { en3: 'Ari', ja: '牡羊座', base: 0 },
@@ -67,6 +64,7 @@ const SWISS_BODY_FALLBACK_IDS = {
   Pluto: 9
 };
 
+const SWETEST_NATAL_SEQUENCE = '0123456789mDA';
 export function normDeg(value) {
   return ((value % 360) + 360) % 360;
 }
@@ -85,53 +83,6 @@ function dateToSwissUtParts(date) {
       + date.getUTCSeconds() / 3600
       + date.getUTCMilliseconds() / 3600000
   };
-}
-
-function extractSwissLongitude(result) {
-  if (result == null) throw new Error('Swiss Ephemeris returned no result');
-  if (typeof result.longitude === 'number') return result.longitude;
-  if (typeof result.lon === 'number') return result.lon;
-  if (Array.isArray(result) && typeof result[0] === 'number') return result[0];
-  if (Array.isArray(result.xx) && typeof result.xx[0] === 'number') return result.xx[0];
-  if (Array.isArray(result.x) && typeof result.x[0] === 'number') return result.x[0];
-  if (Array.isArray(result.data) && typeof result.data[0] === 'number') return result.data[0];
-  throw new Error(`Swiss Ephemeris result does not expose longitude: ${JSON.stringify(result)}`);
-}
-
-function sweConstant(swisseph, name, fallback) {
-  return typeof swisseph[name] === 'number' ? swisseph[name] : fallback;
-}
-
-function sweJulday(swisseph, date) {
-  const parts = dateToSwissUtParts(date);
-  const calendar = sweConstant(swisseph, 'SE_GREG_CAL', 1);
-  const result = swisseph.swe_julday(parts.year, parts.month, parts.day, parts.hour, calendar);
-  if (typeof result === 'number') return result;
-  if (typeof result?.julian_day === 'number') return result.julian_day;
-  if (typeof result?.julianDay === 'number') return result.julianDay;
-  if (typeof result?.jd === 'number') return result.jd;
-  throw new Error(`Swiss Ephemeris swe_julday returned an unsupported value: ${JSON.stringify(result)}`);
-}
-
-function sweCalcUtLongitude(swisseph, julianDay, bodyId, flags) {
-  let callbackResult;
-  let callbackError;
-  const returned = swisseph.swe_calc_ut(julianDay, bodyId, flags, (result) => {
-    callbackResult = result;
-  });
-
-  if (returned && typeof returned === 'object') {
-    if (returned.error) throw new Error(returned.error);
-    return extractSwissLongitude(returned);
-  }
-  if (typeof returned === 'number') return returned;
-  if (callbackResult) {
-    if (callbackResult.error) callbackError = callbackResult.error;
-    if (callbackError) throw new Error(callbackError);
-    return extractSwissLongitude(callbackResult);
-  }
-
-  throw new Error('Swiss Ephemeris swe_calc_ut did not return synchronously. Add an async adapter before using this package build.');
 }
 
 function findSwissEphemerisPath() {
@@ -199,6 +150,88 @@ function parseSwetestLongitude(output) {
   return Number(numericMatches[numericMatches.length - 1]);
 }
 
+function parseSwetestRows(output) {
+  return String(output)
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line && !/^warning[:\s]/i.test(line) && !/^error[:\s]/i.test(line))
+    .map((line) => {
+      const columns = line.split(',').map((column) => column.trim());
+      const longitude = Number(columns[1]);
+      if (!Number.isFinite(longitude)) return null;
+      const speed = Number(columns[2]);
+      return {
+        label: columns[0],
+        longitude: normDeg(longitude),
+        speed_longitude: Number.isFinite(speed) ? speed : null,
+        raw: line
+      };
+    })
+    .filter(Boolean);
+}
+
+function swetestRows(date, options = {}) {
+  const binary = findSwetestBinary();
+  if (!binary) throw new Error('Swiss Ephemeris swetest is required but swetest command is not available');
+  const ephePath = findSwissEphemerisPath();
+  const args = [
+    `-b${date.getUTCDate()}.${date.getUTCMonth() + 1}.${date.getUTCFullYear()}`,
+    `-ut${formatUtcTimeForSwetest(date)}`,
+    '-fPls',
+    '-g,',
+    '-head',
+    '-eswe'
+  ];
+  if (options.planetSequence) args.splice(2, 0, `-p${options.planetSequence}`);
+  if (options.house) {
+    args.splice(options.planetSequence ? 3 : 2, 0, `-house${options.house.longitude},${options.house.latitude},${options.house.system || 'E'}`);
+  }
+  if (ephePath) args.push(`-edir${ephePath}`);
+  const output = execFileSync(binary, args, {
+    encoding: 'utf8',
+    timeout: 15000,
+    maxBuffer: 256 * 1024
+  });
+  return {
+    binary,
+    ephemeris_path: ephePath,
+    rows: parseSwetestRows(output)
+  };
+}
+
+function requireSwetestRow(rows, label) {
+  const row = rows.find((entry) => entry.label === label);
+  if (!row) throw new Error(`swetest did not return required row: ${label}`);
+  return row;
+}
+
+function rowByRegex(rows, pattern, label) {
+  const row = rows.find((entry) => pattern.test(entry.label));
+  if (!row) throw new Error(`swetest did not return required row: ${label}`);
+  return row;
+}
+
+function houseNumberFromCusps(longitude, houses) {
+  const value = normDeg(longitude);
+  const cusps = houses.map((house) => normDeg(house.longitude));
+  for (let index = 0; index < 12; index += 1) {
+    const current = cusps[index];
+    const next = cusps[(index + 1) % 12];
+    const local = normDeg(value - current);
+    const width = normDeg(next - current);
+    if (local < width) return index + 1;
+  }
+  return 1;
+}
+
+function swetestPosition(row) {
+  return {
+    ...longitudeParts(row.longitude),
+    speed_longitude: row.speed_longitude,
+    retrograde: row.speed_longitude != null ? row.speed_longitude < 0 : false
+  };
+}
+
 function genericSearchSunLongitude(engine, targetLongitude, searchStart, days) {
   const startMs = searchStart.getTime();
   const endMs = startMs + days * 86400000;
@@ -226,58 +259,6 @@ function genericSearchSunLongitude(engine, targetLongitude, searchStart, days) {
   }
 
   return { date: new Date((lo + hi) / 2) };
-}
-
-export function createAstronomyEphemerisEngine() {
-  const engine = {
-    id: 'astronomy_engine',
-    label: 'Astronomy Engine',
-    source: 'vendor/astronomy-engine/astronomy.cjs',
-    eclipticLongitude(body, date) {
-      if (body === 'Moon') return Astronomy.EclipticGeoMoon(date).lon;
-      return Astronomy.Ecliptic(Astronomy.GeoVector(body, date, true)).elon;
-    }
-  };
-  engine.searchSunLongitude = (targetLongitude, searchStart, days) => genericSearchSunLongitude(engine, targetLongitude, searchStart, days);
-  return engine;
-}
-
-export function createSwissEphemerisEngine() {
-  let swisseph;
-  try {
-    swisseph = require('swisseph');
-  } catch (error) {
-    throw new Error(`Swiss Ephemeris package is not available: ${error.message}`);
-  }
-  if (typeof swisseph.swe_julday !== 'function' || typeof swisseph.swe_calc_ut !== 'function') {
-    throw new Error('Swiss Ephemeris package is missing swe_julday or swe_calc_ut');
-  }
-
-  const ephePath = findSwissEphemerisPath();
-  if (ephePath && typeof swisseph.swe_set_ephe_path === 'function') {
-    swisseph.swe_set_ephe_path(ephePath);
-  }
-
-  const flags = sweConstant(swisseph, 'SEFLG_SWIEPH', 2) | sweConstant(swisseph, 'SEFLG_SPEED', 256);
-  const bodyIds = Object.fromEntries(BODIES.map((body) => {
-    const constantName = body === 'Moon' ? 'SE_MOON' : `SE_${body.toUpperCase()}`;
-    return [body, sweConstant(swisseph, constantName, SWISS_BODY_FALLBACK_IDS[body])];
-  }));
-
-  const engine = {
-    id: 'swiss_ephemeris',
-    label: 'Swiss Ephemeris',
-    source: 'node_modules/swisseph',
-    ephemeris_path: ephePath,
-    flags,
-    eclipticLongitude(body, date) {
-      const bodyId = bodyIds[body];
-      if (bodyId == null) throw new Error(`Swiss Ephemeris body id is not mapped for ${body}`);
-      return normDeg(sweCalcUtLongitude(swisseph, sweJulday(swisseph, date), bodyId, flags));
-    }
-  };
-  engine.searchSunLongitude = (targetLongitude, searchStart, days) => genericSearchSunLongitude(engine, targetLongitude, searchStart, days);
-  return engine;
 }
 
 export function createSwetestEphemerisEngine() {
@@ -316,35 +297,12 @@ export function createSwetestEphemerisEngine() {
   return engine;
 }
 
-export function createSwissCompatibleEphemerisEngine() {
-  const errors = [];
-  try {
-    return createSwissEphemerisEngine();
-  } catch (error) {
-    errors.push(`swisseph node binding: ${error.message}`);
-  }
-  try {
-    return createSwetestEphemerisEngine();
-  } catch (error) {
-    errors.push(`swetest cli: ${error.message}`);
-  }
-  throw new Error(`No Swiss Ephemeris-compatible runtime is available. ${errors.join(' / ')}`);
-}
-
 export function getTimingEngine(options = {}) {
-  const mode = options.engineMode || process.env.ASTRO_TIMING_ENGINE || 'astronomy';
-  if (mode === 'astronomy' || mode === 'astronomy_engine') return astronomyEngine;
-  if (mode === 'swisseph' || mode === 'swiss_ephemeris_node') return createSwissEphemerisEngine();
+  const mode = options.engineMode || process.env.ASTRO_TIMING_ENGINE || 'swetest';
   if (mode === 'swetest' || mode === 'swetest_cli') return createSwetestEphemerisEngine();
-  if (mode === 'swiss' || mode === 'swiss_ephemeris') return createSwissCompatibleEphemerisEngine();
-  if (mode === 'auto') {
-    try {
-      return createSwissCompatibleEphemerisEngine();
-    } catch {
-      return astronomyEngine;
-    }
-  }
-  throw new Error(`Unknown timing engine mode: ${mode}`);
+  if (mode === 'swiss' || mode === 'swiss_ephemeris') return createSwetestEphemerisEngine();
+  if (mode === 'auto') return createSwetestEphemerisEngine();
+  throw new Error(`Swiss Ephemeris swetest is the only supported timing engine; got ${mode}`);
 }
 
 export function dateFromLocal(input) {
@@ -355,7 +313,7 @@ export function dateFromYmdUtc(date) {
   return new Date(Date.UTC(date.year, date.month - 1, date.day, date.hour || 0, date.minute || 0, date.second || 0));
 }
 
-export function eclipticLongitude(body, date, engine = astronomyEngine) {
+export function eclipticLongitude(body, date, engine = getTimingEngine({ engineMode: 'swetest' })) {
   return engine.eclipticLongitude(body, date);
 }
 
@@ -384,12 +342,88 @@ export function longitudeParts(longitude) {
   };
 }
 
-export function planetRows(date, bodies = BODIES, engine = astronomyEngine) {
+export function planetRows(date, bodies = BODIES, engine = getTimingEngine({ engineMode: 'swetest' })) {
   return bodies.map((body) => ({
     body,
     body_ja: BODY_JA[body],
     ...longitudeParts(eclipticLongitude(body, date, engine))
   }));
+}
+
+export function calculateSwissNatalChart(input) {
+  const birthDate = dateFromLocal(input);
+  const result = swetestRows(birthDate, {
+    planetSequence: SWETEST_NATAL_SEQUENCE,
+    house: {
+      longitude: input.longitude,
+      latitude: input.latitude,
+      system: 'E'
+    }
+  });
+  const { rows } = result;
+  const houses = Array.from({ length: 12 }, (_, index) => {
+    const houseNumber = index + 1;
+    const row = rowByRegex(rows, new RegExp(`^house\\s+${houseNumber}\\b`), `house ${houseNumber}`);
+    return {
+      house: houseNumber,
+      ...longitudeParts(row.longitude)
+    };
+  });
+  const ascRow = requireSwetestRow(rows, 'Ascendant');
+  const mcRow = requireSwetestRow(rows, 'MC');
+  const planets = BODIES.map((body) => {
+    const row = requireSwetestRow(rows, body);
+    const position = swetestPosition(row);
+    return {
+      body,
+      body_ja: BODY_JA[body],
+      ...position,
+      house: houseNumberFromCusps(position.longitude, houses)
+    };
+  });
+  const northNodeRow = requireSwetestRow(rows, 'mean Node');
+  const northNode = swetestPosition(northNodeRow);
+  const southNodePosition = {
+    ...longitudeParts(northNode.longitude + 180),
+    speed_longitude: northNode.speed_longitude,
+    retrograde: northNode.retrograde
+  };
+  const chironPosition = swetestPosition(requireSwetestRow(rows, 'Chiron'));
+  const lilithPosition = swetestPosition(requireSwetestRow(rows, 'mean Apogee'));
+  const pointRows = [
+    { point: 'north_node', point_ja: 'ノースノード', ...northNode },
+    { point: 'south_node', point_ja: 'サウスノード', ...southNodePosition },
+    { point: 'chiron', point_ja: 'キロン', ...chironPosition },
+    { point: 'mean_lilith', point_ja: 'リリス', ...lilithPosition }
+  ].map((point) => ({
+    ...point,
+    house: houseNumberFromCusps(point.longitude, houses)
+  }));
+
+  return {
+    schema: 'swiss-natal-chart/v1',
+    engine: 'Swiss Ephemeris swetest',
+    engine_id: 'swetest_cli',
+    engine_source: result.binary,
+    ephemeris_path: result.ephemeris_path,
+    input,
+    birth_date_utc: birthDate.toISOString(),
+    zodiac: 'tropical',
+    house_system: 'E',
+    planets,
+    points: pointRows,
+    angles: {
+      ascendant: {
+        name: 'ASC',
+        ...longitudeParts(ascRow.longitude)
+      },
+      mc: {
+        name: 'MC',
+        ...longitudeParts(mcRow.longitude)
+      }
+    },
+    houses
+  };
 }
 
 function ymd(year, month, day) {
@@ -544,7 +578,7 @@ function activeMonthlyProfectionIndex(input, targetDate) {
   return 12;
 }
 
-export function secondaryProgressions(input, targetDate, engine = astronomyEngine, bodies = BODIES) {
+export function secondaryProgressions(input, targetDate, engine = getTimingEngine({ engineMode: 'swetest' }), bodies = BODIES) {
   const birthDate = dateFromLocal(input);
   const ageYears = progressedAgeYears(input, targetDate);
   const progressedDate = new Date(birthDate.getTime() + ageYears * 86400000);
@@ -557,7 +591,7 @@ export function secondaryProgressions(input, targetDate, engine = astronomyEngin
   };
 }
 
-export function transits(targetDate, engine = astronomyEngine, bodies = BODIES) {
+export function transits(targetDate, engine = getTimingEngine({ engineMode: 'swetest' }), bodies = BODIES) {
   const target = dateFromYmdUtc(targetDate);
   return {
     method: 'transits',
@@ -566,7 +600,7 @@ export function transits(targetDate, engine = astronomyEngine, bodies = BODIES) 
   };
 }
 
-export function solarReturn(input, returnYear, engine = astronomyEngine) {
+export function solarReturn(input, returnYear, engine = getTimingEngine({ engineMode: 'swetest' })) {
   const birthDate = dateFromLocal(input);
   const natalSunLongitude = eclipticLongitude('Sun', birthDate, engine);
   const searchStart = new Date(Date.UTC(returnYear, input.month - 1, input.day - 10, 0, 0, 0));
@@ -605,7 +639,7 @@ function yearlyTimingRow(input, ascLongitude, engine, natalRows, currentAge, off
   };
 }
 
-export function pastPresentFutureFlow(input, targetDate, ascLongitude, engine = astronomyEngine, yearsBack = 10, yearsForward = 10) {
+export function pastPresentFutureFlow(input, targetDate, ascLongitude, engine = getTimingEngine({ engineMode: 'swetest' }), yearsBack = 10, yearsForward = 10) {
   const startAge = ageAtDate(input, targetDate);
   const natalRows = planetRows(dateFromLocal(input), BODIES, engine);
   const rows = [];
@@ -652,7 +686,7 @@ function monthlyTimingRow(input, ascLongitude, engine, natalRows, periodStart, p
   };
 }
 
-export function futureOneYearMonthlyFlow(input, targetDate, ascLongitude, engine = astronomyEngine) {
+export function futureOneYearMonthlyFlow(input, targetDate, ascLongitude, engine = getTimingEngine({ engineMode: 'swetest' })) {
   const natalRows = planetRows(dateFromLocal(input), BODIES, engine);
   const months = [];
 
@@ -675,7 +709,7 @@ export function futureOneYearMonthlyFlow(input, targetDate, ascLongitude, engine
 
 export const oneYearMonthlyFlow = futureOneYearMonthlyFlow;
 
-export function tenYearFlow(input, targetDate, ascLongitude, engine = astronomyEngine, years = 10) {
+export function tenYearFlow(input, targetDate, ascLongitude, engine = getTimingEngine({ engineMode: 'swetest' }), years = 10) {
   const flow = pastPresentFutureFlow(input, targetDate, ascLongitude, engine, 0, years);
   return {
     method: 'ten_year_flow',
@@ -686,7 +720,10 @@ export function tenYearFlow(input, targetDate, ascLongitude, engine = astronomyE
 }
 
 export function calculateEstablishedTiming(input, targetDate, ascLongitude, options = {}) {
-  const engine = options.engine || getTimingEngine(options);
+  const engine = options.engine || getTimingEngine({ ...options, engineMode: options.engineMode || 'swetest' });
+  if (engine.id !== 'swetest_cli') {
+    throw new Error(`Swiss Ephemeris swetest is required for unified calculation mode; got ${engine.id}`);
+  }
   const centeredFlow = pastPresentFutureFlow(input, targetDate, ascLongitude, engine);
   const monthlyFlow = futureOneYearMonthlyFlow(input, targetDate, ascLongitude, engine);
   return {

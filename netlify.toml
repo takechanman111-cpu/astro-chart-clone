@@ -13,7 +13,6 @@
   node_bundler = "esbuild"
   included_files = [
     "netlify/swiss/**",
-    "vendor/astronomy-engine/astronomy.cjs",
     "reference-fixtures/**",
     "reference-additional-validation-data.json"
   ]

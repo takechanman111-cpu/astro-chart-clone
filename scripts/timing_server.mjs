@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { calculateEstablishedTiming } from './established_timing_calculator.mjs';
+import { calculateEstablishedTiming, calculateSwissNatalChart } from './established_timing_calculator.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const appDir = path.resolve(__dirname, '..');
@@ -16,8 +16,6 @@ const MIME_TYPES = {
   '.md': 'text/markdown; charset=utf-8',
   '.txt': 'text/plain; charset=utf-8'
 };
-
-const ENGINE_MODES = new Set(['auto', 'astronomy', 'astronomy_engine', 'swiss', 'swiss_ephemeris', 'swisseph', 'swiss_ephemeris_node', 'swetest', 'swetest_cli']);
 
 function numberInRange(value, min, max, label) {
   const number = Number(value);
@@ -53,28 +51,34 @@ export function sanitizeTimingPayload(payload) {
     month: intInRange(rawTargetDate.month, 1, 12, 'targetDate.month'),
     day: intInRange(rawTargetDate.day, 1, 31, 'targetDate.day')
   };
-  const ascLongitude = numberInRange(payload.ascLongitude ?? rawInput.ascLongitude, 0, 360, 'ascLongitude');
-  const requestedMode = String(payload.engineMode || process.env.ASTRO_TIMING_ENGINE || 'auto');
-  const engineMode = ENGINE_MODES.has(requestedMode) ? requestedMode : 'auto';
-  return { input, targetDate, ascLongitude, engineMode };
+  return { input, targetDate, engineMode: 'swetest' };
 }
 
 export function calculateTimingPayload(payload, options = {}) {
   const sanitized = sanitizeTimingPayload(payload);
-  const engineMode = options.engineMode || sanitized.engineMode;
-  return calculateEstablishedTiming(
+  const natalChart = calculateSwissNatalChart(sanitized.input);
+  const ascLongitude = natalChart.angles.ascendant.longitude;
+  const timing = calculateEstablishedTiming(
     sanitized.input,
     sanitized.targetDate,
-    sanitized.ascLongitude,
-    { engineMode }
+    ascLongitude,
+    { engineMode: options.engineMode || sanitized.engineMode || 'swetest' }
   );
+  return {
+    ...timing,
+    natal_chart: natalChart,
+    calculation_policy: 'swiss_ephemeris_swetest_only'
+  };
 }
 
 function sendJson(res, statusCode, body) {
   res.writeHead(statusCode, {
     'Content-Type': 'application/json; charset=utf-8',
     'Cache-Control': 'no-store',
-    'X-Content-Type-Options': 'nosniff'
+    'X-Content-Type-Options': 'nosniff',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS'
   });
   res.end(JSON.stringify(body, null, 2));
 }
@@ -103,6 +107,10 @@ function readRequestBody(req) {
 }
 
 async function handleTimingApi(req, res) {
+  if (req.method === 'OPTIONS') {
+    sendJson(res, 204, {});
+    return;
+  }
   if (req.method !== 'POST') {
     sendJson(res, 405, { error: 'method_not_allowed' });
     return;

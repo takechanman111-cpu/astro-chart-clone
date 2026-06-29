@@ -1,52 +1,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { createRequire } from 'node:module';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { findSwetestBinary } from './established_timing_calculator.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const appDir = path.resolve(__dirname, '..');
-const require = createRequire(import.meta.url);
 
 function exists(relativePath) {
   return fs.existsSync(path.join(appDir, relativePath));
 }
 
 function hasAnyEstablishedEngine() {
-  return [
-    'vendor/swiss-ephemeris',
-    'vendor/astronomy-engine/astronomy.cjs',
-    'node_modules/swisseph',
-    'node_modules/astronomy-engine'
-  ].some(exists) || findSwetestBinary() != null;
-}
-
-function checkAstronomyEngine(issues) {
-  const enginePath = path.join(appDir, 'vendor/astronomy-engine/astronomy.cjs');
-  if (!fs.existsSync(enginePath)) return false;
-  const source = fs.readFileSync(enginePath, 'utf8');
-  if (source.includes('[Truncated]')) {
-    issues.push('vendor Astronomy Engine file is truncated and cannot be used');
-    return false;
-  }
-  if (!source.includes('MIT License') || !source.includes('Astronomy library for JavaScript')) {
-    issues.push('vendor Astronomy Engine file does not contain expected license/header');
-    return false;
-  }
-  try {
-    const Astronomy = require(enginePath);
-    const date = new Date(Date.UTC(2026, 5, 11, 0, 0, 0));
-    const sun = Astronomy.Ecliptic(Astronomy.GeoVector('Sun', date, true)).elon;
-    const moon = Astronomy.EclipticGeoMoon(date).lon;
-    if (Math.abs(sun - 80.109941) > 0.01 || Math.abs(moon - 22.5901) > 0.01) {
-      issues.push('vendor Astronomy Engine smoke calculation did not match expected 2026-06-11 Sun/Moon longitudes');
-      return false;
-    }
-  } catch (error) {
-    issues.push(`vendor Astronomy Engine file is not executable as an engine: ${error.message}`);
-    return false;
-  }
-  return true;
+  return exists('vendor/swiss-ephemeris') || findSwetestBinary() != null;
 }
 
 export function runEstablishedEngineGate(options = {}) {
@@ -73,9 +38,8 @@ export function runEstablishedEngineGate(options = {}) {
   if (html.includes('AstrologyReadingsOnlineClone')) {
     issues.push('index.html still calls the visible-output sample adapter');
   }
-  const hasValidAstronomyEngine = checkAstronomyEngine(issues);
-  if (phase === 'production' && !hasAnyEstablishedEngine() && !hasValidAstronomyEngine) {
-    issues.push('no established calculation engine is installed or vendored');
+  if (phase === 'production' && !hasAnyEstablishedEngine()) {
+    issues.push('Swiss Ephemeris swetest is not installed or vendored');
   }
 
   return {
@@ -88,10 +52,7 @@ export function runEstablishedEngineGate(options = {}) {
     },
     accepted_engine_paths: [
       'vendor/swiss-ephemeris',
-      'vendor/astronomy-engine/astronomy.cjs',
-      'swetest on PATH or SWETEST_PATH',
-      'node_modules/swisseph',
-      'node_modules/astronomy-engine'
+      'swetest on PATH or SWETEST_PATH'
     ],
     issues
   };

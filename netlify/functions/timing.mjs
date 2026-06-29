@@ -45,13 +45,20 @@ function jsonResponse(statusCode, body) {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': 'no-store',
-      'X-Content-Type-Options': 'nosniff'
+      'X-Content-Type-Options': 'nosniff',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS'
     },
     body: JSON.stringify(body)
   };
 }
 
 export async function handler(event) {
+  if (event.httpMethod === 'OPTIONS') {
+    return jsonResponse(204, {});
+  }
+
   if (event.httpMethod !== 'POST') {
     return jsonResponse(405, { error: 'method_not_allowed' });
   }

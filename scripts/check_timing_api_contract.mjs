@@ -9,12 +9,10 @@ const samplePayload = {
     minute: 0,
     timezoneOffset: 9,
     latitude: 34.69,
-    longitude: 135.5,
-    ascLongitude: 10
+    longitude: 135.5
   },
   targetDate: { year: 2026, month: 6, day: 11 },
-  ascLongitude: 10,
-  engineMode: 'astronomy'
+  engineMode: 'swetest'
 };
 
 const issues = [];
@@ -27,7 +25,7 @@ try {
   const sanitized = sanitizeTimingPayload(samplePayload);
   if (sanitized.input.year !== 1990) issues.push('sanitized input year mismatch');
   if (sanitized.targetDate.year !== 2026) issues.push('sanitized target year mismatch');
-  if (sanitized.engineMode !== 'astronomy') issues.push('engine mode was not preserved');
+  if (sanitized.engineMode !== 'swetest') issues.push('engine mode was not forced to swetest');
 } catch (error) {
   issues.push(`valid payload was rejected: ${error.message}`);
 }
@@ -40,9 +38,15 @@ try {
 }
 
 try {
-  const result = calculateTimingPayload(samplePayload, { engineMode: 'astronomy' });
+  const result = calculateTimingPayload(samplePayload, { engineMode: 'swetest' });
   if (result.schema !== 'established-astrology-timing/v1') issues.push('result schema mismatch');
-  if (result.engine_id !== 'astronomy_engine') issues.push('result did not use astronomy engine in contract check');
+  if (result.engine_id !== 'swetest_cli') issues.push('result did not use Swiss Ephemeris swetest');
+  if (result.calculation_policy !== 'swiss_ephemeris_swetest_only') issues.push('calculation policy is not swetest-only');
+  if (result.natal_chart?.schema !== 'swiss-natal-chart/v1') issues.push('result is missing Swiss natal chart payload');
+  if (result.natal_chart?.engine_id !== 'swetest_cli') issues.push('natal chart did not use Swiss Ephemeris swetest');
+  if (!Array.isArray(result.natal_chart?.planets) || result.natal_chart.planets.length !== 10) issues.push('natal chart did not return 10 planets');
+  if (!Array.isArray(result.natal_chart?.houses) || result.natal_chart.houses.length !== 12) issues.push('natal chart did not return 12 house cusps');
+  if (!Array.isArray(result.natal_chart?.points) || result.natal_chart.points.length !== 4) issues.push('natal chart did not return 4 sensitive points');
   if (result.transits.planets.length !== 10) issues.push('transits did not return 10 planets');
   if (result.secondary_progressions.planets.length !== 10) issues.push('secondary progressions did not return 10 planets');
   if (result.solar_return.planets.length !== 10) issues.push('solar return did not return 10 planets');

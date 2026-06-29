@@ -1,12 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { createRequire } from 'node:module';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { findSwetestBinary, getTimingEngine } from './established_timing_calculator.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const appDir = path.resolve(__dirname, '..');
-const require = createRequire(import.meta.url);
 
 function exists(relativePath) {
   return fs.existsSync(path.join(appDir, relativePath));
@@ -16,26 +14,9 @@ function checkedDate() {
   return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tokyo' }).format(new Date());
 }
 
-function tryRequireSwiss() {
-  try {
-    const swisseph = require('swisseph');
-    return {
-      ok: true,
-      has_swe_julday: typeof swisseph.swe_julday === 'function',
-      has_swe_calc_ut: typeof swisseph.swe_calc_ut === 'function',
-      has_swe_set_ephe_path: typeof swisseph.swe_set_ephe_path === 'function'
-    };
-  } catch (error) {
-    return {
-      ok: false,
-      error: String(error?.message || error)
-    };
-  }
-}
-
 function tryCreateSwissTimingEngine() {
   try {
-    const engine = getTimingEngine({ engineMode: 'swiss' });
+    const engine = getTimingEngine({ engineMode: 'swetest' });
     return {
       ok: true,
       engine_id: engine.id,
@@ -62,22 +43,15 @@ async function runStrictGateIfPossible(swissRuntimeReady) {
 }
 
 async function main() {
-  const swissLoad = tryRequireSwiss();
   const swissTimingEngine = tryCreateSwissTimingEngine();
   const strictGateReport = await runStrictGateIfPossible(swissTimingEngine.ok);
   const issues = [];
 
-  if (!exists('node_modules/swisseph') && !exists('vendor/swiss-ephemeris') && !findSwetestBinary()) {
-    issues.push('Swiss Ephemeris package/vendor files are not installed in this app.');
-  }
-  if (!swissLoad.ok && !swissTimingEngine.ok) {
-    issues.push(`Node cannot require swisseph: ${swissLoad.error}`);
-  }
-  if (swissLoad.ok && (!swissLoad.has_swe_julday || !swissLoad.has_swe_calc_ut)) {
-    issues.push('swisseph is present but required calculation APIs are missing.');
+  if (!findSwetestBinary()) {
+    issues.push('Swiss Ephemeris swetest command is not installed or vendored in this app.');
   }
   if (!swissTimingEngine.ok) {
-    issues.push(`Swiss timing adapter cannot be created: ${swissTimingEngine.error}`);
+    issues.push(`Swiss Ephemeris swetest timing adapter cannot be created: ${swissTimingEngine.error}`);
   }
   if (strictGateReport && strictGateReport.verdict !== 'PASS') {
     issues.push('Strict reference clone Gate is still NG after Swiss load.');
@@ -87,27 +61,24 @@ async function main() {
     schema: 'swiss-ephemeris-readiness-gate/v1',
     verdict: issues.length ? 'BLOCKED' : 'PASS',
     checked_on: checkedDate(),
-    purpose: 'Detect whether the app can move from Astronomy Engine compatibility mode to Swiss Ephemeris strict reference clone mode.',
-    required_for: 'stricter one-to-one clone of Astrology Readings Online lunar/progressed values',
+    purpose: 'Confirm that the app can run the unified Swiss Ephemeris swetest calculation mode.',
+    required_for: 'one-to-one clone of Astrology Readings Online lunar/progressed values',
     local_candidates: {
-      node_modules_swisseph: exists('node_modules/swisseph'),
       vendor_swiss_ephemeris: exists('vendor/swiss-ephemeris'),
       vendor_swiss_ephemeris_ephe: exists('vendor/swiss-ephemeris/ephe'),
       swetest_binary: findSwetestBinary()
     },
-    swiss_load: swissLoad,
     swiss_timing_engine: swissTimingEngine,
     strict_gate_verdict: strictGateReport?.verdict || null,
     strict_gate_issues: strictGateReport?.issues || [],
     known_constraints: [
-      'The known Node swisseph package is a native C/C++ binding, not a direct static-browser drop-in.',
-      'The swetest command line tool is also accepted as a Swiss Ephemeris-compatible runtime.',
-      'Swiss Ephemeris licensing must be reviewed before bundling in a commercial or redistributed app.',
-      'Shell network/DNS is unavailable in this environment, so npm cannot fetch swisseph here.'
+      'The browser page does not calculate positions directly; it calls the timing API.',
+      'The swetest command line tool is the required Swiss Ephemeris runtime.',
+      'Swiss Ephemeris licensing must be reviewed before bundling in a commercial or redistributed app.'
     ],
     next_action_when_available: [
-      'Install or vendor a Swiss Ephemeris-compatible runtime: node swisseph binding or swetest command.',
-      'Wire the timing calculator to use Swiss longitudes instead of Astronomy Engine longitudes.',
+      'Install or vendor the Swiss Ephemeris swetest command.',
+      'Keep the timing calculator on Swiss Ephemeris swetest only.',
       'Run node scripts/check_established_timing_reference_gate.mjs --strict and require PASS.'
     ],
     issues

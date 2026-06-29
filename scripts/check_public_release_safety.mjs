@@ -20,11 +20,6 @@ const ignoredPathPrefixes = [
   'netlify/swiss/'
 ];
 
-const ignoredFiles = new Set([
-  'vendor/astronomy-engine/astronomy.js',
-  'vendor/astronomy-engine/astronomy.cjs'
-]);
-
 const requiredFiles = [
   '.gitignore',
   '.env.example',
@@ -133,7 +128,6 @@ const gitignore = fs.existsSync(path.join(appDir, '.gitignore'))
 
 for (const file of files) {
   const normalized = file.split(path.sep).join('/');
-  if (ignoredFiles.has(normalized)) continue;
   const content = readMaybe(file);
   if (content == null) continue;
 
@@ -161,7 +155,6 @@ const report = {
   checked_on: checkedDate(),
   verdict: issues.length ? 'NG' : 'PASS',
   scanned_file_count: files.length,
-  ignored_large_vendor_files: Array.from(ignoredFiles),
   issues,
   warnings
 };

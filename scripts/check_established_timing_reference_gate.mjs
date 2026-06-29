@@ -17,10 +17,7 @@ function angularDiff(a, b) {
 }
 
 function toleranceForBody(body, standardToleranceDeg) {
-  if (globalThis.__ASTRO_STRICT_REFERENCE_GATE__) return standardToleranceDeg;
-  // Astronomy Engine's lunar model can differ from the reference site's
-  // ephemeris by a few arcminutes on older dates. Keep all other bodies strict.
-  return body === 'Moon' ? 0.05 : standardToleranceDeg;
+  return standardToleranceDeg;
 }
 
 async function loadReferenceData() {
@@ -121,7 +118,7 @@ function strictSwissUnavailableReport(error) {
     tolerance_deg_standard: 0.02,
     mode: 'strict_reference_clone',
     tolerance_deg_moon: 0.02,
-    precision_note: 'Strict mode requires Swiss Ephemeris. Astronomy Engine compatibility mode is not accepted here.',
+    precision_note: 'Swiss Ephemeris swetest is required. Browser/simple compatibility mode is not accepted.',
     sample_count: 0,
     issues: [`Swiss Ephemeris is required for strict reference clone mode but is not available: ${error.message}`]
   };
@@ -258,11 +255,9 @@ export async function runEstablishedTimingReferenceGate() {
     engine: result.engine,
     reference_site: reference.source_site,
     tolerance_deg_standard: 0.02,
-    mode: strictMode ? 'strict_reference_clone' : 'astronomy_engine_compatibility',
-    tolerance_deg_moon: strictMode ? 0.02 : 0.05,
-    precision_note: strictMode
-      ? 'Strict mode uses a Swiss Ephemeris-compatible runtime and the same 0.02 degree tolerance for every body.'
-      : 'Moon uses a wider compatibility tolerance because Astronomy Engine can differ from the reference-site ephemeris by a few arcminutes on older progressed dates.',
+    mode: 'strict_reference_clone',
+    tolerance_deg_moon: 0.02,
+    precision_note: 'Strict mode uses Swiss Ephemeris swetest and the same 0.02 degree tolerance for every body.',
     sample_count: 1 + additionalSamples.length,
     solar_return_time_utc: result.solar_return.return_time_utc,
     secondary_progressed_date_utc: result.secondary_progressions.progressed_date_utc,
