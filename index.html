@@ -387,8 +387,8 @@ function calcDispositorChain(planetData){
 function drawChart(lons,asc){
   const svg=document.getElementById('chart'),cx=200,cy=200,r=175,rS=155,rI=120,rP=100;
   const sc=['#ff4444','#cc8844','#ffee44','#44aaff','#ff8800','#44cc88','#88aaff','#cc4466','#ee8833','#887799','#44ccee','#8866cc'];
-  // 表示だけASC基準で回転する。計算上のASC/ハウス/天体度数は変更しない。
-  const displayLon=lon=>normDeg(lon-asc+270);
+  // 表示だけASC基準で回転する。ASC左固定で、第1Hが左下へ進む通常の向きにする。
+  const displayLon=lon=>normDeg(asc-lon+270);
   let h=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="#08081a" stroke="#2a2a5a" stroke-width="1.5"/>
     <circle cx="${cx}" cy="${cy}" r="${rS}" fill="none" stroke="#1a1a3a" stroke-width="12"/>
     <circle cx="${cx}" cy="${cy}" r="${rI}" fill="none" stroke="#2a2a5a" stroke-width="1"/>
