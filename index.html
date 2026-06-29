@@ -271,6 +271,7 @@ const PLANETS=[
   {name:'海王星',sym:'♆',col:'#6080ff',group:'世代'},
   {name:'冥王星',sym:'♇',col:'#c080ff',group:'世代'},
 ];
+const ASTRO_BODIES=['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto'];
 
 const ASPECTS=[
   {name:'コンジャンクション',sym:'☌',angle:0,  orb:8,cls:'conj'},
@@ -338,6 +339,55 @@ function isRetrograde(lonFn,T){
   return v<0;
 }
 
+function signedDegDiff(current,target){
+  return ((normDeg(current)-normDeg(target)+540)%360)-180;
+}
+
+function makeUtcDate(y,m,d,h,mn,tz){
+  return new Date(Date.UTC(y,m-1,d,h,mn)-tz*3600000);
+}
+
+function astronomyTimeValue(date){
+  return (date.getTime()-Date.UTC(2000,0,1,12,0,0))/86400000;
+}
+
+function astronomyLongitude(body,date){
+  if(!window.Astronomy)throw new Error('Astronomy Engine is not loaded');
+  const time=astronomyTimeValue(date);
+  if(body==='Moon')return normDeg(window.Astronomy.EclipticGeoMoon(time).lon);
+  return normDeg(window.Astronomy.Ecliptic(window.Astronomy.GeoVector(body,time,true)).elon);
+}
+
+function fallbackNatalLongitudes(T){
+  return [sunLon(T),moonLon(T),mercuryLon(T),venusLon(T),marsLon(T),jupiterLon(T),saturnLon(T),uranusMean(T),neptuneMean(T),plutoMean(T)];
+}
+
+function getNatalLongitudes(T,birthDate){
+  try{
+    const lons=ASTRO_BODIES.map(body=>astronomyLongitude(body,birthDate));
+    return {lons,engine:'Astronomy Engine',engineId:'astronomy_engine',source:'vendor/astronomy-engine/astronomy.js'};
+  }catch(error){
+    console.warn('natal Astronomy Engine fallback:',error);
+    return {lons:fallbackNatalLongitudes(T),engine:'内部簡易計算',engineId:'fallback_simple',source:'index.html fallback formulas'};
+  }
+}
+
+function getNatalRetrogrades(T,birthDate,natalEngineId){
+  if(natalEngineId==='astronomy_engine'){
+    const dayMs=86400000;
+    return ASTRO_BODIES.map((body,i)=>{
+      if(i<2)return false;
+      const prev=astronomyLongitude(body,new Date(birthDate.getTime()-dayMs));
+      const next=astronomyLongitude(body,new Date(birthDate.getTime()+dayMs));
+      return signedDegDiff(next,prev)<0;
+    });
+  }
+  const retroFns=[null,null,
+    T=>mercuryLon(T),T=>venusLon(T),T=>marsLon(T),
+    T=>jupiterLon(T),T=>saturnLon(T),T=>uranusMean(T),T=>neptuneMean(T),T=>plutoMean(T)];
+  return fallbackNatalLongitudes(T).map((_,i)=>retroFns[i]?isRetrograde(retroFns[i],T):false);
+}
+
 function calcASC(jd,lat,lon){
   const T=(jd-2451545)/36525,gmst=normDeg(280.46061837+360.98564736629*(jd-2451545)+0.000387933*T*T),lst=normDeg(gmst+lon),e=rad(23.4393-0.0130042*T),latr=rad(lat);
   return normDeg(deg(Math.atan2(Math.cos(rad(lst)),-(Math.sin(rad(lst))*Math.cos(e)+Math.tan(latr)*Math.sin(e)))));
@@ -393,11 +443,18 @@ function drawChart(lons,asc){
     <circle cx="${cx}" cy="${cy}" r="${rS}" fill="none" stroke="#1a1a3a" stroke-width="12"/>
     <circle cx="${cx}" cy="${cy}" r="${rI}" fill="none" stroke="#2a2a5a" stroke-width="1"/>
     <circle cx="${cx}" cy="${cy}" r="40" fill="#0d0d25" stroke="#2a2a5a" stroke-width="1"/>`;
+
+  for(let i=0;i<12;i++){
+    const signStart=i*30,da=displayLon(signStart),x1=cx+(rS-10)*Math.cos(rad(da-90)),y1=cy+(rS-10)*Math.sin(rad(da-90)),x2=cx+r*Math.cos(rad(da-90)),y2=cy+r*Math.sin(rad(da-90));
+    h+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${sc[i]}88" stroke-width="1"/>`;
+    const m=displayLon(signStart+15);
+    h+=`<text x="${cx+rS*Math.cos(rad(m-90))}" y="${cy+rS*Math.sin(rad(m-90))}" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="${sc[i]}" font-family="serif">${SIGN_SYM[i]}</text>`;
+  }
+
   for(let i=0;i<12;i++){
     const a=normDeg(asc+i*30),da=displayLon(a),x1=cx+rI*Math.cos(rad(da-90)),y1=cy+rI*Math.sin(rad(da-90)),x2=cx+r*Math.cos(rad(da-90)),y2=cy+r*Math.sin(rad(da-90));
-    h+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#2a2a5a" stroke-width="1"/>`;
-    const m=displayLon(a+15),si=Math.floor(normDeg(asc+i*30)/30);
-    h+=`<text x="${cx+rS*Math.cos(rad(m-90))}" y="${cy+rS*Math.sin(rad(m-90))}" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="${sc[si]}" font-family="serif">${SIGN_SYM[si]}</text>`;
+    h+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#404070" stroke-width="1.1"/>`;
+    const m=displayLon(a+15);
     h+=`<text x="${cx+78*Math.cos(rad(m-90))}" y="${cy+78*Math.sin(rad(m-90))}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#404070">${i+1}</text>`;
   }
   const ascDisplay=displayLon(asc);
@@ -778,17 +835,16 @@ async function runHoroscopeCalculation(){
   };
   const pi=+document.getElementById('pref').value,pref=prefs[pi];
   const ut=h+mn/60-tz,jd=julianDay(y,m,d,ut),T=(jd-2451545)/36525;
+  const birthDateUtc=makeUtcDate(y,m,d,h,mn,tz);
 
   // 10天体黄経
-  const rawLons=[sunLon(T),moonLon(T),mercuryLon(T),venusLon(T),marsLon(T),jupiterLon(T),saturnLon(T),uranusMean(T),neptuneMean(T),plutoMean(T)];
+  const natalCalculation=getNatalLongitudes(T,birthDateUtc);
+  const rawLons=natalCalculation.lons;
   const ascLon=calcASC(jd,pref.lat,pref.lon),mcLon=calcMC(jd,pref.lon);
   const houses=getHouses(ascLon);
 
   // 逆行判定（太陽・月は常に順行）
-  const retroFns=[null,null,
-    T=>mercuryLon(T),T=>venusLon(T),T=>marsLon(T),
-    T=>jupiterLon(T),T=>saturnLon(T),T=>uranusMean(T),T=>neptuneMean(T),T=>plutoMean(T)];
-  const retros=rawLons.map((_,i)=>retroFns[i]?isRetrograde(retroFns[i],T):false);
+  const retros=getNatalRetrogrades(T,birthDateUtc,natalCalculation.engineId);
 
   // 感受点
   const nnLon=northNodeLon(T);
@@ -998,7 +1054,7 @@ async function runHoroscopeCalculation(){
   // ─── 命式テキスト生成 ───
   let txt='';
   txt+=`■ ホロスコープ命式データ（超本格版）\n${'━'.repeat(48)}\n\n`;
-  txt+=`【A. 基本情報】\n生年月日：${y}年${m}月${d}日　${h}時${String(mn).padStart(2,'0')}分\n出生地：${pref.n}（北緯${pref.lat}°　東経${pref.lon}°）\nタイムゾーン：UTC+${tz}\n\n`;
+  txt+=`【A. 基本情報】\n生年月日：${y}年${m}月${d}日　${h}時${String(mn).padStart(2,'0')}分\n出生地：${pref.n}（北緯${pref.lat}°　東経${pref.lon}°）\nタイムゾーン：UTC+${tz}\n出生図計算エンジン：${natalCalculation.engine}（${natalCalculation.source}）\n\n`;
   txt+=`【B. 基本三要素】\n太陽星座：${planetData[0].signName}　${planetData[0].deg}°${String(planetData[0].min).padStart(2,'0')}'\n月星座：${planetData[1].signName}　${planetData[1].deg}°${String(planetData[1].min).padStart(2,'0')}'\nASC（上昇点）：${ascSign.name}　${ascSign.deg}°${String(ascSign.min).padStart(2,'0')}'\nMC（天頂）：${mcSign.name}　${mcSign.deg}°${String(mcSign.min).padStart(2,'0')}'\n※等分ハウスのため、MCと第10ハウスカスプは一致しない場合があります\n\n`;
   txt+=`【C. 天体配置（10天体）】\n天体　　　サイン　　　度数　　　エレメント　クオリティ　ハウス　逆行\n${'─'.repeat(58)}\n`;
   planetData.forEach(p=>{txt+=`${p.name.padEnd(5,'　')}　${p.signName.padEnd(5,'　')}　${String(p.deg).padStart(2)}°${String(p.min).padStart(2,'0')}'　　${p.elem}　　　${p.qual}宮　　第${p.house}H　${p.retro?'逆行':''}\n`;});
@@ -1079,7 +1135,7 @@ async function runHoroscopeCalculation(){
   if(timingReading){
     txt+=`\n【Q. 時期読みライト鑑定文】\n${timingReading.text}\n`;
   }
-  txt+=`\n【O. 仕様メモ】\n黄道帯：トロピカル\nハウスシステム：等分ハウス\n集計対象：10天体（太陽〜冥王星）\nノードの種類：Mean Node（平均ノード）\nリリスの種類：Mean Lilith（平均リリス）\n支配星体系：モダン支配星\nサビアン度数換算：小数点以下があれば切り上げ（0°00'〜0°59'=第1度=1番）\nMCと第10ハウスカスプ：別概念。等分ハウスではMCと第10カスプは通常一致しない。\nエレメント分類：牡羊/獅子/射手=火、牡牛/乙女/山羊=地、双子/天秤/水瓶=風、蟹/蠍/魚=水\nクオリティ分類：牡羊/蟹/天秤/山羊=活動、牡牛/獅子/蠍/水瓶=不動、双子/乙女/射手/魚=柔軟\n`;
+  txt+=`\n【O. 仕様メモ】\n出生図10天体：${natalCalculation.engine}の地心黄経\n黄道帯：トロピカル\nハウスシステム：等分ハウス\n集計対象：10天体（太陽〜冥王星）\nノードの種類：Mean Node（平均ノード）\nリリスの種類：Mean Lilith（平均リリス）\n支配星体系：モダン支配星\nサビアン度数換算：小数点以下があれば切り上げ（0°00'〜0°59'=第1度=1番）\nMCと第10ハウスカスプ：別概念。等分ハウスではMCと第10カスプは通常一致しない。\nエレメント分類：牡羊/獅子/射手=火、牡牛/乙女/山羊=地、双子/天秤/水瓶=風、蟹/蠍/魚=水\nクオリティ分類：牡羊/蟹/天秤/山羊=活動、牡牛/獅子/蠍/水瓶=不動、双子/乙女/射手/魚=柔軟\n`;
 
   document.getElementById('meishikiBox').textContent=txt;
   document.getElementById('result').classList.add('show');
