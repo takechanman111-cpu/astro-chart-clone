@@ -387,22 +387,26 @@ function calcDispositorChain(planetData){
 function drawChart(lons,asc){
   const svg=document.getElementById('chart'),cx=200,cy=200,r=175,rS=155,rI=120,rP=100;
   const sc=['#ff4444','#cc8844','#ffee44','#44aaff','#ff8800','#44cc88','#88aaff','#cc4466','#ee8833','#887799','#44ccee','#8866cc'];
+  // 表示だけASC基準で回転する。計算上のASC/ハウス/天体度数は変更しない。
+  const displayLon=lon=>normDeg(lon-asc+270);
   let h=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="#08081a" stroke="#2a2a5a" stroke-width="1.5"/>
     <circle cx="${cx}" cy="${cy}" r="${rS}" fill="none" stroke="#1a1a3a" stroke-width="12"/>
     <circle cx="${cx}" cy="${cy}" r="${rI}" fill="none" stroke="#2a2a5a" stroke-width="1"/>
     <circle cx="${cx}" cy="${cy}" r="40" fill="#0d0d25" stroke="#2a2a5a" stroke-width="1"/>`;
   for(let i=0;i<12;i++){
-    const a=normDeg(asc+i*30),x1=cx+rI*Math.cos(rad(a-90)),y1=cy+rI*Math.sin(rad(a-90)),x2=cx+r*Math.cos(rad(a-90)),y2=cy+r*Math.sin(rad(a-90));
+    const a=normDeg(asc+i*30),da=displayLon(a),x1=cx+rI*Math.cos(rad(da-90)),y1=cy+rI*Math.sin(rad(da-90)),x2=cx+r*Math.cos(rad(da-90)),y2=cy+r*Math.sin(rad(da-90));
     h+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#2a2a5a" stroke-width="1"/>`;
-    const m=normDeg(a+15),si=Math.floor(normDeg(asc+i*30)/30);
+    const m=displayLon(a+15),si=Math.floor(normDeg(asc+i*30)/30);
     h+=`<text x="${cx+rS*Math.cos(rad(m-90))}" y="${cy+rS*Math.sin(rad(m-90))}" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="${sc[si]}" font-family="serif">${SIGN_SYM[si]}</text>`;
-    h+=`<text x="${cx+78*Math.cos(rad(a+15-90))}" y="${cy+78*Math.sin(rad(a+15-90))}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#404070">${i+1}</text>`;
+    h+=`<text x="${cx+78*Math.cos(rad(m-90))}" y="${cy+78*Math.sin(rad(m-90))}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#404070">${i+1}</text>`;
   }
-  h+=`<line x1="${cx+rI*Math.cos(rad(asc-90))}" y1="${cy+rI*Math.sin(rad(asc-90))}" x2="${cx+(r+8)*Math.cos(rad(asc-90))}" y2="${cy+(r+8)*Math.sin(rad(asc-90))}" stroke="#f0c040" stroke-width="2"/>`;
-  h+=`<text x="${cx+(r+18)*Math.cos(rad(asc-90))}" y="${cy+(r+18)*Math.sin(rad(asc-90))}" text-anchor="middle" font-size="9" fill="#f0c040">ASC</text>`;
+  const ascDisplay=displayLon(asc);
+  h+=`<line x1="${cx+rI*Math.cos(rad(ascDisplay-90))}" y1="${cy+rI*Math.sin(rad(ascDisplay-90))}" x2="${cx+(r+8)*Math.cos(rad(ascDisplay-90))}" y2="${cy+(r+8)*Math.sin(rad(ascDisplay-90))}" stroke="#f0c040" stroke-width="2"/>`;
+  h+=`<text x="${cx+(r+18)*Math.cos(rad(ascDisplay-90))}" y="${cy+(r+18)*Math.sin(rad(ascDisplay-90))}" text-anchor="middle" font-size="9" fill="#f0c040">ASC</text>`;
   lons.forEach((lon,i)=>{
-    h+=`<text x="${cx+rP*Math.cos(rad(lon-90))}" y="${cy+rP*Math.sin(rad(lon-90))}" text-anchor="middle" dominant-baseline="middle" font-size="12" fill="${PLANETS[i].col}" font-family="serif">${PLANETS[i].sym}</text>`;
-    h+=`<line x1="${cx+42*Math.cos(rad(lon-90))}" y1="${cy+42*Math.sin(rad(lon-90))}" x2="${cx+rI*Math.cos(rad(lon-90))}" y2="${cy+rI*Math.sin(rad(lon-90))}" stroke="${PLANETS[i].col}55" stroke-width=".8"/>`;
+    const dlon=displayLon(lon);
+    h+=`<text x="${cx+rP*Math.cos(rad(dlon-90))}" y="${cy+rP*Math.sin(rad(dlon-90))}" text-anchor="middle" dominant-baseline="middle" font-size="12" fill="${PLANETS[i].col}" font-family="serif">${PLANETS[i].sym}</text>`;
+    h+=`<line x1="${cx+42*Math.cos(rad(dlon-90))}" y1="${cy+42*Math.sin(rad(dlon-90))}" x2="${cx+rI*Math.cos(rad(dlon-90))}" y2="${cy+rI*Math.sin(rad(dlon-90))}" stroke="${PLANETS[i].col}55" stroke-width=".8"/>`;
   });
   h+=`<text x="${cx}" y="${cy-6}" text-anchor="middle" font-size="10" fill="#7b5ea7">HOROSCOPE</text><text x="${cx}" y="${cy+8}" text-anchor="middle" font-size="8" fill="#5050a0">✦ ✦ ✦</text>`;
   svg.innerHTML=h;
