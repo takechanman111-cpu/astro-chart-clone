@@ -35,19 +35,31 @@ if [ ! -f "$SRC_DIR/swetest.c" ] || [ ! -f "$SRC_DIR/swephexp.h" ]; then
   exit 1
 fi
 
-make -C "$SRC_DIR" -B swetest
-
-SWETEST_BIN="$SRC_DIR/swetest"
-if [ ! -x "$SWETEST_BIN" ] && [ -x "$SRC_DIR/bin/swetest" ]; then
-  SWETEST_BIN="$SRC_DIR/bin/swetest"
-fi
-if [ ! -x "$SWETEST_BIN" ]; then
-  echo "ERROR: swetest binary was not created" >&2
-  exit 1
-fi
-
 mkdir -p "$OUT_EPHE_DIR"
-cp "$SWETEST_BIN" "$OUT_DIR/swetest"
+
+if [ "$(uname)" = "Darwin" ]; then
+  make -C "$SRC_DIR" -B swetest
+  SWETEST_BIN="$SRC_DIR/swetest"
+  if [ ! -x "$SWETEST_BIN" ] && [ -x "$SRC_DIR/bin/swetest" ]; then
+    SWETEST_BIN="$SRC_DIR/bin/swetest"
+  fi
+  if [ ! -x "$SWETEST_BIN" ]; then
+    echo "ERROR: swetest binary was not created" >&2
+    exit 1
+  fi
+  cp "$SWETEST_BIN" "$OUT_DIR/swetest"
+else
+  make -C "$SRC_DIR" -B swetest.o libswe.a
+  BUILD_CC="${CC:-cc}"
+  "$BUILD_CC" -static -o "$OUT_DIR/swetest" \
+    "$SRC_DIR/swetest.o" -L"$SRC_DIR" -lswe -lm
+  if command -v file >/dev/null 2>&1 && ! file "$OUT_DIR/swetest" | grep -q "statically linked"; then
+    echo "ERROR: Netlify swetest must be statically linked" >&2
+    file "$OUT_DIR/swetest" >&2
+    exit 1
+  fi
+fi
+
 chmod 755 "$OUT_DIR/swetest"
 
 for ephe_file in sepl_18.se1 semo_18.se1; do
