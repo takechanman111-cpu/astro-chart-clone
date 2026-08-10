@@ -1,9 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { calculateTimingPayload } from '../../scripts/timing_server.mjs';
-
-const functionDir = path.dirname(fileURLToPath(import.meta.url));
 
 function firstExisting(candidates) {
   return candidates.find((candidate) => {
@@ -15,22 +12,33 @@ function firstExisting(candidates) {
   }) || null;
 }
 
+function runtimeCandidates(configuredPath, relativePaths) {
+  const roots = [...new Set([
+    process.env.LAMBDA_TASK_ROOT,
+    process.cwd()
+  ].filter(Boolean).map((root) => path.resolve(root)))];
+  const candidates = [];
+  if (configuredPath) {
+    candidates.push(configuredPath);
+    if (!path.isAbsolute(configuredPath)) {
+      candidates.push(...roots.map((root) => path.join(root, configuredPath)));
+    }
+  }
+  for (const relativePath of relativePaths) {
+    candidates.push(...roots.map((root) => path.join(root, relativePath)));
+  }
+  return candidates;
+}
+
 function configureSwissRuntime() {
-  const taskRoot = process.env.LAMBDA_TASK_ROOT || '';
-  const swetestPath = firstExisting([
+  const swetestPath = firstExisting(runtimeCandidates(
     process.env.SWETEST_PATH,
-    path.join(functionDir, '..', 'swiss', 'swetest'),
-    path.join(process.cwd(), 'netlify/swiss/swetest'),
-    taskRoot ? path.join(taskRoot, 'netlify/swiss/swetest') : '',
-    taskRoot ? path.join(taskRoot, 'swiss/swetest') : ''
-  ]);
-  const ephePath = firstExisting([
+    ['netlify/swiss/swetest', 'swiss/swetest']
+  ));
+  const ephePath = firstExisting(runtimeCandidates(
     process.env.SWISS_EPHEMERIS_PATH,
-    path.join(functionDir, '..', 'swiss', 'ephe'),
-    path.join(process.cwd(), 'netlify/swiss/ephe'),
-    taskRoot ? path.join(taskRoot, 'netlify/swiss/ephe') : '',
-    taskRoot ? path.join(taskRoot, 'swiss/ephe') : ''
-  ]);
+    ['netlify/swiss/ephe', 'swiss/ephe']
+  ));
 
   if (swetestPath) process.env.SWETEST_PATH = swetestPath;
   if (ephePath) process.env.SWISS_EPHEMERIS_PATH = ephePath;

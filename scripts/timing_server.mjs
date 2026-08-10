@@ -1,11 +1,9 @@
 import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
 import { calculateEstablishedTiming, calculateSwissNatalChart } from './established_timing_calculator.mjs';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const appDir = path.resolve(__dirname, '..');
+const appDir = path.resolve(process.cwd());
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -201,6 +199,7 @@ export function startTimingServer(options = {}) {
   return server;
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+const invokedScript = process.argv[1] ? path.resolve(process.argv[1]) : '';
+if (invokedScript === path.join(appDir, 'scripts', 'timing_server.mjs')) {
   startTimingServer();
 }

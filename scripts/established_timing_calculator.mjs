@@ -1,12 +1,8 @@
 import fs from 'node:fs';
-import { createRequire } from 'node:module';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const appDir = path.resolve(__dirname, '..');
-const require = createRequire(import.meta.url);
+const appDir = path.resolve(process.cwd());
 
 export const SIGNS = [
   { en3: 'Ari', ja: '牡羊座', base: 0 },
