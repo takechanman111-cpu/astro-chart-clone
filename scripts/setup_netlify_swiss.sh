@@ -24,6 +24,7 @@ else
         echo "!/ephe/*"
         echo "/ephe/sepl_18.se1"
         echo "/ephe/semo_18.se1"
+        echo "/ephe/seas_18.se1"
       } > .git/info/sparse-checkout
       git checkout
     )
@@ -62,7 +63,7 @@ fi
 
 chmod 755 "$OUT_DIR/swetest"
 
-for ephe_file in sepl_18.se1 semo_18.se1; do
+for ephe_file in sepl_18.se1 semo_18.se1 seas_18.se1; do
   if [ ! -f "$SRC_DIR/ephe/$ephe_file" ]; then
     echo "ERROR: required ephemeris file missing: $SRC_DIR/ephe/$ephe_file" >&2
     exit 1
