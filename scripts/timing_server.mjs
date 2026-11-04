@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { calculateEstablishedTiming, calculateSwissNatalChart } from './established_timing_calculator.mjs';
+import { calculateUnknownBirthTime } from './unknown_birth_time.mjs';
 
 const appDir = path.resolve(process.cwd());
 
@@ -10,6 +11,7 @@ const MIME_TYPES = {
   '.js': 'text/javascript; charset=utf-8',
   '.mjs': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
+  '.svg': 'image/svg+xml',
   '.json': 'application/json; charset=utf-8',
   '.md': 'text/markdown; charset=utf-8',
   '.txt': 'text/plain; charset=utf-8'
@@ -32,14 +34,16 @@ function intInRange(value, min, max, label) {
 export function sanitizeTimingPayload(payload) {
   if (!payload || typeof payload !== 'object') throw new Error('payload must be an object');
   const rawInput = payload.input || {};
+  if (rawInput.birthTimeUnknown != null && typeof rawInput.birthTimeUnknown !== 'boolean') throw new Error('出生時間不明の指定が不正です。');
+  const unknown = rawInput.birthTimeUnknown === true;
   const rawTargetDate = payload.targetDate || payload.target_date || {};
   const input = {
     year: intInRange(rawInput.year, 1800, 2200, 'input.year'),
     month: intInRange(rawInput.month, 1, 12, 'input.month'),
     day: intInRange(rawInput.day, 1, 31, 'input.day'),
-    hour: intInRange(rawInput.hour, 0, 23, 'input.hour'),
-    minute: intInRange(rawInput.minute ?? 0, 0, 59, 'input.minute'),
-    second: intInRange(rawInput.second ?? 0, 0, 59, 'input.second'),
+    hour: unknown ? null : intInRange(rawInput.hour, 0, 23, 'input.hour'),
+    minute: unknown ? null : intInRange(rawInput.minute ?? 0, 0, 59, 'input.minute'),
+    second: unknown ? null : intInRange(rawInput.second ?? 0, 0, 59, 'input.second'),
     timezoneOffset: numberInRange(rawInput.timezoneOffset, -14, 14, 'input.timezoneOffset'),
     latitude: numberInRange(rawInput.latitude, -90, 90, 'input.latitude'),
     longitude: numberInRange(rawInput.longitude, -180, 180, 'input.longitude')
@@ -49,11 +53,22 @@ export function sanitizeTimingPayload(payload) {
     month: intInRange(rawTargetDate.month, 1, 12, 'targetDate.month'),
     day: intInRange(rawTargetDate.day, 1, 31, 'targetDate.day')
   };
+  for (const date of [input,targetDate]) {
+    if(new Date(Date.UTC(date.year,date.month-1,date.day)).getUTCMonth()!==date.month-1) throw new Error('存在する日付を入力してください。');
+  }
+  if(unknown) {
+    const prefecture = intInRange(rawInput.prefectureIndex,0,47,'出生地');
+    if(prefecture>=46 || input.timezoneOffset!==9) throw new Error('この出生地・時差の時間不明計算は、地域の時差確認が必要なためまだ対応していません。出生地は変更せず、そのままお知らせください。');
+    input.birthTimeUnknown=true;
+    input.prefectureIndex=prefecture;
+    input.timeZone='Asia/Tokyo';
+  }
   return { input, targetDate, engineMode: 'swetest' };
 }
 
 export function calculateTimingPayload(payload, options = {}) {
   const sanitized = sanitizeTimingPayload(payload);
+  if(sanitized.input.birthTimeUnknown) return calculateUnknownBirthTime(sanitized.input);
   const natalChart = calculateSwissNatalChart(sanitized.input);
   const ascLongitude = natalChart.angles.ascendant.longitude;
   const timing = calculateEstablishedTiming(

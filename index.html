@@ -40,6 +40,7 @@ svg.horoscope{width:100%;max-width:360px;}
 .dt th{color:var(--muted);font-weight:normal;padding:4px 5px;border-bottom:1px solid #2a2a5a;text-align:left;font-size:.72rem;white-space:nowrap;}
 .dt td{padding:5px 5px;border-bottom:1px solid #1a1a3a;white-space:nowrap;}
 .dt tr:last-child td{border-bottom:none;}
+@media(max-width:650px){.panel:has(.dt){overflow-x:auto;}}
 /* 色 */
 .ef{color:#ff7744}.ee{color:#aabb55}.ea{color:#66ccff}.ew{color:#8899ff}
 .qc{color:#ffaa44}.qf{color:#cc88ff}.qm{color:#55ddaa}
@@ -52,6 +53,42 @@ svg.horoscope{width:100%;max-width:360px;}
 .si-label{font-size:.67rem;color:var(--muted);margin-bottom:3px;}
 .si-val{font-size:1.15rem;}
 .si-name{font-size:.7rem;color:var(--accent2);}
+.guide-intro{font-size:.84rem;line-height:1.8;color:var(--text);margin-bottom:14px;}
+.guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start;}
+@media(max-width:650px){.guide-grid{grid-template-columns:1fr;}}
+.guide-card{background:#0a0a20;border:1px solid var(--border);border-radius:12px;padding:15px;line-height:1.7;}
+.guide-head{display:flex;align-items:center;gap:11px;margin-bottom:9px;}
+.guide-icon{width:54px;height:54px;flex:none;}
+.guide-head h3{font-size:.93rem;color:var(--gold);}
+.guide-result{font-size:.84rem;color:var(--accent2);}
+.guide-card dl{display:grid;grid-template-columns:5.5em 1fr;gap:7px 10px;font-size:.88rem;}
+.guide-card dt{color:var(--gold);}
+.guide-card dd{margin:0;}
+.guide-card .guide-summary{font-size:.82rem;line-height:1.8;margin:7px 0 10px;color:var(--text);}
+.guide-card details{border-top:1px solid var(--border);padding-top:10px;}
+.guide-card summary{color:var(--accent2);font-size:.82rem;font-weight:700;cursor:pointer;list-style-position:inside;}
+.guide-card details[open] summary{margin-bottom:12px;}
+.guide-card .guide-detail-intro{font-size:.88rem;line-height:1.9;margin:0 0 12px;color:var(--text);}
+.guide-card .guide-detail-note{font-size:.82rem;line-height:1.8;margin-top:11px;color:var(--muted);}
+.explain-intro{font-size:.8rem;line-height:1.8;color:var(--text);margin:0 0 12px;}
+.explain-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:14px;}
+.explain-item{background:#0a0a20;border:1px solid var(--border);border-radius:9px;padding:15px;font-size:.88rem;line-height:1.9;}
+.explain-item summary{cursor:pointer;color:var(--accent2);font-size:.88rem;font-weight:700;}
+.explain-item p{margin:11px 0 0;}
+.explain-item b{color:var(--gold);font-weight:600;}
+.explain-item summary{display:flex;align-items:center;gap:10px;list-style:none;}
+.explain-item summary::-webkit-details-marker{display:none;}
+.explain-item summary::after{content:'＋';margin-left:auto;font-size:1.1rem;color:var(--gold);}
+.explain-item[open] summary::after{content:'−';}
+.explain-icons{display:flex;flex:none;align-items:center;}
+.explain-icons img{width:56px;height:56px;object-fit:contain;}
+.explain-icons img+img{margin-left:-10px;}
+.detail-visuals{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:12px;margin:16px 0;}
+.detail-visuals figure{margin:0;overflow:hidden;border-radius:12px;background:#fff8ed;}
+.detail-visuals img{display:block;width:100%;height:auto;}
+.detail-visuals figcaption{padding:10px 14px;color:#423222;font-size:.85rem;line-height:1.6;}
+.explain-lead{color:var(--text);font-size:.81rem;line-height:1.8;margin:8px 0 0;}
+@media(max-width:650px){.explain-grid{grid-template-columns:1fr;}}
 /* バランス */
 .bal-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 @media(max-width:500px){.bal-grid{grid-template-columns:1fr;}}
@@ -83,6 +120,19 @@ svg.horoscope{width:100%;max-width:360px;}
 .source-notice{border-top:1px solid var(--border);color:var(--muted);font-size:.72rem;line-height:1.8;margin:10px 0 0;padding:16px 4px 6px;text-align:center;}
 .source-notice a{color:var(--accent2);text-decoration:none;}
 .source-notice a:hover{text-decoration:underline;}
+.unknown-toggle{display:flex!important;align-items:center;gap:8px;margin-top:10px;cursor:pointer;letter-spacing:0!important;}
+.unknown-toggle input{width:18px;height:18px;flex:none;}
+.unknown-table{overflow-x:auto;}
+.unknown-table table{min-width:620px;}
+.unknown-status{display:inline-block;font-size:.75rem;margin:4px 0;color:#b7d6c5;}
+.unknown-status.conditional{color:#eed198;}.unknown-status.unresolved{color:#e0b5bc;}
+.unknown-text{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.8rem;line-height:1.8;}
+#unknownResult p{line-height:1.8;margin:10px 0;}#unknownResult svg{max-width:100%;width:400px;}
+#unknownResult .chart-wrap{flex-direction:column;align-items:center;min-width:0;}
+#unknownResult .chart-wrap svg{flex:none;display:block;aspect-ratio:1;}
+#unknownResult .panel-title{letter-spacing:0;font-size:1rem;}
+#unknownResult .dt{font-size:.85rem;}
+#unknownResult .chart-wrap p{align-self:stretch;}
 </style>
 </head>
 <body>
@@ -100,6 +150,7 @@ svg.horoscope{width:100%;max-width:360px;}
       </div>
       <div class="field-group"><label>出生時刻</label>
         <div class="inline-selects"><select id="hr"></select><select id="mn"></select></div>
+        <label class="unknown-toggle"><input type="checkbox" id="birthTimeUnknown">生まれた時間がわからない</label>
       </div>
       <div class="field-group"><label>出生地（都道府県）</label><select id="pref"></select></div>
       <div class="field-group"><label>タイムゾーン</label>
@@ -116,59 +167,88 @@ svg.horoscope{width:100%;max-width:360px;}
     <button class="btn" id="calculateBtn" type="button">🔮 ホロスコープを計算する</button>
   </div>
 
+  <div id="calculationStatus" role="status" aria-live="polite"></div>
+  <div id="unknownResult" hidden></div>
   <div class="result-area" id="result">
+    <section class="panel" aria-labelledby="guideTitle">
+      <div class="panel-title" id="guideTitle">出生図の4つの入口</div>
+      <p class="guide-intro">太陽・月・ASC・MCから、資質、才能、強み、弱みを読みます。表示された星座とハウス、ASCの支配星を使って説明します。現在やこれからの運勢は、下の「時期読み」で年・月のテーマと天体の動きを重ねて見てください。</p>
+      <div class="guide-grid" id="beginnerGuide"></div>
+    </section>
     <div class="chart-grid">
-      <div class="chart-wrap"><svg class="horoscope" id="chart" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"></svg></div>
+      <div class="chart-wrap"><svg class="horoscope" id="chart" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"></svg><p class="explain-intro">外側の帯は12星座、内側の数字はハウスです。左のASCは出生時の上昇点で、星座の帯はその位置に合わせて回転します。</p></div>
       <div class="panel">
         <div class="panel-title">☿ 基本情報</div>
         <div class="sign-info" id="signInfo"></div>
       </div>
     </div>
     <div class="panel">
-      <div class="panel-title">☽ 天体配置（10天体）</div>
+      <div class="panel-title">あなたの天体×星座から読む、性格・才能・好み</div>
+      <p class="explain-intro">あなたの天体がどの星座にあるかで、目標の選び方、安心する条件、恋愛の好みなどを読み分けます。各詳細であなたの配置を説明し、ハウスは生活のどこに表れるかの補足にします。</p>
       <table class="dt"><thead><tr><th>天体</th><th>サイン</th><th>度数</th><th>エレメント</th><th>クオリティ</th><th>ハウス</th><th>逆行</th></tr></thead>
       <tbody id="planetList"></tbody></table>
+      <div class="explain-grid" id="planetExplanations"></div>
     </div>
     <div class="panel">
-      <div class="panel-title">⊕ 感受点（ノード・キロン・リリス）</div>
-      <table class="dt"><thead><tr><th>感受点</th><th>サイン</th><th>度数</th><th>エレメント</th><th>クオリティ</th><th>ハウス</th><th>逆行</th></tr></thead>
+      <div class="panel-title">12ハウスは、生活のどこを表す？</div>
+      <p class="explain-intro">ハウスは、仕事、家庭、友人関係など生活の分野です。まず各ハウスの意味を読み、その後で自分の天体がどこに入っているか見てください。</p>
+      <div class="explain-grid" id="houseMeaningExplanations"></div>
+    </div>
+    <details class="panel">
+      <summary class="panel-title">天体そのものの意味を知りたい方へ</summary>
+      <p class="explain-intro">まずは10天体それぞれの意味です。太陽は目標、月は安心できる過ごし方、水星は考え方や伝え方を見る、と役割が違います。</p>
+      <div class="explain-grid" id="planetMeaningExplanations"></div>
+    </details>
+    <div class="panel">
+      <div class="panel-title">⊕ 補助天体・感受点（ノード・キロン・リリス）</div>
+      <p class="explain-intro">ノードとリリスは月の動きから求める位置、キロンは実在する小天体です。それぞれ何を読むための項目か、表の下で具体的に説明します。</p>
+      <table class="dt"><thead><tr><th>項目</th><th>サイン</th><th>度数</th><th>エレメント</th><th>クオリティ</th><th>ハウス</th><th>逆行</th></tr></thead>
       <tbody id="extraList"></tbody></table>
+      <div class="explain-grid" id="extraExplanations"></div>
     </div>
     <div class="panel">
       <div class="panel-title">△ アスペクト一覧 <span class="panel-sub">メジャー5種／☌☍△□8°　＊6°</span></div>
+      <p class="explain-intro">アスペクトは天体同士の角度です。二つのテーマがどう関わるかを読みます。角度だけで「良い・悪い」は決まりません。</p>
       <table class="dt"><thead><tr><th>天体1</th><th>アスペクト</th><th>天体2</th><th>オーブ</th></tr></thead>
       <tbody id="aspectList"></tbody></table>
+      <div class="explain-grid" id="aspectExplanations"></div>
     </div>
     <div class="panel">
       <div class="panel-title">◎ バランス分析</div>
       <div class="bal-grid" id="balanceArea"></div>
+      <div class="explain-grid" id="balanceExplanations"></div>
     </div>
     <div class="panel">
       <div class="panel-title">★ サビアンシンボル</div>
       <table class="dt"><thead><tr><th>天体</th><th>サイン</th><th>度数</th><th>Sab#</th><th>サビアン文</th></tr></thead>
       <tbody id="sabianList"></tbody></table>
+      <div class="explain-grid" id="sabianExplanations"></div>
     </div>
     <div class="panel">
       <div class="panel-title">♄ 支配星・チャートルーラー</div>
       <div id="rulerArea"></div>
+      <div class="explain-grid" id="rulerExplanations"></div>
+      <div class="explain-grid" id="houseRulerExplanations"></div>
     </div>
     <div class="panel">
       <div class="panel-title">🔗 ディスポジター・チェーン</div>
       <table class="dt"><thead><tr><th>天体</th><th>→ 支配星</th><th>→ 次</th><th>→ 次</th><th>最終</th></tr></thead>
       <tbody id="dispositorList"></tbody></table>
       <div id="dispositorNote" style="font-size:.75rem;color:var(--muted);margin-top:8px;"></div>
+      <div class="explain-grid" id="dispositorExplanations"></div>
     </div>
     <div class="panel">
       <div class="panel-title">📊 構造分析</div>
       <div id="structureArea"></div>
+      <div class="explain-grid" id="structureExplanations"></div>
     </div>
     <div class="panel">
-      <div class="panel-title">⏳ 時期読み（無料計算サイト互換クローン） <span class="panel-sub">出生図 + 4手法</span></div>
-      <div id="timingArea" class="timing-note">Swiss Ephemeris swetest APIで、出生図・ASC・MC・ハウス・感受点・時期読みを一括計算します。</div>
-    </div>
-    <div class="panel">
-      <div class="panel-title">📝 時期読みライト鑑定文 <span class="panel-sub">人生全体・過去現在未来・直近1年・未来12か月</span></div>
-      <div id="readingArea" class="reading-box">時期読みデータを計算すると、ここに鑑定文が表示されます。</div>
+      <div class="panel-title">⏳ 運勢の流れ</div>
+      <div id="readingArea" class="reading-box"></div>
+      <div class="explain-grid" id="timingExplanations"></div>
+      <details style="margin-top:20px"><summary>過去10年・未来10年を年ごとに読む</summary><div class="explain-grid" id="timingPeriodExplanations"></div></details>
+      <details style="margin-top:20px"><summary>計算データを確認する</summary><div id="timingArea" class="timing-note"></div></details>
+      <div id="readingExplanations" hidden></div>
     </div>
     <div class="panel">
       <div class="panel-title">
@@ -187,6 +267,10 @@ svg.horoscope{width:100%;max-width:360px;}
   </div>
 </div>
 
+<script src="personal-planet-readings.js"></script>
+<script src="unknown-birth-time-ui.js"></script>
+<script src="solar-return-readings.js"></script>
+<script src="personal-timing-readings.js"></script>
 <script>
 // ─── 星背景 ───
 const starsEl=document.getElementById('stars');
@@ -354,18 +438,19 @@ function drawChart(lons,asc,houses){
   const displayLon=lon=>normDeg(asc-lon+270);
   let h=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="#08081a" stroke="#2a2a5a" stroke-width="1.5"/>
     <circle cx="${cx}" cy="${cy}" r="${rS}" fill="none" stroke="#1a1a3a" stroke-width="12"/>
+    <circle cx="${cx}" cy="${cy}" r="140" fill="none" stroke="#555580" stroke-width="1"/>
     <circle cx="${cx}" cy="${cy}" r="${rI}" fill="none" stroke="#2a2a5a" stroke-width="1"/>
     <circle cx="${cx}" cy="${cy}" r="40" fill="#0d0d25" stroke="#2a2a5a" stroke-width="1"/>`;
 
   for(let i=0;i<12;i++){
-    const signStart=i*30,da=displayLon(signStart),x1=cx+(rS-10)*Math.cos(rad(da-90)),y1=cy+(rS-10)*Math.sin(rad(da-90)),x2=cx+r*Math.cos(rad(da-90)),y2=cy+r*Math.sin(rad(da-90));
+    const signStart=i*30,da=displayLon(signStart),x1=cx+140*Math.cos(rad(da-90)),y1=cy+140*Math.sin(rad(da-90)),x2=cx+r*Math.cos(rad(da-90)),y2=cy+r*Math.sin(rad(da-90));
     h+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${sc[i]}88" stroke-width="1"/>`;
     const m=displayLon(signStart+15);
     h+=`<text x="${cx+rS*Math.cos(rad(m-90))}" y="${cy+rS*Math.sin(rad(m-90))}" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="${sc[i]}" font-family="serif">${SIGN_SYM[i]}</text>`;
   }
 
   for(let i=0;i<12;i++){
-    const a=normDeg((houses&&houses[i]!=null)?houses[i]:asc+i*30),da=displayLon(a),x1=cx+rI*Math.cos(rad(da-90)),y1=cy+rI*Math.sin(rad(da-90)),x2=cx+r*Math.cos(rad(da-90)),y2=cy+r*Math.sin(rad(da-90));
+    const a=normDeg((houses&&houses[i]!=null)?houses[i]:asc+i*30),da=displayLon(a),x1=cx+42*Math.cos(rad(da-90)),y1=cy+42*Math.sin(rad(da-90)),x2=cx+140*Math.cos(rad(da-90)),y2=cy+140*Math.sin(rad(da-90));
     h+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#404070" stroke-width="1.1"/>`;
     const m=displayLon(a+15);
     h+=`<text x="${cx+78*Math.cos(rad(m-90))}" y="${cy+78*Math.sin(rad(m-90))}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#404070">${i+1}</text>`;
@@ -514,6 +599,131 @@ function houseTheme(house){
   return HOUSE_READING[house]||`第${house}Hのテーマ`;
 }
 
+const BODY_EXPLANATION={
+  '太陽':'自分の意志や、時間をかけて育てる目標',
+  '月':'感情の反応や、安心できる過ごし方',
+  '水星':'考え方、学び方、言葉で伝える方法',
+  '金星':'好きなもの、人との心地よい距離感、楽しみ方',
+  '火星':'行動を起こす力、意思表示、挑戦の仕方',
+  '木星':'可能性を広げること、学び、信頼の育て方',
+  '土星':'責任を引き受け、時間をかけて形にする課題',
+  '天王星':'既存の形を変え、自由を求める視点',
+  '海王星':'理想や想像力、共感の働き方',
+  '冥王星':'深く向き合い、根本から変わるテーマ'
+};
+const BODY_IMAGE={太陽:'sun',月:'moon',水星:'mercury',金星:'venus',火星:'mars',木星:'jupiter',土星:'saturn',天王星:'uranus',海王星:'neptune',冥王星:'pluto',ASC:'asc',MC:'mc',ノースノード:'north-node',サウスノード:'south-node',キロン:'chiron',リリス:'lilith'};
+const BODY_EVERYDAY={
+  太陽:'自分で選んだ目標に向かうとき、何に「これを続けたい」と感じるか',
+  月:'疲れて帰った夜、誰と・どこで・どう過ごすと落ち着くか',
+  水星:'新しいことを覚えるとき、聞く・読む・話す・試すのどれが入りやすいか',
+  金星:'時間やお金を使ってでも大切にしたい楽しみや関係は何か',
+  火星:'断る、始める、挑戦するとき、どのように一歩目を出すか',
+  木星:'面白いと感じたことを学び、誰と分かち合うと視野が広がるか',
+  土星:'すぐにはできないことを、どんな手順で少しずつ形にしてきたか',
+  天王星:'従来のやり方が合わないとき、どんな別の方法を試したくなるか',
+  海王星:'理想や想像に心が動くとき、現実との境目をどう確かめるか',
+  冥王星:'簡単には手放せないことに向き合い、何を根本から変えたいか'
+};
+const SIGN_PLAIN={
+  牡羊座:'まず動いてみる、始めながら道を見つける',牡牛座:'感覚で確かめ、時間をかけて育てる',双子座:'言葉を交わし、複数の見方を試す',蟹座:'安心できるつながりを守り育てる',
+  獅子座:'自分の思いを表に出し、創る喜びを味わう',乙女座:'細部を見て、実際に役立つ形へ整える',天秤座:'相手との違いを見ながら、釣り合いを探す',蠍座:'表面だけで終わらせず、深く関わる',
+  射手座:'知らない世界に目を向け、意味を探す',山羊座:'目標を決め、責任を持って積み重ねる',水瓶座:'当たり前を問い直し、仲間と新しい形を考える',魚座:'人の気持ちや雰囲気を受け取り、想像を広げる'
+};
+const SIGN_TALENT={
+  牡羊座:{strength:'迷った場面で先に一歩を踏み出し、周囲に始めるきっかけを作る',risk:'結果を急ぎ、相手の準備を待たずに進めてしまう',work:'試作や新企画の立ち上げで力を出しやすい'},
+  牡牛座:{strength:'価値を見極め、時間をかけて安定した形に育てる',risk:'変化が必要な場面でも慣れた方法に留まりやすい',work:'品質を保ち、ものや関係を長く育てる場面で力を出しやすい'},
+  双子座:{strength:'情報を集め、言葉にして人や考えをつなぐ',risk:'選択肢を増やし過ぎて一つを深めにくい',work:'取材、説明、発信、学び直しで力を出しやすい'},
+  蟹座:{strength:'人の変化に気づき、安心できる場を作る',risk:'守りたい気持ちが強くなり、外からの提案を受け取りにくい',work:'育成や相談、居場所づくりで力を出しやすい'},
+  獅子座:{strength:'自分の思いを堂々と表し、人を勇気づける',risk:'評価が得られないと自信を失いやすい',work:'創作、発表、人前での表現で力を出しやすい'},
+  乙女座:{strength:'細かな違いを見つけ、使える形に整える',risk:'欠点を探し過ぎて着手が遅れる',work:'分析、編集、改善、実務の整理で力を出しやすい'},
+  天秤座:{strength:'双方の立場を聞き、納得できる接点を作る',risk:'対立を避けて自分の希望を後回しにする',work:'交渉、調整、デザイン、人をつなぐ場面で力を出しやすい'},
+  蠍座:{strength:'表面の言葉だけで終わらず、深い信頼を築く',risk:'警戒が強まり、相手に任せにくくなる',work:'調査、相談、長期的な共同作業で力を出しやすい'},
+  射手座:{strength:'遠くの可能性を見つけ、学んだ意味を伝える',risk:'興味が先へ向かい、細部の詰めが甘くなる',work:'教育、探究、旅や異分野をつなぐ場面で力を出しやすい'},
+  山羊座:{strength:'目標を段階に分け、責任を持って実現する',risk:'成果を急ぐあまり休みや助けを求めにくい',work:'計画、運営、長期の成果づくりで力を出しやすい'},
+  水瓶座:{strength:'当たり前を問い直し、違う人の視点を組み合わせる',risk:'理屈が先に立ち、身近な気持ちを置き去りにする',work:'改善案、共同企画、新しい仕組みづくりで力を出しやすい'},
+  魚座:{strength:'人の気持ちや場の空気を受け取り、想像を広げる',risk:'境界が曖昧になり、人の問題まで抱え込む',work:'表現、支援、イメージを形にする場面で力を出しやすい'}
+};
+const SIGN_GIFT={
+  牡羊座:'誰も動けずにいるとき、「一度やってみよう」と最初の一歩を出せます。完成前でも試作品を見せるので、周りも意見を出しやすくなり、止まっていた話を動かせます',
+  牡牛座:'一度身につけた技術を、繰り返すたびに上手くしていけます。たとえば料理の味や道具の使い心地の小さな差に気づき、「いつ頼んでも安心」と思ってもらえる品質を保てます',
+  双子座:'相手の話から「それ、どういうこと？」と面白い点を拾い、質問を重ねて話を引き出せます。難しい説明も、聞く人が知っている言葉や例に置き換えられるので、「やっと分かった」と言ってもらいやすいでしょう',
+  蟹座:'いつもより口数が少ない、無理に笑っている、といった小さな変化に気づけます。いきなり助言せず、相手が話せるまで待ったり、安心できる場所を用意したりして、「この人には話せる」と思ってもらえるでしょう',
+  獅子座:'自分が面白いと思うことを、声や表情、作品に乗せて人に伝えられます。たとえば発表で自分の体験を生き生きと話すと、聞く人も「自分もやってみたい」と気持ちが動きます',
+  乙女座:'人が困っている原因を細かく見つけ、実際に使える解決策にできます。分かりにくい手順を並べ直したり、抜けている説明を足したりして、次の人が迷わず進めるようにできます',
+  天秤座:'意見が割れたとき、両方の話を聞いて「ここは同じですね」と共通点を見つけられます。どちらかを押し切るのではなく、双方が納得できる条件を提案し、話を前へ進められます',
+  蠍座:'表面の説明で終わらず、「なぜそうなったのか」を粘り強く調べられます。すぐに答えが出ない相談や調査でも、話の食い違いや見落としをたどり、問題の核心に近づけます',
+  射手座:'離れた分野の知識を結びつけ、「これにも使える」と可能性を見つけられます。学んだことを細かい知識のまま伝えず、何が面白く、なぜ役立つのかを話して、人の好奇心に火をつけられます',
+  山羊座:'大きな目標を「今週はここまで」と具体的な手順に分けられます。時間や人数の制約も考えて順番を決め、途中で問題が起きても計画を立て直して、最後まで形にできます',
+  水瓶座:'皆が慣れて見過ごしている不便に気づき、「そもそも、この作業は必要？」と考えられます。違う担当の意見を聞いて仕組みを作り直すなど、一人の頑張りに頼らず、皆が楽になる方法を提案できます',
+  魚座:'うまく言葉にできない気持ちを、たとえ話や絵、音楽などで表せます。相手が話しながら迷っているときも、すぐに結論を求めずに聞けるので、本人も気づいていなかった思いを話しやすくなります'
+};
+Object.entries(SIGN_GIFT).forEach(([sign,gift])=>{SIGN_TALENT[sign].work=gift;});
+const SIGN_ADVICE={
+  牡羊座:'急いで答えを出したくなったら、相手がどこまで準備できているか一度聞いてみましょう。',
+  牡牛座:'いつもの方法で進まないときは、全部を変えずに一つだけ新しいやり方を試してみましょう。',
+  双子座:'選択肢が増えすぎたら、いちばん気になる一つを決めて、少し深く調べてみましょう。',
+  蟹座:'大切な人を守りたいときほど、その人が何を望んでいるか先に聞いてみましょう。',
+  獅子座:'反応が気になったら、評価を待つ前に、自分が何を表現したかったか思い出してみましょう。',
+  乙女座:'細かいところが気になって始められないなら、まず一度やってみて、あとから直しましょう。',
+  天秤座:'みんなの意見を聞いたあと、自分はどうしたいかも一言伝えてみましょう。',
+  蠍座:'相手を疑いたくなったら、推測で決めず、気になったことをそのまま聞いてみましょう。',
+  射手座:'次へ進みたくなったら、今の約束や細かい手順を一度確認しましょう。',
+  山羊座:'責任を抱え込みすぎたら、今週やらなくてよいことを一つ外し、頼めることは頼みましょう。',
+  水瓶座:'新しい案を出す前に、一緒にいる人が今どう感じているか聞いてみましょう。',
+  魚座:'人の相談を聞いたあと、自分ができることと相手が決めることを分けて考えましょう。'
+};
+window.ASTRO_SIGN_ADVICE=SIGN_ADVICE;
+const SIGN_BEHAVIOR={牡羊座:'考え続けるより、まず一度やって確かめたくなります。',牡牛座:'すぐに決めず、自分で確かめて納得してから進みます。',双子座:'人に聞いたり調べたりして、いくつかの選択肢を比べます。',蟹座:'身近な人が安心できるか、自分にとって落ち着けるかを大切にします。',獅子座:'自分が面白いと思ったことを、人に見せたり伝えたりしたくなります。',乙女座:'小さな違いや不便に気づき、もっと使いやすく直そうとします。',天秤座:'自分だけで決めず、相手の希望も聞いて折り合いを探します。',蠍座:'広く浅くより、一つのことや一人の相手にじっくり関わります。',射手座:'まだ知らないことを学び、今より広い世界を見たくなります。',山羊座:'目標までに必要な手順を考え、一つずつ進めます。',水瓶座:'「前からこうだから」で決めず、もっとよい方法がないか考えます。自分と違う意見にも興味を持ちます。',魚座:'言葉だけでなく、相手の表情や場の雰囲気からも気持ちを感じ取ります。'};
+function planetSignReading(name,sign){
+  return name==='月'?SIGN_COMFORT[sign]:window.PERSONAL_PLANET_READINGS[name][sign];
+}
+const SIGN_COMFORT={牡羊座:'自分で決めてすぐ動けると、気分がすっきりします。待つことが続くと、いら立ちがたまりやすいでしょう。',牡牛座:'慣れた場所で、おいしい食事や心地よい手触りを楽しむと落ち着きます。急な予定変更は負担になりがちです。',双子座:'気の合う人と話したり、面白い情報に触れたりすると気が晴れます。一つのことを黙って抱え込むと疲れやすいでしょう。',蟹座:'気を許せる人と、安心できる場所で過ごすとほっとします。身近な人との不仲が心に響きやすいでしょう。',獅子座:'好きなことを自由に表現し、喜んでもらえると元気が戻ります。反応がないと、自分まで否定されたように感じることがあります。',乙女座:'身の回りや予定を整え、次にすることが分かると安心します。細かいことまで気にし続けると休めなくなります。',天秤座:'気持ちのよいやり取りや、整った空間で落ち着きます。場の空気を悪くしないよう気を使いすぎると疲れます。',蠍座:'本音を話せる相手と、深く信頼し合えると安心します。相手の気持ちが見えないと、考え込みやすいでしょう。',射手座:'新しいことを学び、外へ出て視野が広がると元気になります。行動を細かく制限されると息苦しくなります。',山羊座:'やるべきことを終え、少しでも前に進んだと分かると落ち着きます。休んでいる間も仕事が気になることがあります。',水瓶座:'自分のペースで考え、違う意見も話せる相手と過ごすと落ち着きます。気持ちや行動を決めつけられると、距離を取りたくなります。',魚座:'音楽や物語に浸ったり、一人で静かに過ごしたりすると気持ちがほどけます。周りの感情を受け取りすぎると疲れやすいでしょう。'};
+const ASC_STYLE={牡羊座:'初対面でも自分から声をかけ、まず試そうとするため、率直で行動が早い人に見られやすいでしょう。',牡牛座:'初めての場所では様子を確かめ、自分のペースで動きます。落ち着いていて、急がず丁寧な人という印象を与えやすいでしょう。',双子座:'質問したり会話を始めたりして、その場をつかもうとします。話しやすく、好奇心のある人に見られやすいでしょう。',蟹座:'相手の表情や場の雰囲気を確かめてから近づきます。親しみやすさと、慎重さの両方が伝わりやすいでしょう。',獅子座:'自分の考えや存在を自然に表へ出します。明るく堂々としていて、目を引く人に見られやすいでしょう。',乙女座:'周りをよく見て、必要なことを丁寧に進めます。きちんとしていて、細かなところに気づく人という印象です。',天秤座:'相手に合わせて言葉や距離を選びます。感じがよく、話を聞いてくれる人に見られやすいでしょう。',蠍座:'すぐに全部を話さず、相手をよく見てから関わります。静かでも存在感があり、本心が気になる人という印象です。',射手座:'知らない場所にも興味を持ち、気軽に話しかけます。おおらかで、自由に動く人に見られやすいでしょう。',山羊座:'何を求められているかを確かめ、責任を持って動こうとします。まじめで頼れそうな人という印象を与えやすいでしょう。',水瓶座:'周りと違う考えでも、自分なりの見方を大切にします。個性的で、ほどよい距離を保つ人に見られやすいでしょう。',魚座:'その場の空気を感じ取り、柔らかく相手に合わせます。優しく、話しかけやすい人という印象を与えやすいでしょう。'};
+const HOUSE_PLAIN={
+  1:'自分の見せ方や新しい挑戦',2:'お金・持ち物・自分で育てる力',3:'日々の会話・学び・身近な移動',4:'家・家族・安心できる居場所',5:'遊び・創作・恋愛・自分を表す時間',6:'日々の仕事・体調・続ける習慣',
+  7:'一対一の関係・協力・約束',8:'深い信頼・共有するもの・大きな変化',9:'専門的な学び・旅・人生観',10:'仕事・社会での役割・目標',11:'友人・仲間・コミュニティ・未来の計画',12:'一人の時間・休息・心の整理'
+};
+const HOUSE_SCENE={
+  1:'新しい集まりに参加するとき',2:'買い物や貯蓄、自分の得意なことを選ぶとき',3:'身近な人と話したり、新しい知識を覚えるとき',4:'家での過ごし方や家族との距離を考えるとき',5:'好きな作品を作ったり、遊びや恋愛を楽しむとき',6:'日々の仕事の段取りや体調に合わせた習慣を整えるとき',
+  7:'一対一で相手と約束や役割を決めるとき',8:'人と大切なものを共有したり、深い話をするとき',9:'専門分野を学び直したり、旅で見方が変わるとき',10:'仕事や社会で自分の役割を引き受けるとき',11:'友人や仲間と未来の計画を話すとき',12:'一人で休み、気持ちを整理するとき'
+};
+const EXTRA_EXPLANATION={
+  'ノースノード':'これから伸ばす力',
+  'サウスノード':'すでに使い慣れた力',
+  'キロン':'気になりやすい経験と、そこから育つ理解',
+  'リリス':'表に出しにくい本音や関係の距離感'
+};
+const ASPECT_EXPLANATION={
+  '☌':'二つのテーマが同じ場所で強く重なります。片方だけを切り離さず、一緒に現れる場面を探します。',
+  '☍':'二つのテーマが向かい合います。どちらかを消すより、両方を行き来しながら釣り合いを探します。',
+  '△':'二つの力が自然に協力しやすい角度です。無理なくできていることに気づけます。',
+  '□':'二つの力がぶつかりやすい角度です。どちらかを押し込めると疲れやすく、使い分ける工夫が必要になります。',
+  '＊':'二つの力を意識してつなぐと、できることが増える角度です。'
+};
+const ASPECT_PAIR_READING={
+  '太陽|木星':{gift:'大きな可能性を見つけても、目標へ向かう力を失わないこと',tension:'引き受けることを増やし過ぎて、本当に続けたい目標が後回しになること'},
+  '太陽|土星':{gift:'やりたいことを計画に落とし、時間をかけて実績に変えること',tension:'責任を優先し過ぎて、自分の望みを後回しにすること'},
+  '太陽|天王星':{gift:'自分の目標に独自の発想を持ち込み、古いやり方を変えること',tension:'自由を急ぐあまり、続けてきた目標まで捨てたくなること'},
+  '太陽|海王星':{gift:'理想を持って目標を描き、人の気持ちにも目を向けられること',tension:'期待が膨らみ、今できることと理想の差に疲れること'},
+  '月|木星':{gift:'人を受け入れ、安心できる関係を広げること',tension:'気持ちが大きくなり、無理な約束まで引き受けること'},
+  '金星|火星':{gift:'好きなことを楽しむだけで終わらせず、行動に移すこと',tension:'相手との距離を急いで縮め、気持ちの速さが合わなくなること'},
+  '木星|天王星':{gift:'新しい考えを学びに取り込み、可能性を広げること',tension:'次々と新しいことへ移り、一つを育てる時間が足りなくなること'},
+  '木星|海王星':{gift:'理想を人と分かち合い、学びや支援へ広げること',tension:'期待だけが先に進み、必要な条件の確認を忘れること'},
+  '土星|海王星':{gift:'曖昧な理想を、続けられる計画や仕事の形にすること',tension:'現実の制約を重く感じ、理想を試す前に諦めること'},
+  '土星|冥王星':{gift:'難しい問題にも腰を据え、仕組みを根本から立て直すこと',tension:'一人で責任を抱え、やり方を変えられなくなること'},
+  '天王星|海王星':{gift:'新しい発想と想像力を結び、従来にない形を考えること',tension:'構想が広がり過ぎて、最初の一歩が決まらないこと'},
+  '海王星|冥王星':{gift:'見えにくい問題や気持ちの変化を深く捉えること',tension:'大きな変化を望むあまり、目の前の関係や生活を見失うこと'}
+};
+function detailIllustrations(title,images=['structure']){
+  const meanings={sun:'太陽では、自分で選びたい目標や、時間をかけて伸ばす力を見ます。',moon:'月では、ほっとできる過ごし方や、気持ちが疲れやすい状況を見ます。',mercury:'水星では、物事の覚え方、考えをまとめる方法、人への伝え方を見ます。',venus:'金星では、好きになるもの、楽しみ方、人と心地よく付き合う方法を見ます。',mars:'火星では、やる気が出るきっかけ、挑戦の仕方、自分の意見の伝え方を見ます。',jupiter:'木星では、学びを深めたり、人との出会いから可能性を広げたりする力を見ます。',saturn:'土星では、苦手でも練習を重ねて身につけることや、責任の引き受け方を見ます。',uranus:'天王星では、古いやり方を変えたい気持ちや、自分らしい方法を見つける力を見ます。',neptune:'海王星では、想像をふくらませる力、理想、人の気持ちへの共感を見ます。',pluto:'冥王星では、簡単には諦められないことや、根本からやり直す力を見ます。',asc:'ASCでは、初対面で伝わりやすい印象と、初めての場面で取りやすい行動を見ます。',mc:'MCでは、仕事や社会活動でどんな役割を担い、何を目指したいかを見ます。','north-node':'ノースノードでは、まだ慣れていなくても、経験を増やすことで伸ばせる力を見ます。','south-node':'サウスノードでは、自然にできることと、つい頼りすぎるいつものやり方を見ます。',chiron:'キロンでは、気になって身構えやすい場面と、その経験から人を理解する力を見ます。',lilith:'リリスでは、言いにくくても大切にしたい本音や、人との距離の取り方を見ます。',elements:'火は行動、地は実行、風は会話、水は気持ち。どの進め方を使いやすいか比べます。',modalities:'活動は始める、不動は続ける、柔軟は変える。物事の進め方の違いを見ます。',sabian:'サビアンシンボルは、星座の一度ごとに付いた短い物語です。配置の意味を想像するための補足です。',structure:'構造分析では、天体がどの星座や生活分野に集まっているかを見ます。',transit:'トランジットでは、今の天体と出生図を比べ、現在向き合いやすい話題を見ます。',progression:'プログレスでは、年齢とともに目標や気持ちがどう変わっていくかを見ます。','solar-return':'ソーラーリターンでは、誕生日ごとの天体配置から、その一年に大切にしたい目標や過ごし方を見ます。',profection:'プロフェクションでは、年齢と月の経過から、その期間に注目する生活分野を見ます。'};
+  return `<div class="detail-visuals">${[...new Set(images)].map(name=>`<figure><img src="assets/detail-illustrations/${name}.png" alt="${title}の意味を、いつものキャラクターと日本語で説明した画像" loading="lazy"><figcaption>${meanings[name]||title}</figcaption></figure>`).join('')}</div>`;
+}
+window.detailIllustrations=detailIllustrations;
+function explanationCard(title,paragraphs,images=['structure']){
+  const icons=images.map(name=>`<img src="assets/${name.startsWith('house-')?'structure':name}-generated.png" alt="" aria-hidden="true" loading="lazy">`).join('');
+  return `<details class="explain-item"><summary><span class="explain-icons">${icons}</span><span>${title}を詳しく読む</span></summary>${images.length?detailIllustrations(title,images):''}${paragraphs.map(p=>`<p>${p}</p>`).join('')}</details>`;
+}
+
 function rulerTheme(ruler){
   return RULER_READING[ruler]||`${ruler}のテーマを動かす`;
 }
@@ -544,17 +754,13 @@ function strongestAspectHits(rows,limit=4){
 function yearReadingLine(row){
   if(!row)return '取得なし';
   const p=row.profection;
-  const top=(row.notable_transits||[])[0];
-  const aspect=top?`${top.transit_body_ja||top.transit_body}${top.symbol||''}${top.natal_body_ja||top.natal_body}`:'主要Tは控えめ';
-  return `${row.period}（${p.age}歳）：第${p.activated_house}H ${p.activated_sign}／年主星 ${p.lord_of_year}。テーマは「${houseTheme(p.activated_house)}」。P月は${shortPlanetPosition(row.progressed_moon)}。注目：${aspect}。`;
+  return `${p.age}歳の年（${row.active_from}〜${row.active_to}）は、${HOUSE_PLAIN[p.activated_house]}が主なテーマです。${p.activated_sign}の「${SIGN_PLAIN[p.activated_sign]}」姿勢で取り組むと、${p.lord_of_year}が示す${BODY_EXPLANATION[p.lord_of_year]||'課題'}にも向き合いやすくなります。`;
 }
 
 function monthReadingLine(row){
   if(!row)return '取得なし';
   const p=row.monthly_profection;
-  const top=(row.notable_transits||[])[0];
-  const aspect=top?`${top.transit_body_ja||top.transit_body}${top.symbol||''}${top.natal_body_ja||top.natal_body}`:'主要Tは控えめ';
-  return `${row.active_from}開始：第${p.activated_house}H ${p.activated_sign}／月主星 ${p.lord_of_month}。テーマは「${houseTheme(p.activated_house)}」。P月は${shortPlanetPosition(row.progressed_moon)}。注目：${aspect}。`;
+  return `${row.active_from}〜${row.active_to}：${HOUSE_PLAIN[p.activated_house]}に目を向ける月。${HOUSE_SCENE[p.activated_house]}、${p.activated_sign}の「${SIGN_PLAIN[p.activated_sign]}」やり方を試してみてください。`;
 }
 
 function phaseSummary(title,rows,kind){
@@ -562,15 +768,11 @@ function phaseSummary(title,rows,kind){
   const first=rows[0],last=rows[rows.length-1];
   const startTheme=houseTheme(first.profection.activated_house);
   const endTheme=houseTheme(last.profection.activated_house);
-  const strong=strongestAspectHits(rows,3);
   const paragraphs=[];
   if(kind==='past'){
-    paragraphs.push(`${first.active_from}から${last.active_to}までの過去10年は、${startTheme}から${endTheme}へテーマが移ってきた流れです。`);
+    paragraphs.push(`${first.active_from}〜${last.active_to}の年ごとのテーマを振り返れます。最初の年は${HOUSE_PLAIN[first.profection.activated_house]}、最後の年は${HOUSE_PLAIN[last.profection.activated_house]}に焦点が当たります。各年の詳しい内容は下の年別欄で確認できます。`);
   }else{
-    paragraphs.push(`${first.active_from}から${last.active_to}までの未来10年は、${startTheme}から${endTheme}へ焦点が移ります。`);
-  }
-  if(strong.length){
-    paragraphs.push(`節目候補：${strong.map(({row,hit})=>`${row.active_from}開始 ${hit.transit_body_ja||hit.transit_body}${hit.symbol||''}${hit.natal_body_ja||hit.natal_body}`).join('、')}。`);
+    paragraphs.push(`${first.active_from}〜${last.active_to}の年ごとのテーマを見られます。最初の年は${HOUSE_PLAIN[first.profection.activated_house]}、最後の年は${HOUSE_PLAIN[last.profection.activated_house]}が焦点です。気になる年の詳しい内容は下の年別欄を見てください。`);
   }
   return {title,paragraphs};
 }
@@ -599,8 +801,8 @@ function generateTimingReading(natal,data){
   sections.push({
     title:'人生全体の流れ',
     paragraphs:[
-      `出生図の軸は、太陽${natal.sun.signName}第${natal.sun.house}H、月${natal.moon.signName}第${natal.moon.house}H、ASC${natal.asc.name}です。中心テーマは「${houseTheme(natal.sun.house)}」と「${houseTheme(natal.moon.house)}」。`,
-      `現在のP太陽は${shortPlanetPosition(pSun)}、P月は${shortPlanetPosition(pMoon)}。意識は${signTheme(pSun?.sign_ja)}へ、心は${signTheme(pMoon?.sign_ja)}へ向かっています。`
+      `太陽が${natal.sun.signName}のあなたは、${SIGN_TALENT[natal.sun.signName]?.strength||SIGN_PLAIN[natal.sun.signName]}ことに力を使いやすいでしょう。その力を発揮しやすいのは、${HOUSE_PLAIN[natal.sun.house]}に関わる場面です。月が${natal.moon.signName}のため、疲れたときは「${SIGN_PLAIN[natal.moon.signName]}」ことが心を整えるヒントになります。`,
+      `長い目で見た関心の変化は、進行した太陽の${pSun?.sign_ja||'現在の星座'}から読みます。${signTheme(pSun?.sign_ja)}への関心が以前より強まっていないか、これまでの選択と照らしてみてください。進行した月の${pMoon?.sign_ja||'現在の星座'}は、最近の気持ちの変化を考える材料です。`
     ]
   });
 
@@ -610,9 +812,7 @@ function generateTimingReading(natal,data){
       title:'現在の年のテーマ',
       paragraphs:[
         yearReadingLine(current),
-        currentAspects.length
-          ? `強めの動き：${currentAspects.slice(0,3).map(transitAspectLine).join('／')}。`
-          : `主要Tは控えめ。年主星とP月を中心に読む年です。`
+        `この一年の選択では、${HOUSE_SCENE[current.profection.activated_house]}、何を大切にしたいかを考えてみてください。`
       ]
     });
   }
@@ -621,8 +821,8 @@ function generateTimingReading(natal,data){
   sections.push({
     title:'直近1年の流れ',
     paragraphs:[
-      `SR太陽は${shortPlanetPosition(srSun)}、SR月は${shortPlanetPosition(srMoon)}。今年は${signTheme(srSun?.sign_ja)}と${signTheme(srMoon?.sign_ja)}が強まります。`,
-      `年テーマは第${data.annual_profection.activated_house}H ${data.annual_profection.activated_sign}、年主星${data.annual_profection.lord_of_year}。読む中心は「${houseTheme(data.annual_profection.activated_house)}」です。`
+      `誕生日からの約一年は、${HOUSE_PLAIN[data.annual_profection.activated_house]}に力を向ける時期です。${data.annual_profection.activated_sign}の「${SIGN_PLAIN[data.annual_profection.activated_sign]}」姿勢が、取り組み方のヒントになります。`,
+      `その年に大切にしたい目標は太陽、気持ちを整える方法は月の配置から読みます。具体的な月ごとのテーマは、下の一覧で確かめられます。`
     ]
   });
 
@@ -654,6 +854,10 @@ async function fetchServerTiming(input,targetDate){
     throw new Error(`Swiss Ephemeris swetest API計算に失敗しました（HTTP ${res.status}）${detail}`);
   }
   const data=await res.json();
+  if(input.birthTimeUnknown){
+    if(data.schema!=='unknown-birth-time/v1'||data.engine_id!=='swetest_cli')throw new Error('時間不明用の計算結果を取得できませんでした。');
+    return data;
+  }
   if(!data || data.schema!=='established-astrology-timing/v1')throw new Error('timing API schema mismatch');
   if(!data.natal_chart || data.natal_chart.schema!=='swiss-natal-chart/v1')throw new Error('Swiss出生図データがAPIから返っていません。');
   if(data.engine_id!=='swetest_cli' || data.natal_chart.engine_id!=='swetest_cli')throw new Error('計算エンジンがSwiss Ephemeris swetestに統一されていません。');
@@ -756,6 +960,12 @@ async function runHoroscopeCalculation(){
     latitude:pref.lat,
     longitude:pref.lon
   };
+  if(document.getElementById('birthTimeUnknown').checked){
+    Object.assign(apiInput,{birthTimeUnknown:true,hour:null,minute:null,second:null,prefectureIndex:pi});
+    const data=await fetchServerTiming(apiInput,targetDate);
+    window.UnknownBirthTime.render(data);
+    return;
+  }
   const timingCloneData=await renderTimingClone(apiInput,targetDate);
   const natalChart=timingCloneData.natal_chart;
   if(!natalChart || natalChart.engine_id!=='swetest_cli')throw new Error('Swiss Ephemeris swetest出生図データを取得できませんでした。');
@@ -809,6 +1019,50 @@ async function runHoroscopeCalculation(){
   // ─── UI描画 ───
 
   // 基本情報
+  const ascRulerGuide=MODERN_RULER[ascSign.signIdx];
+  const ascRulerPlace=planetData.find(p=>p.name===ascRulerGuide);
+  const ascTrait=SIGN_TALENT[ascSign.name];
+  const guideItems=[
+    {key:'sun',title:'太陽｜自分が進みたい方向',result:planetData[0],summary:'「これを大切にして生きたい」と、自分の意思で選ぶ方向を考える手がかりです。',intro:'太陽は、毎日の気分よりも、時間をかけて育てていく自分の軸を表します。今すぐ実感できなくてもかまいません。選択や目標を振り返るときに見てください。',role:'意志・目標・成長していく方向。',meaning:`${planetData[0].signName}の「${signTheme(planetData[0].signName)}」という特徴が、目標の立て方や自分を表す方法に重なります。`,life:`第${planetData[0].house}ハウスは「${houseTheme(planetData[0].house)}」の領域です。その場面で、自分から選びたいことや伸ばしたい力を考えてみましょう。`,care:'太陽だけで「本当の自分」を決めつける必要はありません。月が示す心地よさも一緒に見ます。',use:'最近、自分で選んで続けたいと思ったことを一つ書き、その理由を考えてみましょう。'},
+    {key:'moon',title:'月｜心が安心する条件',result:planetData[1],summary:'疲れたとき、どんな過ごし方や関係の中で気持ちが落ち着くかを見る手がかりです。',intro:'月は、がんばって作る目標よりも、自然に出る感情や安心の取り方を表します。心の反応を良し悪しで評価せず、普段の自分を観察するために使います。',role:'感情・安心感・いつもの心の反応。',meaning:`${planetData[1].signName}の「${signTheme(planetData[1].signName)}」という特徴が、心地よさを感じる条件を考えるヒントになります。`,life:`第${planetData[1].house}ハウスは「${houseTheme(planetData[1].house)}」の領域です。その場面で、何にほっとし、何に疲れるかを振り返ってみましょう。`,care:'その日の体調や状況でも気持ちは変わります。月の配置だけで苦手なことや性格を固定しません。',use:'気持ちが落ち着いた場面を一つ思い出し、場所・相手・行動のどれが助けになったかメモしましょう。'},
+    {key:'asc',title:'ASC｜第一印象と、初めての場面での振る舞い',sign:ascSign,summary:`${ascSign.name}ASC。${ascTrait.strength}ことが、外の世界に向かうときの強みです。`,intro:`ASCは生まれた瞬間に東の地平線にあった星座です。第一印象に加え、未知の状況にどう入っていくかを読みます。今回の${ascSign.name}ASCは「${SIGN_PLAIN[ascSign.name]}」入口です。`,role:'新しい状況への向き合い方と、周囲に伝わりやすい第一印象。',meaning:`${ascSign.name}の強みは、${ascTrait.strength}こと。${ascTrait.work}。`,life:`たとえば新しい企画を任されたとき、${SIGN_PLAIN[ascSign.name]}動き方から力を発揮しやすい配置です。${ascRulerPlace?`さらにASCの支配星${ascRulerGuide}は${ascRulerPlace.signName}・第${ascRulerPlace.house}ハウス。「${SIGN_PLAIN[ascRulerPlace.signName]}」方法で、「${HOUSE_PLAIN[ascRulerPlace.house]}」の場面へ向かいやすい、と読み合わせます。`:''}`,strength:ascTrait.work,weakness:ascTrait.risk,fortune:'ASCだけで運の良し悪しは決まりません。下の時期読みで、現在の年・月のテーマとトランジットを重ねて確認します。',care:'出生時刻が違えばASCやハウスも変わります。時刻が不明なら出生時刻不明モードを使います。',use:`最近の新しい取り組みで「${ascTrait.strength}」が役立った場面と「${ascTrait.risk}」が出た場面を比べてください。`},
+    {key:'mc',title:'MC｜社会で目指す方向',sign:mcSign,summary:'仕事や活動を通じて、長い目でどんな役割を担いたいか考える手がかりです。',intro:'MC（エムシー）は、出生図の中で社会との関わり方を考えるための点です。職業名を一つ当てるものではなく、年月をかけて育てる方向として読みます。',role:'社会で担う役割・長期的な目標。',meaning:`${mcSign.name}の「${signTheme(mcSign.name)}」という特徴が、公の場で目指したい方向を考えるヒントになります。`,life:'仕事のほか、地域での活動、発信、誰かを支える役割にも重ねて読めます。自分が人に届けたいものを考えてみてください。',care:'成功や適職を一つに決める配置ではありません。出生時刻が変わるとMCも変わるため、時刻が不明なら確定的に読めません。',use:'今後、人に届けたいことを一つ決め、それに向けて今週できる小さな行動を考えてみましょう。'}
+  ];
+  const currentYearGuide=timingFlowRows(timingCloneData).find(row=>row.phase==='current');
+  const currentMonthGuide=monthlyFlowRows(timingCloneData)[0];
+  const yearFocus=currentYearGuide?.profection;
+  const monthFocus=currentMonthGuide?.monthly_profection;
+  const fortuneGuide=yearFocus?`今年（${currentYearGuide.active_from}〜${currentYearGuide.active_to}）は${HOUSE_PLAIN[yearFocus.activated_house]}に力を向ける年。${monthFocus?`今月（${currentMonthGuide.active_from}〜${currentMonthGuide.active_to}）は${HOUSE_PLAIN[monthFocus.activated_house]}が話題になりやすい期間です。`:''}年主星は${yearFocus.lord_of_year}。時期読みでは、現在の天体との角度も合わせて見ます。`:'時期読みの年・月のテーマと天体の動きを合わせて確認します。';
+  guideItems.forEach(item=>{item.fortune='';item.care=item.key==='asc'||item.key==='mc'?'出生時刻が分からない場合、この星座とハウスは確定できません。':'';});
+  const ascGuide=guideItems.find(item=>item.key==='asc');
+  ascGuide.intro=`${ascSign.name}のASCは、初めての場面で${SIGN_PLAIN[ascSign.name]}姿勢が出やすい配置です。`;
+  ascGuide.life=`${HOUSE_SCENE[1]}、${ascTrait.strength}力が出ます。${ascRulerPlace?`支配星の${ascRulerGuide}は${ascRulerPlace.signName}・第${ascRulerPlace.house}ハウスにあり、その一歩が${HOUSE_PLAIN[ascRulerPlace.house]}へつながります。`:''}`;
+  ascGuide.summary=ASC_STYLE[ascSign.name];
+  ascGuide.intro='ASCは、初対面で人に伝わりやすい印象や、新しい場所で最初に取りやすい行動を見る項目です。';
+  ascGuide.life=ASC_STYLE[ascSign.name];
+  ascGuide.use=SIGN_ADVICE[ascSign.name];
+  guideItems.filter(item=>item.key!=='asc').forEach(item=>{
+    const sign=item.result?item.result.signName:item.sign.name;
+    const trait=SIGN_TALENT[sign];
+    const place=item.result?`第${item.result.house}ハウス「${HOUSE_PLAIN[item.result.house]}」`:'仕事や社会で担う役割';
+    item.intro=item.key==='sun'?`太陽は、自分で選ぶ目標や、続けたいことを見る項目です。${sign}の太陽には、${trait.strength}という持ち味があります。`:item.key==='moon'?`月は、疲れたときにどんな過ごし方で落ち着くかを見る項目です。${sign}の月には、${trait.strength}という持ち味があります。`:`MCは、仕事や社会活動で目指す方向を見ます。${sign}のMCには、${trait.strength}という持ち味があります。`;
+    item.summary=`${trait.strength}力を、${place}で発揮しやすい配置です。`;
+    item.meaning=`${trait.strength}ことが得意な方向です。`;
+    item.life=item.result?`たとえば、${HOUSE_SCENE[item.result.house]}に、この持ち味が表れます。`:`${trait.work}。仕事以外の活動にも生かせます。`;
+    item.strength=trait.work;
+    item.weakness=trait.risk;
+    item.use=SIGN_ADVICE[sign];
+  });
+  const moonGuide=guideItems.find(item=>item.key==='moon');
+  moonGuide.summary=SIGN_COMFORT[planetData[1].signName];
+  moonGuide.intro='月は、気を張らずにいられる過ごし方と、心が疲れやすい状況を見ます。';
+  moonGuide.life=SIGN_COMFORT[planetData[1].signName];
+  moonGuide.strength=SIGN_GIFT[planetData[1].signName];
+  document.getElementById('beginnerGuide').innerHTML=guideItems.map(item=>{
+    const sign=item.result?item.result.signName:item.sign.name;
+    const house=item.result?`・第${item.result.house}ハウス`:'';
+    return `<article class="guide-card"><div class="guide-head"><img class="guide-icon" src="assets/${item.key}-generated.png" alt="" aria-hidden="true"><div><h3>${item.title}</h3><p class="guide-result">${sign}${house}</p></div></div><p class="guide-summary">${item.summary}</p><details><summary>資質・才能・強み・弱みを詳しく読む</summary>${detailIllustrations(item.title,[item.key])}<p class="guide-detail-intro">${item.intro}</p><dl><dt>表すもの</dt><dd>${item.role}</dd><dt>生活ではどう出る？</dt><dd>${item.life}</dd>${item.strength?`<dt>才能・強み</dt><dd>${item.strength}</dd>`:''}${item.weakness?`<dt>弱み・気をつけたい点</dt><dd>${item.weakness}</dd>`:''}<dt>活かし方</dt><dd>${item.use}</dd>${item.care?`<dt>出生時刻について</dt><dd>${item.care}</dd>`:''}</dl></details></article>`;
+  }).join('')+`<p class="guide-intro">${fortuneGuide}</p>`;
   document.getElementById('signInfo').innerHTML=`
     <div class="si-item"><div class="si-label">☉ 太陽</div><div class="si-val">${planetData[0].signSym}</div><div class="si-name">${planetData[0].signName}</div></div>
     <div class="si-item"><div class="si-label">☽ 月</div><div class="si-val">${planetData[1].signSym}</div><div class="si-name">${planetData[1].signName}</div></div>
@@ -950,6 +1204,152 @@ async function runHoroscopeCalculation(){
   if(topHouse.length>0)stHtml+=`<div style="margin-top:4px;font-size:.78rem;color:var(--accent2)">ハウス集中（3天体以上）：${topHouse.map(([s,v])=>`第${s}ハウス（${v}天体）`).join('、')}</div>`;
   document.getElementById('structureArea').innerHTML=stHtml;
 
+  const planetBasics={"太陽": ["太陽は、自分で選ぶ目標や「こう生きたい」という意志を表します。人に求められたからではなく、自分が納得して続けたいことを読む天体です。", "たとえば進路や仕事を選ぶとき、条件だけでなく「これに挑戦したい」と感じることがあります。そこで何を目指し、どんな自分になろうとするかに太陽の特徴が表れます。", "自分の目標を決め、選んだことを続ける力です。周りの評価に揺れたときも、自分が大切にしたかったことに戻れると、行動に一貫性が生まれます。", "目標や成果に自分の価値を重ねすぎると、うまくいかないときに自分まで否定しがちです。太陽の星座で目標への向かい方、ハウスで力を注ぎやすい生活分野を読みます。"], "月": ["月は、気を張っていないときに自然に出る感情や、安心するために必要なことを表します。頑張り方よりも、無理なく過ごせる条件を知るための天体です。", "疲れた夜に誰かと話したいのか、一人になりたいのか。予定が変わったときに不安になるのか、気分が軽くなるのか。そんな普段の反応に表れます。", "自分の疲れや心地よさに気づき、休み方や人との距離を調整する力です。自分を落ち着かせる方法が分かると、周りの人にも無理をさせにくくなります。", "不安なときには、慣れた反応を繰り返しやすくなります。月の星座で安心しやすい過ごし方、ハウスで気持ちが動きやすい生活分野を読みます。"], "水星": ["水星は、情報を受け取り、考え、言葉にして伝える働きを表します。勉強の得意不得意を一言で決めるものではなく、自分に合う覚え方や説明の仕方を見る天体です。", "説明書を先に読む人もいれば、人に聞く人、試しながら覚える人もいます。相手に説明するときも、結論から話すか、具体例を並べるかなどに違いが出ます。", "必要な情報を選び、話を整理して、相手に分かる形で渡す力です。質問で相手の考えを引き出したり、複雑な話を順序立てたりすることにも関わります。", "考えすぎて決められない、早口で相手を置いていくなど、伝え方の癖も出ます。星座で考え方や話し方、ハウスでよく考えたり伝えたりする分野を読みます。"], "金星": ["金星は、「好き」「心地よい」「大切にしたい」と感じる好みを表します。恋愛だけでなく、趣味、美意識、お金や時間をかけて楽しみたいことにも関わります。", "服や部屋を選ぶときの好み、休日の楽しみ、誰とどんな時間を過ごしたいかに表れます。人と仲良くなるとき、何を喜びとして分かち合うかも金星の話です。", "自分の好きなものを見つけ、日常を楽しめるようにする力です。相手の好みを知って贈り物を選ぶ、心地よい空間を整えるなど、人を喜ばせることにもつながります。", "好かれたい気持ちから相手に合わせすぎたり、楽しみにお金を使いすぎたりすることもあります。星座で好みと付き合い方、ハウスで楽しみを見つけやすい分野を読みます。"], "火星": ["火星は、欲しいものに向かって動く力や、自分の意見をはっきり示す力を表します。やる気、挑戦、競争、怒りの表し方を読む天体です。", "新しい仕事に手を挙げる、断りたい頼みを断る、負けて悔しくなり練習する。自分から状況を動かそうとするときに表れます。", "考えを行動に変え、必要な場面で踏ん張る力です。「嫌です」「私はこうしたい」と言えることも、自分を守る大事な強みです。", "急ぎすぎたり、反対意見を攻撃と受け取ったりすると、衝突や消耗につながります。星座で動き出し方や主張の仕方、ハウスで力を注ぎやすい分野を読みます。"], "木星": ["木星は、経験や知識、人とのつながりを広げる働きを表します。「自分にもできるかもしれない」と可能性を信じ、次の挑戦に向かう力を見る天体です。", "人に教わって新しい分野を学ぶ、旅で考え方が変わる、誰かの応援で挑戦を始める。今までの自分の範囲を少し越えるときに表れます。", "目の前の失敗だけで諦めず、別の可能性を探す力です。学んだことや機会を人にも分けることで、協力してくれる相手が増えることもあります。", "見通しを楽観しすぎると、予定や出費を広げすぎます。星座で可能性を広げる方法、ハウスで学びや出会いが広がりやすい分野を読みます。"], "土星": ["土星は、責任や制約に向き合い、練習を重ねてできるようになることを表します。最初から得意なことより、時間をかけて自信を育てる課題を見る天体です。", "締め切りを守るために予定を組む、失敗した手順を見直す、苦手な技術を少しずつ練習する。すぐに結果が出なくても続ける場面に表れます。", "約束を守り、途中で投げずに形にする力です。できない理由を確かめ、無理のない手順を作れると、人から任せてもらえる信頼につながります。", "失敗を怖がりすぎると、準備だけで動けなくなったり、一人で責任を抱えたりします。星座で慎重になりやすいこと、ハウスで経験を積む課題を読みます。"], "天王星": ["天王星は、「今までのやり方が自分には合わない」と気づき、別の方法を試す働きを表します。自由とは、何でも投げ出すことではなく、自分で選べる余地を作ることです。", "毎回手作業をしている仕事で「これ、自動化できないかな」と考える。皆が同じ進路を選ぶ中で、自分には別の道が合うと気づく。そんな疑問や工夫に表れます。", "当たり前になっている不便を見つけ、違う選択肢を提案する力です。仕組みを変えて皆の手間を減らしたり、周囲と違う考えを新しい企画にしたりできます。", "変えることを急ぐと、今の方法を必要としている人の事情を見落とします。天王星は一つの星座に長く滞在するため、星座の特徴は同年代にも共通します。個人の生活のどこに表れるかはハウス、他の天体との関係はアスペクトを合わせて読みます。"], "海王星": ["海王星は、まだ形になっていないものを想像する力や、人の気持ちに共感する働きを表します。音楽や物語に心が動くこと、こんな世界にしたいと願うことにも関わります。", "映画を見て登場人物の気持ちに浸る、言葉にならない雰囲気を絵にする、困っている人を見ると放っておけない。現実の出来事から想像や気持ちが広がる場面に表れます。", "説明だけでは届かない思いを、作品やイメージで伝える力です。相手の気持ちを想像し、すぐに結論を求めず寄り添うことにもつながります。", "理想や期待が大きくなると、相手の実際の言動や約束の条件を見落とすことがあります。星座は同年代で共有しやすい理想、ハウスは想像や共感が向かいやすい分野として読みます。"], "冥王星": ["冥王星は、簡単には諦められない思いや、今までの状態を根本から変えようとする働きを表します。表面だけを整えても納得できないとき、何を深く見直すかを読む天体です。", "何度直しても起きる問題に対して、手順の一部ではなく仕組み全体を調べ直す。大切にしてきた役割が変わり、生き方を組み直す。そうした深い取り組みに重ねて読みます。", "すぐに答えが出ない問題を掘り下げ、やり直す力です。見たくない事情にも向き合い、もう役に立たないやり方を手放すことで、新しく立て直す道を探せます。", "思いが強いほど、相手や結果を思いどおりにしようとしがちです。星座は長い期間に生まれた人に共通するため、個人の特徴はハウスや太陽・月とのアスペクトも合わせて読みます。"]};
+  document.getElementById('planetMeaningExplanations').innerHTML=planetData.map(p=>explanationCard(`${p.name}とは？`,planetBasics[p.name].map((text,i)=>`<b>${['何を表す？','生活ではどう出る？','どんな強みになる？','つまずきと、自分の配置の読み方'][i]}</b>${text}`),[BODY_IMAGE[p.name]])).join('');
+  const houseDescriptions=[
+    '初対面での振る舞いや、新しいことへの取りかかり方。人に伝わる印象や、自分をどう見せるかを見る場所です。',
+    '自分で得るお金、持ち物、身につけた技能。何に価値を感じ、どう収入や安心につなげるかを見ます。',
+    '普段の会話、読み書き、身近な学び。兄弟姉妹や近所の人とのやり取り、日常の移動も含みます。',
+    '家、家族、育った環境、自分の居場所。外で頑張ったあと、どこで安心して過ごしたいかを見ます。',
+    '遊び、趣味、創作、恋愛。役に立つかよりも、自分が楽しくて夢中になることや、自分を表現する喜びを見ます。',
+    '毎日の仕事、役割、体調管理、生活習慣。無理なく暮らすための段取りや、日々の手入れに関わる場所です。',
+    '恋人、配偶者、仕事の相棒など、一対一の関係。相手と何を約束し、どう協力するかを見ます。',
+    '深い信頼、共有する財産、受け継ぐもの。自分だけでは決められないことを、人とどう分かち合うかを見ます。',
+    '専門的な勉強、遠い土地への旅、人生観。普段の生活から一歩外へ出て、考え方を広げる場所です。',
+    '仕事、社会での役割、長期的な目標。何を成し遂げたいか、どんな働きで人に認められたいかを見ます。',
+    '友人、仲間、コミュニティ、将来の計画。共通の関心や目的を持つ人と、何をしていきたいかを見ます。',
+    '一人で過ごす時間、休息、心の整理。人前で頑張るのをいったん休み、まだ言葉にならない気持ちを見つめる場所です。'
+  ];
+  document.getElementById('houseMeaningExplanations').innerHTML=houseDescriptions.map((description,i)=>{
+    const sign=lonToSign(houses[i]),ruler=MODERN_RULER[sign.signIdx],rulerPlanet=planetData.find(p=>p.name===ruler);
+    const occupants=planetData.filter(p=>p.house===i+1);
+    return explanationCard(`第${i+1}ハウス｜${HOUSE_PLAIN[i+1]}`,[
+    `<b>このハウスが表すこと：</b>${description}`,
+    `<b>あなたの入口の星座は${sign.name}：</b>ハウスの始まりを「カスプ」と呼びます。この分野への向き合い方を、そこにある星座から読みます。${SIGN_BEHAVIOR[sign.name]}`,
+    `<b>この分野で生かせること：</b>${HOUSE_SCENE[i+1]}は、${SIGN_TALENT[sign.name].strength}ことが強みになります。${SIGN_ADVICE[sign.name]}`,
+    `<b>${sign.name}の支配星・${ruler}を見ると：</b>${rulerPlanet?`${ruler}は${rulerPlanet.signName}・第${rulerPlanet.house}ハウスです。この分野の話は、${HOUSE_PLAIN[rulerPlanet.house]}にも結びつきやすいと読みます。`:'支配星の位置を確認できませんでした。'}`,
+    `<b>入っている天体：</b>${occupants.length?occupants.map(p=>`${p.name}（${BODY_EXPLANATION[p.name]}）`).join('、')+'。これらのテーマも、このハウスの分野に重なります。':'10天体は入っていません。この欄では、上のカスプの星座と支配星を中心に読みます。'}`
+  ],['house-'+(i+1)]);
+  }).join('');
+  document.getElementById('planetExplanations').innerHTML=planetData.map(p=>explanationCard(`${p.name}が${p.signName}にある意味`,[
+    `<b>${p.name==='月'?'安心できること・疲れやすいこと':p.name==='金星'?'好み・恋愛・人との付き合い方':p.name==='水星'?'考え方・学び方・伝え方':p.name==='火星'?'やる気・行動・主張の仕方':p.name==='太陽'?'目指すこと・持ち味・つまずき':p.name==='木星'?'成長のきっかけ・可能性の広げ方':p.name==='土星'?'苦手に感じること・経験から育つ力':'この配置が表す傾向'}</b>${planetSignReading(p.name,p.signName)}`,
+    `<b>生活のどこに表れやすい？</b>${p.name}は第${p.house}ハウスにあります。上の特徴は、${HOUSE_PLAIN[p.house]}に関わる場面と結びつけて読みます。たとえば、${HOUSE_SCENE[p.house]}です。`,
+    `<b>この欄で見ていること：</b>${p.name}は${BODY_EXPLANATION[p.name]}を表します。${['天王星','海王星','冥王星'].includes(p.name)?'この天体は一つの星座に長くとどまるので、星座の特徴は同年代にも共通します。あなた個人については、上のハウスや太陽・月とのアスペクトも合わせて読みます。':''}`
+  ],[BODY_IMAGE[p.name]])).join('');
+  const pointReading=(p)=>{
+    const sign=p.signName,house=p.house,place=HOUSE_PLAIN[house];
+    if(p.name==='ノースノード')return [
+      `<b>ここで分かること：</b>これから経験を増やすと伸びる力を見ます。今回の${sign}・第${house}ハウスでは、${place}に関わる新しい役割がテーマです。`,
+      sign==='水瓶座'&&house===11?'<b>この配置なら：</b>友人や仲間と関わる中で、立場の違う人の意見をつなぎ、新しい活動を形にしていく方向が見えます。':`<b>この配置なら：</b>${place}に関わるとき、${SIGN_BEHAVIOR[sign]}`,
+      sign==='水瓶座'&&house===11?'<b>伸ばせる強み：</b>自分のアイデアを抱え込まず、仲間の意見も組み合わせて企画を動かすこと。':`<b>伸ばせる強み：</b>${place}で${SIGN_TALENT[sign].strength}こと。`,
+      `<b>サウスノードとの関係：</b>${sign==='水瓶座'&&house===11?'獅子座・第5ハウスの表現力はそのまま使えます。一人で完成させようとせず、仲間と作る活動に持ち込むと、力の使い道が広がります。':`${extras.find(x=>x.name==='サウスノード')?.signName}・第${extras.find(x=>x.name==='サウスノード')?.house}ハウスで使い慣れた力を、今度は${place}にも生かします。`}`
+    ];
+    if(p.name==='サウスノード')return [
+      `<b>ここで分かること：</b>自然に使いやすい力と、同じやり方に頼り過ぎる場面を見ます。今回の${sign}・第${house}ハウスでは、${place}に表れます。`,
+      sign==='獅子座'&&house===5?'<b>この配置なら：</b>作品や言葉に自分の思いを込め、前に出してきた力があります。創作や遊び、恋愛など、自分の色を出す場面で使いやすい力です。':`<b>この配置なら：</b>${place}では、${SIGN_PLAIN[sign]}やり方が馴染みやすいでしょう。`,
+      sign==='獅子座'&&house===5?'<b>強みとつまずき：</b>自分から表現を始められることは才能です。一方、反応や評価が気になると、仲間のアイデアを受け取る余裕がなくなるかもしれません。':`<b>強みとつまずき：</b>${SIGN_TALENT[sign].strength}ことは強みです。${SIGN_TALENT[sign].risk}ときは使い方を見直します。`,
+      `<b>次につなげるなら：</b>${sign==='獅子座'&&house===5?'表現する力を、水瓶座・第11ハウスのノースノードが示す共同企画やコミュニティに持ち込む。自分の光を消さず、人と分け合う方向です。':`慣れた${sign}の力を、${extras.find(x=>x.name==='ノースノード')?.signName}・第${extras.find(x=>x.name==='ノースノード')?.house}ハウスの方向へ広げます。`}`
+    ];
+    if(p.name==='キロン')return [
+      `<b>ここで分かること：</b>キロンでは、${place}で身構えやすいことと、そこから人を理解する力を見ます。過去に傷があったと決める項目ではありません。`,
+      sign==='蟹座'&&house===3?'<b>この配置なら：</b>何気ない一言が気になり、話す前に相手の反応を確かめたくなることがあります。蟹座は安心できる関係を求め、第3ハウスは日々の会話や学びに関わります。':`<b>この配置なら：</b>${place}で、自分の希望をどう伝えるか、相手にどう受け取られるかが気になりやすいでしょう。`,
+      sign==='蟹座'&&house===3?'<b>そこから育つ力：</b>言葉にしづらい気持ちに気づき、相手が安心して話せる言い方を選べること。相談、教えること、身近な人との対話に生かせます。':`<b>そこから育つ力：</b>${place}で自分と相手の反応を丁寧に理解し、${SIGN_TALENT[sign].strength}力につなげること。`,
+      '<b>気をつけたい点：</b>相手の一言をすべて自分への否定と受け取らないこと。過去に何があったかは本人の経験で確かめます。配置からは、会話のどこで身構えやすいか、どんな言葉なら安心しやすいかを考えられます。'
+    ];
+    return [
+      `<b>ここで分かること：</b>リリスでは、${place}で言い出しにくい本音や、譲りたくない境界線を見ます。このアプリでは月の軌道から求める平均リリスを使っています。`,
+      sign==='蠍座'&&house===7?'<b>この配置なら：</b>一対一の関係では、表面的な付き合いより深い信頼を求めます。気持ちをはっきり確かめたい一方で、近づきすぎると苦しくなることもあります。':`<b>この配置なら：</b>${place}では、人に合わせ続けると、自分の希望を言いたくなることがあります。`,
+      sign==='蠍座'&&house===7?'<b>強みとつまずき：</b>相手の本音に向き合い、深い信頼を築けることが強みです。ただ、疑いが強くなると、相手を試したり、距離を急に詰めたりしやすいかもしれません。':`<b>強みとつまずき：</b>${SIGN_TALENT[sign].strength}力があります。一方で${SIGN_TALENT[sign].risk}点には気をつけます。`,
+      '<b>関係に生かすなら：</b>近づきたい気持ちと、相手にも自分にも必要な距離を言葉にすること。恋愛で自分が求める心地よさは金星、安心の条件は月、行動の癖は火星、一対一の関係は第7ハウスも合わせて読みます。相手の気持ちは相手の言葉と行動で確かめてください。'
+    ];
+  };
+  document.getElementById('extraExplanations').innerHTML=extras.map(p=>explanationCard(`${p.name}｜${p.signName}・第${p.house}ハウス`,pointReading(p),[BODY_IMAGE[p.name]])).join('');
+  document.getElementById('aspectExplanations').innerHTML=asps.map(a=>{
+    const first=PLANETS[a.p1].name,second=PLANETS[a.p2].name;
+    const pair=ASPECT_PAIR_READING[`${first}|${second}`]||ASPECT_PAIR_READING[`${second}|${first}`];
+    const firstPlace=planetData[a.p1],secondPlace=planetData[a.p2];
+    const relation=a.asp.sym==='☍'?'両方を求めて揺れやすい':a.asp.sym==='□'?'同時に進めようとするとぶつかりやすい':a.asp.sym==='☌'?'二つが一緒に強く出やすい':a.asp.sym==='△'?'自然に助け合いやすい':'意識して組み合わせると力になる';
+    return explanationCard(`${first} ${a.asp.sym} ${second}`, [
+      `<b>この組み合わせで分かること：</b>${first==='太陽'&&second==='木星'?'大きな目標を着実に進めたい気持ちと、新しい可能性を広げたい気持ちの両方があります。広げるほど予定を抱えやすいので、続けたい目標を選ぶことが大切です。':`${first}が表す${BODY_EXPLANATION[first]}と、${second}が表す${BODY_EXPLANATION[second]}が${relation}関係です。二つの力の使い方に、次の強みとつまずきが出ます。`}`,
+      `<b>強み：</b>${pair?pair.gift:`${first}の力を${second}の働きと結びつけること`}。${firstPlace.signName}の${SIGN_PLAIN[firstPlace.signName]}力と、${secondPlace.signName}の${SIGN_PLAIN[secondPlace.signName]}力を合わせて使えます。`,
+      `<b>つまずきやすい点：</b>${pair?pair.tension:`${first}と${second}のどちらかを優先し過ぎること`}。${a.asp.sym==='☍'||a.asp.sym==='□'?'二つを同時に進めにくいときは、今どちらを優先するか決めると整理しやすくなります。':'この強みを使いすぎて疲れていないかも、時々確かめてください。'}`,
+      `<b>今回の配置では：</b>${first}は${firstPlace.signName}・第${firstPlace.house}ハウス（${HOUSE_PLAIN[firstPlace.house]}）、${second}は${secondPlace.signName}・第${secondPlace.house}ハウス（${HOUSE_PLAIN[secondPlace.house]}）です。${first==='太陽'&&second==='木星'&&firstPlace.house===9&&secondPlace.house===3?'専門分野で学んだことを身近な人へ伝えるとき、目標を深めることと学びを広げることの間で、優先順位を決める必要が出てきます。':`${HOUSE_PLAIN[firstPlace.house]}と${HOUSE_PLAIN[secondPlace.house]}が重なる場面で、この強みとつまずきが表れます。`}`,
+      `<b>強みと時期をどう見る？</b>${a.orb}°は生まれたときの角度のずれで、小さいほど正確な角度に近い数です。強みとして使えているかは、上の二つの天体の星座・ハウスと実際の行動を合わせて見ます。いつ関心が高まるかは、下の「時期読み」で現在の天体との角度、年・月のテーマを確認します。出来事の日付や結果を確定する数値ではありません。`
+    ],[BODY_IMAGE[first],BODY_IMAGE[second]]);
+  }).join('');
+  const balanceReadings={"火": {"meaning": "面白そう、やってみたい、と感じたことを行動に移す性質です。まず経験してから考えることを好みます。", "gift": "誰も手を挙げない場面で「試してみよう」と動けます。うまくいく保証がなくても、最初の一歩を出して周りの気持ちも動かす力です。", "risk": "やる気があるうちに進めたくて、準備や相手の都合を飛ばすことがあります。始める数が増えて、続ける作業が追いつかなくなることもあります。", "low": "即断や勢い任せの挑戦より、理由や見通しが分かってから動くほうが合うかもしれません。意欲がないと決めず、何なら自分から動きたくなるかを見ます。", "tip": "新しいことは「10分だけ試す」と決めてみましょう。勢いが出すぎるときは、誰に何を確認してから進むかを一つ決めておくと役立ちます。"}, "地": {"meaning": "時間、お金、手順、使い心地など、現実に確かめられることを大切にする性質です。続けて形にすることに目が向きます。", "gift": "曖昧な案を「誰が、いつまでに、何をするか」に落とし込めます。約束の品質を守り、毎回安心して任せられる仕事や暮らしを作る力です。", "risk": "失敗や無駄を避けるほど、今の方法から離れにくくなります。役に立つかを先に考えて、楽しそうという気持ちを引っ込めることもあります。", "low": "細かな段取りや毎日の維持より、アイデアや人との関わりに先に意識が向くかもしれません。実務能力の不足ではなく、予定や支出を見える形にすると取り組みやすいと考えます。", "tip": "やりたいことを「今週の一作業」に分けて、予定に入れてみましょう。慎重になりすぎるときは、失敗しても困らない小さな予算や時間で試す方法が合います。"}, "風": {"meaning": "会話や情報を通じて、物事をいくつかの角度から考える性質です。気持ちや体験を言葉にして人と交換します。", "gift": "話がかみ合わないとき、言葉の意味や双方の前提の違いに気づけます。情報を整理し、「こういうことですか」と説明して、人と人の理解を助ける力です。", "risk": "考えや選択肢を増やすほど、決めて実行するのが遅くなることがあります。筋の通る説明を優先し、相手がまず気持ちを聞いてほしい場面を見落とすこともあります。", "low": "言葉で整理するより、実際にやって確かめたり、相手の雰囲気から感じ取ったりするほうが自然かもしれません。人付き合いが苦手と決める数字ではありません。", "tip": "考えがまとまらないときは、誰かに話すか、事実と自分の気持ちを分けて書いてみましょう。考え続けているなら、決める期限と試す一案を絞るのが役立ちます。"}, "水": {"meaning": "自分や相手の気持ち、安心できるつながりを大切にする性質です。言葉の内容だけでなく、表情や声の変化にも心が動きます。", "gift": "口数が減った相手や、無理に笑っている人の変化に気づけます。答えを急がずに話を聞き、相手が安心して本音を話せる関係を作る力です。", "risk": "相手がつらそうだと、自分まで落ち込んだり、何とかしなければと抱え込んだりします。心配が強いと、相手の選択に口を出すこともあります。", "low": "気持ちを共有する前に、何が起きたか、どう解決するかへ意識が向くかもしれません。冷たい人という意味ではなく、相手の気持ちは尋ねて確かめる方法もあります。", "tip": "相談を受けたら「聞いてほしい？ 一緒に方法を考えたい？」と尋ねてみましょう。感情を抱え込みやすいときは、話を聞いた後に一人で休む時間を用意します。"}, "活動": {"meaning": "状況が動くのを待つより、自分から働きかける進め方です。目的を決め、最初の一歩を作ることに関わります。", "gift": "話し合いが止まったとき、「まずここから始めよう」と出発点を作れます。予定を立てたり役割を引き受けたりして、周りが動き出すきっかけになります。", "risk": "気になることへ次々に手をつけ、引き受けた仕事が増えがちです。相手が考える時間を待てず、自分が全部進めてしまうこともあります。", "low": "白紙から始めるより、目的や役割が見えてから力を出すほうが自然かもしれません。主体性がないのではなく、始めやすい条件が何かを確かめます。", "tip": "始める前に「今回は何を一つ終わらせるか」を決めてみましょう。動き出しにくいなら、誰かと最初の約束だけ作る方法があります。"}, "不動": {"meaning": "一度選んだことを保ち、腰を据えて続ける進め方です。すぐには結果が出ないことを育てる場面に関わります。", "gift": "周りの関心が移った後も、必要な作業を積み重ねられます。同じ練習や手入れを続け、技術や関係を深める粘り強さになります。", "risk": "続けてきたことほど、変えるのが惜しくなります。目的に合わなくなっても手段を守り、他の案を受け取りにくくなることがあります。", "low": "同じやり方を長く続けるより、新しい目的や変化に応じて動くほうが合うかもしれません。根気のなさと決めず、続ける理由や小さな区切りを作ります。", "tip": "続けていることは、月に一度「今の目的にも合っているか」を確かめましょう。習慣が途切れやすいなら、一日5分など小さな形にしてみます。"}, "柔軟": {"meaning": "相手や状況の変化に合わせて、方法を調整する進め方です。予定どおりにならない場面で、別の道を探すことに関わります。", "gift": "予定が崩れても、使える時間や道具を見て組み直せます。違う人の話を聞いて案を修正し、その場に合った助け方を考える力です。", "risk": "対応できるからと頼みを増やし、自分の予定が後回しになることがあります。意見を聞くたび方針が変わり、何を終わらせたいか見失うこともあります。", "low": "変わるたびに合わせるより、方針や手順を先に決めて進むほうが安心かもしれません。融通が利かないと決めず、変更に必要な時間や情報を用意します。", "tip": "予定を変えるときも「今日これだけは終える」という一つを残しましょう。急な変更が負担なら、予備の時間や代案を先に決めておくと助けになります。"}};
+
+  const strongestKeys=counts=>{const max=Math.max(...Object.values(counts));return Object.keys(counts).filter(k=>counts[k]===max);};
+  const weakestKeys=counts=>{const min=Math.min(...Object.values(counts));return Object.keys(counts).filter(k=>counts[k]===min);};
+  const placementList=rows=>rows.map(p=>`${p.name}（${p.signName}・第${p.house}ハウス）`).join('、');
+  const overview=(title,counts,field,image)=>{
+    const high=strongestKeys(counts),low=weakestKeys(counts),tied=high.length===Object.keys(counts).length;
+    return explanationCard(title,[
+      `<b>あなたの内訳：</b>${Object.entries(counts).map(([k,v])=>`${k}${v}天体`).join('・')}。太陽から冥王星までを、一つずつ同じ重さで数えています。`,
+      `<b>多い性質から読むと：</b>${tied?'数は均等です。特定の一種類が目立つ配分ではありません。':high.map(k=>`${k}が${counts[k]}天体。${balanceReadings[k].gift}`).join(' ')}`,
+      `<b>行き過ぎると：</b>${high.map(k=>balanceReadings[k].risk).join(' ')}`,
+      `<b>少ない性質はどう読む？</b>${tied?'均等でも、どの天体がどこにあるかで表れ方は違います。':low.map(k=>`${k}は${counts[k]}天体。${counts[k]<=1?balanceReadings[k].low:'今回の中では少ない側ですが、数だけで苦手とは読みません。どの天体が当てはまるかを下の個別欄で確認します。'}`).join(' ')}`,
+      `<b>数と一緒に見ること：</b>太陽は${planetData[0][field]}、月は${planetData[1][field]}です。目標や普段の感情には、この二つの特徴が身近に出ます。天王星・海王星・冥王星の配置は同年代にも共通するため、合計数だけで性格を決めず、下の該当天体と生活での経験を合わせます。`
+    ],[image]);
+  };
+  document.getElementById('balanceExplanations').innerHTML=overview('火・地・風・水｜あなたが使いやすい方法',elemCount,'elem','elements')+overview('活動・不動・柔軟｜あなたの物事の進め方',qualCount,'qual','modalities');
+  const balanceDetail=(k,counts,field,image)=>{
+    const rows=planetData.filter(p=>p[field]===k),reading=balanceReadings[k],high=strongestKeys(counts).includes(k),low=weakestKeys(counts).includes(k);
+    const personal=rows.filter(p=>['太陽','月','水星','金星','火星'].includes(p.name));
+    return explanationCard(`${k}${field==='qual'?'宮':''}｜${counts[k]}天体の意味`,[
+      `<b>どんな性質？</b>${reading.meaning}`,
+      `<b>あなたの場合：</b>${rows.length?placementList(rows)+'が該当します。':'この分類に入る10天体はありません。'}${high?'今回の配分では最多なので、まず使いやすい方法として注目します。':''}${low&&!high&&counts[k]<=1?reading.low:''}`,
+      `<b>才能・強みとして表れると：</b>${reading.gift}`,
+      `<b>つまずきやすいとき：</b>${reading.risk}`,
+      `<b>どこに表れやすい？</b>${personal.length?personal.map(p=>`${p.name}の${BODY_EXPLANATION[p.name]}に関わり、${HOUSE_PLAIN[p.house]}の場面で確かめられます。`).join(' '):rows.length?'該当する天体は木星以遠です。日々の反応をこの数だけで決めず、太陽・月・水星・金星・火星の個別解説も合わせて読みます。':'この分野への取り組み方は、上の太陽・月などの個別解説や、実際にやってきたことから確かめてください。数がゼロでも、経験や工夫で使う方法は身につきます。'}`,
+      `<b>生活に生かすなら：</b>${reading.tip}`
+    ],[image]);
+  };
+  document.getElementById('balanceExplanations').innerHTML+=['火','地','風','水'].map(k=>balanceDetail(k,elemCount,'elem','elements')).join('')+['活動','不動','柔軟'].map(k=>balanceDetail(k,qualCount,'qual','modalities')).join('');
+  document.getElementById('sabianExplanations').innerHTML=sabTargets.map(p=>{
+    const s=getSabian(p.lon);
+    return explanationCard(`${p.name}｜${p.signName}第${s.num}度`,[
+      `<b>今回の言葉：</b>「${s.text}」。${p.name}の${BODY_EXPLANATION[p.name]||EXTRA_EXPLANATION[p.name]||'テーマ'}に添える象徴です。`,
+      `<b>読み方：</b>${p.signName}${p.deg}°${String(p.min).padStart(2,'0')}'を第${s.num}度として表示しています。具体的な資質は${p.name}の星座とハウスの解説を先に読み、この象徴は補足として扱います。`
+    ],[BODY_IMAGE[p.name]||'sabian','sabian']);
+  }).join('');
+  document.getElementById('rulerExplanations').innerHTML=[
+    explanationCard('チャートルーラー',[
+      `<b>今回の強み：</b>ASC ${ascSign.name}の支配星は${ascRulerName}です。${ascRulerPlanet?`${ascRulerPlanet.signName}の${SIGN_TALENT[ascRulerPlanet.signName].strength}力が、新しい場面での行動を後押しします。`:'支配星の位置を確認できないため、この先の解説は保留します。'}`,
+      ascRulerPlanet?`<b>どこに向かう？</b>${ascRulerName}は第${ascRulerPlanet.house}ハウス。始めたことが${HOUSE_PLAIN[ascRulerPlanet.house]}に広がりやすい配置です。`:'',
+      '<b>合わせて見る項目：</b>目標は太陽、安心できる条件は月、社会で担う役割はMCを読みます。'
+    ],[BODY_IMAGE[ascRulerName]]),
+    explanationCard('MC支配星と12ハウスの支配星',[
+      `<b>この配置から分かること：</b>社会で目指す役割は、${mcRulerPlanet?`第${mcRulerPlanet.house}ハウスの${HOUSE_PLAIN[mcRulerPlanet.house]}に結びつきます。`:'支配星の位置を確認できないため保留します。'}`,
+      `<b>なぜ？</b>MC ${mcSign.name}を司る${mcRulerName}が${mcRulerPlanet?`第${mcRulerPlanet.house}ハウスにあるためです。`:'どこにあるか確認できないためです。'}仕事だけでなく、人に届ける活動にも重ねて読めます。`,
+      '<b>下の表：</b>12の生活領域それぞれについて、入口の星座の支配星がどこにあるかを示します。'
+    ],[BODY_IMAGE[mcRulerName]])
+  ].join('');
+  document.getElementById('houseRulerExplanations').innerHTML=Array.from({length:12},(_,i)=>{
+    const hs=lonToSign(houses[i]),rn=MODERN_RULER[hs.signIdx],rp=planetData.find(p=>p.name===rn);
+    return explanationCard(`第${i+1}ハウスの支配星 ${rn}`,[
+      `<b>今回のつながり：</b>${HOUSE_PLAIN[i+1]}の話は、${rp?HOUSE_PLAIN[rp.house]:'別の生活領域'}とも結びつきます。支配星の${rn}が${rp?`${rp.signName}・第${rp.house}ハウス`:'確認できない位置'}にあるためです。`,
+      `<b>生活で見るなら：</b>${HOUSE_SCENE[i+1]}、${rp?HOUSE_PLAIN[rp.house]:'別の場面'}にも関係していないか確かめてみてください。`
+    ],[BODY_IMAGE[rn]||'structure']);
+  }).join('');
+  document.getElementById('dispositorExplanations').innerHTML=dispChains.map(dc=>explanationCard(`${dc.chain[0]}のつながり`,[
+    `<b>ここで分かること：</b>${dc.chain[0]}が表す${BODY_EXPLANATION[dc.chain[0]]}を考えるとき、${dc.chain[1]||dc.chain[0]}の性質も関わります。`,
+    `<b>つながり：</b>${dc.chain.join(' → ')}。各天体がいる星座の支配星を順にたどっています。${dc.chain.length===1?'この天体自身が中心になります。':`最後に現れる${dc.chain.at(-1)}だけで判断せず、途中の天体も読みます。`}`
+  ],[BODY_IMAGE[dc.chain[0]]])).join('');
+  document.getElementById('structureExplanations').innerHTML=[
+    explanationCard('天体グループとハウスの種類',[
+      `<b>今回の特徴：</b>第${topHouse[0]?.[0]||'—'}ハウスに天体が集まり、${topHouse.length?HOUSE_PLAIN[Number(topHouse[0][0])]:'特定の一つの分野'}に関心や力を向けやすい配置です。`,
+      `<b>今回：</b>個人天体${grpCount['個人']}、社会天体${grpCount['社会']}、世代天体${grpCount['世代']}。角ハウス${houseType['角']}、続ハウス${houseType['続']}、果てハウス${houseType['果て']}です。`,
+      '<b>読み方：</b>個人天体は日常の意思や感情、社会天体は社会との関係、世代天体は長い時間の変化を見る区分です。角は始動、続は維持、果ては学びや調整の場面として読めます。'
+    ],['structure']),
+    explanationCard('半球・星座の性質・集中',[
+      `<b>今回の特徴：</b>${topSign.length?`${topSign[0][0]}に${topSign[0][1]}天体が集まり、${SIGN_PLAIN[topSign[0][0]]}力が複数の場面に表れます。`:'特定の星座に天体の大きな集中はありません。'}`,
+      `<b>今回：</b>東${hemi['東']}・西${hemi['西']}、上${hemi['上']}・下${hemi['下']}、火風${sex['男性']}・地水${sex['女性']}。`,
+      `<b>集中：</b>${topSign.length?topSign.map(([s,v])=>`${s}${v}天体`).join('、'):'3天体以上の星座なし'}。${topHouse.length?topHouse.map(([h,v])=>`第${h}ハウス${v}天体`).join('、'):'3天体以上のハウスなし'}。`,
+      '<b>数の意味：</b>集中している性質や生活の場面が分かります。性格の優劣や「男性的・女性的」という人格評価ではありません。'
+    ],['structure'])
+  ].join('');
+
   const timingReading=timingCloneData?generateTimingReading({
     sun:planetData[0],
     moon:planetData[1],
@@ -961,6 +1361,30 @@ async function runHoroscopeCalculation(){
   document.getElementById('readingArea').innerHTML=timingReading
     ? timingReading.html
     :'時期読みデータを計算すると、ここに鑑定文が表示されます。';
+
+  if(timingCloneData){
+    const data=timingCloneData,annual=data.annual_profection;
+    const months=monthlyFlowRows(data),currentMonth=months[0];
+    const progressSun=planetByBody(data.secondary_progressions.planets,'Sun');
+    const progressMoon=planetByBody(data.secondary_progressions.planets,'Moon');
+    const returnSun=planetByBody(data.solar_return.planets,'Sun');
+    const returnMoon=planetByBody(data.solar_return.planets,'Moon');
+    document.getElementById('readingArea').innerHTML=`<h3>今のテーマ</h3><p>今年は「${HOUSE_PLAIN[annual.activated_house]}」が年齢から読むテーマです。${currentMonth?`今月（${currentMonth.active_from}〜${currentMonth.active_to}）は「${HOUSE_PLAIN[currentMonth.monthly_profection.activated_house]}」に目を向けます。`:''}</p><p>下では、現在の天体から読む話、誕生日からの一年、月ごとのテーマ、長い時間の気持ちの変化を、それぞれの計算方法と一緒に読めます。</p>`;
+    const yearCard=explanationCard('今年｜誕生日からの一年の過ごし方',solarReturnParagraphs(data.active_solar_return||data.solar_return),['solar-return']);
+    const monthDetails=months.map(row=>explanationCard(`${row.active_from}〜${row.active_to}｜${HOUSE_PLAIN[row.monthly_profection.activated_house]}`,monthlyTimingParagraphs(row,houses),[])).join('');
+    const monthlyCard=`<details class="explain-item"><summary>月別｜未来12か月のテーマ</summary>${detailIllustrations('未来12か月のテーマ',['profection'])}<p><b>今年の年齢から読むテーマ：</b>${annual.age}歳の年は第${annual.activated_house}ハウス「${HOUSE_PLAIN[annual.activated_house]}」。年主星は${annual.lord_of_year}です。</p><p><b>計算方法：プロフェクション</b>誕生日ごとに注目するハウスを一つ進め、年の中でも月ごとに注目先を進めます。下の各月は、そのハウス・星座・月主星を使った今回の解説です。</p><div class="explain-grid">${monthDetails}</div></details>`;
+    const progressCard=explanationCard('長期｜目標や安心できる条件の変化',longTimingParagraphs(data,houses),['progression']);
+    document.getElementById('timingExplanations').innerHTML=explanationCard('現在｜今の天体から読む生活のテーマ',currentTimingParagraphs(data,houses),['transit'])+yearCard+monthlyCard+progressCard;
+    document.getElementById('timingPeriodExplanations').innerHTML=timingFlowRows(data).map(row=>{
+      const p=row.profection;
+      return explanationCard(`${row.active_from}〜${row.active_to}｜${p.age}歳・${HOUSE_PLAIN[p.activated_house]}`,[
+        `<b>この年のテーマ：</b>${HOUSE_PLAIN[p.activated_house]}。${p.activated_sign}の特徴から、${SIGN_BEHAVIOR[p.activated_sign]}`,
+        `<b>年主星は${p.lord_of_year}：</b>${BODY_EXPLANATION[p.lord_of_year]}を、この分野でどう扱うかを考えます。${SIGN_ADVICE[p.activated_sign]}`,
+        '<b>計算方法：</b>上の月別欄と同じプロフェクションで、こちらは一年単位のテーマを並べています。過去は経験を振り返り、未来は計画を考える材料にできます。'
+      ],[]);
+    }).join('');
+    document.getElementById('readingExplanations').innerHTML='';
+  }
 
   // チャート描画
   drawChart(rawLons,ascLon,houses);
@@ -1047,7 +1471,8 @@ async function runHoroscopeCalculation(){
     txt+=`　注意：表示表の貼り合わせではなく、既存ライブラリの天体計算を土台にしている。\n`;
   }
   if(timingReading){
-    txt+=`\n【Q. 時期読みライト鑑定文】\n${timingReading.text}\n`;
+    const visibleTimingText=Array.from(document.querySelectorAll("#readingArea h3,#readingArea p,#timingExplanations summary,#timingExplanations p")).map(el=>el.textContent.trim()).join("\n");
+    txt+=`\n【Q. 運勢の読み解き】\n${visibleTimingText}\n`;
   }
   txt+=`\n【O. 仕様メモ】\n出生図10天体：${natalCalculation.engine}の地心黄経\n黄道帯：トロピカル\nハウスシステム：等分ハウス\n集計対象：10天体（太陽〜冥王星）\nノードの種類：Mean Node（平均ノード）\nリリスの種類：Mean Lilith（平均リリス）\n支配星体系：モダン支配星\nサビアン度数換算：小数点以下があれば切り上げ（0°00'〜0°59'=第1度=1番）\nMCと第10ハウスカスプ：別概念。等分ハウスではMCと第10カスプは通常一致しない。\nエレメント分類：牡羊/獅子/射手=火、牡牛/乙女/山羊=地、双子/天秤/水瓶=風、蟹/蠍/魚=水\nクオリティ分類：牡羊/蟹/天秤/山羊=活動、牡牛/獅子/蠍/水瓶=不動、双子/乙女/射手/魚=柔軟\n`;
 
@@ -1058,24 +1483,44 @@ async function runHoroscopeCalculation(){
 
 function showCalculationError(error){
   const message=String(error&&error.message?error.message:error);
-  console.error('calculation failed:',error);
-  document.getElementById('result').classList.add('show');
-  document.getElementById('timingArea').innerHTML=`<div class="timing-card"><h3>計算エラー</h3><div>${escapeHtml(message)}</div><div class="timing-note">ページを再読み込みしても直らない場合は、http://127.0.0.1:4173/ から開いてください。</div></div>`;
-  document.getElementById('readingArea').textContent='時期読みデータを計算できなかったため、鑑定文は作成されていません。';
-  document.getElementById('meishikiBox').textContent=`計算エラー：${message}`;
+  invalidateResults();
+  document.getElementById('calculationStatus').textContent=`計算できませんでした：${message}`;
+}
+
+function invalidateResults(){
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('meishikiBox').textContent='';
+  document.getElementById('copyBtn').disabled=true;
+  window.latestTimingCloneData=null;
+  window.UnknownBirthTime.clear();
+  document.getElementById('calculationStatus').textContent='';
+}
+function syncUnknownInput(){
+  const unknown=document.getElementById('birthTimeUnknown').checked;
+  document.getElementById('hr').disabled=unknown;
+  document.getElementById('mn').disabled=unknown;
 }
 
 async function handleCalculateClick(){
   const button=document.getElementById('calculateBtn');
+  if(button.disabled)return;
+  invalidateResults();
+  const fields=[...document.querySelectorAll('.form-card select,.form-card input')];
+  fields.forEach(field=>field.disabled=true);
+  document.getElementById('calculationStatus').textContent='計算中です。';
   if(button){
     button.disabled=true;
     button.textContent='計算中...';
   }
   try{
     await runHoroscopeCalculation();
+    document.getElementById('calculationStatus').textContent='計算しました。';
+    document.getElementById('copyBtn').disabled=false;
   }catch(error){
     showCalculationError(error);
   }finally{
+    fields.forEach(field=>field.disabled=false);
+    syncUnknownInput();
     if(button){
       button.disabled=false;
       button.textContent='🔮 ホロスコープを計算する';
@@ -1087,6 +1532,8 @@ window.calculate=handleCalculateClick;
 window.handleCalculateClick=handleCalculateClick;
 window.runHoroscopeCalculation=runHoroscopeCalculation;
 document.getElementById('calculateBtn')?.addEventListener('click',handleCalculateClick);
+document.querySelectorAll('.form-card select,.form-card input').forEach(field=>field.addEventListener('change',()=>{invalidateResults();syncUnknownInput();}));
+syncUnknownInput();
 </script>
 </body>
 </html>

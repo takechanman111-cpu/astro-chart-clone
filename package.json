@@ -11,10 +11,11 @@
     "check:public": "node scripts/check_public_release_safety.mjs",
     "check:engine": "node scripts/check_established_engine_gate.mjs --phase=production",
     "check:api": "node scripts/check_timing_api_contract.mjs",
+    "check:unknown-time": "node --test scripts/check_unknown_birth_time.mjs",
     "check:timing": "node scripts/check_established_timing_reference_gate.mjs",
     "check:timing:strict": "node scripts/check_established_timing_reference_gate.mjs --strict",
     "check:swiss": "node scripts/check_swiss_ephemeris_readiness.mjs",
-    "check:deploy": "npm run check:public && npm run check:api && npm run check:timing:strict"
+    "check:deploy": "npm run check:public && npm run check:api && npm run check:timing:strict && npm run check:unknown-time"
   },
   "optionalDependencies": {
     "swisseph": "*"

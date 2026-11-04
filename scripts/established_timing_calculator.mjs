@@ -195,6 +195,41 @@ function swetestRows(date, options = {}) {
   };
 }
 
+// House-free batch adapter. Unknown-time analysis never calls the natal-house path.
+export function validateSwissSeriesOutput(output) {
+  if (/\berror\b|using Moshier|not found/i.test(output)) throw new Error('Swiss天文暦の必要なデータを取得できませんでした。');
+  const numeric=/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/;
+  for(const line of output.split(/\r?\n/).filter(line=>line.trim()&&!/^warning[:\s]/i.test(line.trim()))) {
+    const columns=line.split(',').map(s=>s.trim());
+    if(columns.length!==3 || !numeric.test(columns[1]) || !numeric.test(columns[2])) throw new Error('Swiss天体位置または速度が欠けています。');
+  }
+}
+
+export function swissPositionSeries(start, count = 1, stepSeconds = 150) {
+  if (!Number.isInteger(count) || count < 1 || count > 1000) throw new Error('Invalid Swiss series length');
+  const binary = findSwetestBinary();
+  if (!binary) throw new Error('Swiss Ephemeris swetest is required');
+  const ephePath = findSwissEphemerisPath();
+  const args = [`-b${start.getUTCDate()}.${start.getUTCMonth()+1}.${start.getUTCFullYear()}`,
+    `-ut${formatUtcTimeForSwetest(start)}`, `-p${SWETEST_NATAL_SEQUENCE}`,
+    '-fPls', '-g,', '-head', '-eswe', `-n${count}`, `-s${stepSeconds}s`];
+  if (ephePath) args.push(`-edir${ephePath}`);
+  const output = execFileSync(binary, args, { encoding:'utf8', timeout:15000, maxBuffer:4*1024*1024 });
+  validateSwissSeriesOutput(output);
+  const rows = parseSwetestRows(output);
+  const names = [...BODIES, 'mean Node', 'Chiron', 'mean Apogee'];
+  if (rows.length !== count*names.length) throw new Error('Swiss時刻別データの件数が一致しません。');
+  return Array.from({length:count}, (_,index) => {
+    const group = rows.slice(index*names.length, (index+1)*names.length);
+    names.forEach((name,i) => {
+      if (group[i].label !== name || !Number.isFinite(group[i].speed_longitude)) throw new Error('Swiss天体位置または速度が不足しています。');
+    });
+    return { time:start.getTime()+index*stepSeconds*1000, rows:group.map(row=>({
+      body:row.label, longitude:row.longitude, speed:row.speed_longitude
+    })) };
+  });
+}
+
 function requireSwetestRow(rows, label) {
   const row = rows.find((entry) => entry.label === label);
   if (!row) throw new Error(`swetest did not return required row: ${label}`);
@@ -346,8 +381,8 @@ export function planetRows(date, bodies = BODIES, engine = getTimingEngine({ eng
   }));
 }
 
-export function calculateSwissNatalChart(input) {
-  const birthDate = dateFromLocal(input);
+export function calculateSwissNatalChart(input, chartDate = null) {
+  const birthDate = chartDate || dateFromLocal(input);
   const result = swetestRows(birthDate, {
     planetSequence: SWETEST_NATAL_SEQUENCE,
     house: {
@@ -601,12 +636,18 @@ export function solarReturn(input, returnYear, engine = getTimingEngine({ engine
   const natalSunLongitude = eclipticLongitude('Sun', birthDate, engine);
   const searchStart = new Date(Date.UTC(returnYear, input.month - 1, input.day - 10, 0, 0, 0));
   const event = engine.searchSunLongitude(natalSunLongitude, searchStart, 25);
+  const chart = calculateSwissNatalChart(input, event.date);
   return {
     method: 'solar_return',
+    location_basis: 'birthplace',
+    location: { latitude: input.latitude, longitude: input.longitude },
+    house_system: chart.house_system,
+    houses: chart.houses,
+    angles: chart.angles,
     return_year: returnYear,
     natal_sun_longitude: Number(normDeg(natalSunLongitude).toFixed(6)),
     return_time_utc: event.date.toISOString(),
-    planets: planetRows(event.date, BODIES, engine)
+    planets: planetRows(event.date, BODIES, engine).map(p => ({ ...p, house: houseNumberFromCusps(p.longitude, chart.houses) }))
   };
 }
 
@@ -722,6 +763,10 @@ export function calculateEstablishedTiming(input, targetDate, ascLongitude, opti
   }
   const centeredFlow = pastPresentFutureFlow(input, targetDate, ascLongitude, engine);
   const monthlyFlow = futureOneYearMonthlyFlow(input, targetDate, ascLongitude, engine);
+  const calendarReturn = solarReturn(input, targetDate.year, engine);
+  let activeReturn = calendarReturn;
+  const targetInstant = dateFromLocal({ ...input, ...targetDate });
+  if (new Date(activeReturn.return_time_utc) > targetInstant) activeReturn = solarReturn(input, targetDate.year - 1, engine);
   return {
     schema: 'established-astrology-timing/v1',
     engine: engine.label,
@@ -732,7 +777,8 @@ export function calculateEstablishedTiming(input, targetDate, ascLongitude, opti
     target_date: targetDate,
     transits: transits(targetDate, engine),
     secondary_progressions: secondaryProgressions(input, targetDate, engine),
-    solar_return: solarReturn(input, targetDate.year, engine),
+    solar_return: calendarReturn,
+    active_solar_return: activeReturn,
     annual_profection: annualProfection(input, targetDate, ascLongitude),
     past_present_future_flow: centeredFlow.years,
     past_year_flow: centeredFlow.past,
