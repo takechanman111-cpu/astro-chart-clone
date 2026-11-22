@@ -33,6 +33,22 @@ select:focus{border-color:var(--accent);}
 @media(max-width:650px){.chart-grid{grid-template-columns:1fr;}}
 .chart-wrap{display:flex;justify-content:center;align-items:center;}
 svg.horoscope{width:100%;max-width:360px;}
+#chartZoom { margin:auto; width:min(94vw, 900px); max-width:none; max-height:92dvh; padding:14px; border:1px solid var(--border, #6b5790); border-radius:14px; background:#141026; color:#f6efff; box-sizing:border-box; }
+#chartZoom::backdrop { background:rgba(8,5,18,.83); }
+.chart-zoom-controls { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:10px; }
+.chart-zoom-controls button, #openChartZoom { min-height:44px; padding:6px 12px; font:inherit; color:inherit; background:#30224e; border:1px solid #8b72ad; border-radius:8px; cursor:pointer; }
+.chart-zoom-controls button:disabled { opacity:.5; cursor:default; }
+#chartZoomView { overflow:auto; max-height:72dvh; background:#0d0a19; border-radius:8px; }
+#chart .zoom-degree-label { display:none; }
+#chartZoomView .chart-planet-symbol { display:none; }
+.chart-degree-leader { display:none; pointer-events:none; }
+#chartZoomView [aria-pressed="true"] .chart-degree-leader { display:inline; }
+#chartZoomView [role="button"] { cursor:pointer; }
+#chartZoomView [role="button"]:focus-visible rect { stroke:#fff; stroke-width:1; }
+#chartZoomInfo { padding:8px; min-height:3em; }
+#chartZoomInfo p { margin:4px 0 0; }
+#chartZoomView svg { display:block; max-width:none; height:auto; margin:auto; }
+
 .panel-title{color:var(--accent2);font-size:.88rem;letter-spacing:2px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;}
 .panel-sub{font-size:.7rem;color:var(--muted);font-weight:normal;}
 /* テーブル共通 */
@@ -176,7 +192,19 @@ svg.horoscope{width:100%;max-width:360px;}
       <div class="guide-grid" id="beginnerGuide"></div>
     </section>
     <div class="chart-grid">
-      <div class="chart-wrap"><svg class="horoscope" id="chart" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"></svg><p class="explain-intro">外側の帯は12星座、内側の数字はハウスです。左のASCは出生時の上昇点で、星座の帯はその位置に合わせて回転します。</p></div>
+      <div class="chart-wrap"><svg class="horoscope" id="chart" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"></svg><div><button id="openChartZoom" type="button" aria-haspopup="dialog">ホロスコープを拡大</button></div>
+      <dialog id="chartZoom" aria-labelledby="chartZoomTitle">
+        <div class="chart-zoom-controls">
+          <strong id="chartZoomTitle">ホロスコープ図</strong>
+          <button id="chartZoomOut" type="button" aria-label="縮小">−</button>
+          <output id="chartZoomPercent" aria-live="polite">100%</output>
+          <button id="chartZoomIn" type="button" aria-label="拡大">＋</button>
+          <button id="chartZoomReset" type="button">全体表示</button>
+          <button id="closeChartZoom" type="button" autofocus>閉じる</button>
+        </div>
+        <div id="chartZoomInfo" aria-live="polite"><strong id="chartZoomInfoName">図の記号を選ぶ</strong><p id="chartZoomInfoText">天体・星座・ASC・MC・ハウスの説明が表示されます。</p></div>
+        <div id="chartZoomView" tabindex="0" aria-label="拡大したホロスコープ図。スクロールで移動できます"></div>
+      </dialog><p class="explain-intro">外側の帯は12星座、内側の数字はハウスです。左のASCは出生時の上昇点で、星座の帯はその位置に合わせて回転します。</p></div>
       <div class="panel">
         <div class="panel-title">☿ 基本情報</div>
         <div class="sign-info" id="signInfo"></div>
@@ -431,7 +459,60 @@ function calcDispositorChain(planetData){
 }
 
 // ─── チャート描画 ───
-function drawChart(lons,asc,houses){
+const chartZoom = document.getElementById('chartZoom');
+const chartZoomView = document.getElementById('chartZoomView');
+const chartZoomIn = document.getElementById('chartZoomIn');
+const chartZoomOut = document.getElementById('chartZoomOut');
+let chartZoomPercent = 100;
+
+function setChartZoom(percent) {
+  chartZoomPercent = Math.max(100, Math.min(300, percent));
+  const svg = chartZoomView.firstElementChild;
+  svg.style.width = `min(${chartZoomPercent}%, ${chartZoomPercent * 0.70}dvh)`;
+  document.getElementById('chartZoomPercent').value = chartZoomPercent + '%';
+  chartZoomOut.disabled = chartZoomPercent === 100;
+  chartZoomIn.disabled = chartZoomPercent === 300;
+}
+
+document.getElementById('openChartZoom').addEventListener('click', () => {
+  const svg = document.getElementById('chart').cloneNode(true);
+  svg.removeAttribute('id');
+  for (const label of svg.querySelectorAll('[data-chart-name]')) {
+    label.setAttribute('role','button');
+    label.setAttribute('tabindex','0');
+    label.setAttribute('aria-label',label.dataset.chartName);
+    label.setAttribute('aria-pressed','false');
+  }
+  chartZoomView.replaceChildren(svg);
+  document.getElementById('chartZoomInfoName').textContent = '図の記号を選ぶ';
+  document.getElementById('chartZoomInfoText').textContent = '天体・星座・ASC・MC・ハウスの説明が表示されます。';
+  setChartZoom(100);
+  chartZoom.showModal();
+});
+function selectChartLabel(label) {
+  document.getElementById('chartZoomInfoName').textContent = label.dataset.chartName;
+  document.getElementById('chartZoomInfoText').textContent = label.dataset.chartDescription;
+  const show = label.getAttribute('aria-pressed') !== 'true';
+  chartZoomView.querySelector('[aria-pressed="true"]')?.setAttribute('aria-pressed','false');
+  label.setAttribute('aria-pressed',String(show));
+}
+chartZoomView.addEventListener('click', event => {
+  const label = event.target.closest('[data-chart-name]');
+  if (label) selectChartLabel(label);
+});
+chartZoomView.addEventListener('keydown', event => {
+  const label = event.target.closest('[data-chart-name]');
+  if (!label || !['Enter',' '].includes(event.key) || event.repeat) return;
+  event.preventDefault();
+  selectChartLabel(label);
+});
+
+chartZoomIn.addEventListener('click', () => setChartZoom(chartZoomPercent + 50));
+chartZoomOut.addEventListener('click', () => setChartZoom(chartZoomPercent - 50));
+document.getElementById('chartZoomReset').addEventListener('click', () => setChartZoom(100));
+document.getElementById('closeChartZoom').addEventListener('click', () => chartZoom.close());
+
+function drawChart(lons,asc,houses,planetData,ascSign,mcLon,mcSign){
   const svg=document.getElementById('chart'),cx=200,cy=200,r=175,rS=155,rI=120,rP=100;
   const sc=['#ff4444','#cc8844','#ffee44','#44aaff','#ff8800','#44cc88','#88aaff','#cc4466','#ee8833','#887799','#44ccee','#8866cc'];
   // 表示だけASC基準で回転する。ASC左固定で、第1Hが左下へ進む通常の向きにする。
@@ -446,25 +527,70 @@ function drawChart(lons,asc,houses){
     const signStart=i*30,da=displayLon(signStart),x1=cx+140*Math.cos(rad(da-90)),y1=cy+140*Math.sin(rad(da-90)),x2=cx+r*Math.cos(rad(da-90)),y2=cy+r*Math.sin(rad(da-90));
     h+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${sc[i]}88" stroke-width="1"/>`;
     const m=displayLon(signStart+15);
-    h+=`<text x="${cx+rS*Math.cos(rad(m-90))}" y="${cy+rS*Math.sin(rad(m-90))}" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="${sc[i]}" font-family="serif">${SIGN_SYM[i]}</text>`;
+    const sx=cx+rS*Math.cos(rad(m-90)),sy=cy+rS*Math.sin(rad(m-90));
+    const sign=lonToSign(signStart+15).name;
+    h+=`<g data-chart-name="${sign}" data-chart-description="${SIGN_BEHAVIOR[sign]}">
+      <rect x="${sx-11}" y="${sy-11}" width="22" height="22" fill="transparent"/>
+      <text x="${sx}" y="${sy}" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="${sc[i]}" font-family="serif">${SIGN_SYM[i]}</text>
+    </g>`;
   }
 
   for(let i=0;i<12;i++){
     const a=normDeg((houses&&houses[i]!=null)?houses[i]:asc+i*30),da=displayLon(a),x1=cx+42*Math.cos(rad(da-90)),y1=cy+42*Math.sin(rad(da-90)),x2=cx+140*Math.cos(rad(da-90)),y2=cy+140*Math.sin(rad(da-90));
     h+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#404070" stroke-width="1.1"/>`;
     const m=displayLon(a+15);
-    h+=`<text x="${cx+78*Math.cos(rad(m-90))}" y="${cy+78*Math.sin(rad(m-90))}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#404070">${i+1}</text>`;
+    const hx=cx+78*Math.cos(rad(m-90)),hy=cy+78*Math.sin(rad(m-90));
+    h+=`<g data-chart-name="第${i+1}ハウス" data-chart-description="${HOUSE_PLAIN[i+1]}を表します。">
+      <rect x="${hx-8}" y="${hy-8}" width="16" height="16" fill="transparent"/>
+      <text x="${hx}" y="${hy}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#7474ac">${i+1}</text>
+    </g>`;
   }
   const ascDisplay=displayLon(asc);
   h+=`<line x1="${cx+rI*Math.cos(rad(ascDisplay-90))}" y1="${cy+rI*Math.sin(rad(ascDisplay-90))}" x2="${cx+(r+8)*Math.cos(rad(ascDisplay-90))}" y2="${cy+(r+8)*Math.sin(rad(ascDisplay-90))}" stroke="#f0c040" stroke-width="2"/>`;
-  h+=`<text x="${cx+(r+18)*Math.cos(rad(ascDisplay-90))}" y="${cy+(r+18)*Math.sin(rad(ascDisplay-90))}" text-anchor="middle" font-size="9" fill="#f0c040">ASC</text>`;
+  h+=`<text class="chart-planet-symbol" x="${cx+(r+18)*Math.cos(rad(ascDisplay-90))}" y="${cy+(r+18)*Math.sin(rad(ascDisplay-90))}" text-anchor="middle" font-size="9" fill="#f0c040">ASC</text>`;
+  const labelBoxes = [];
+  let degreeLabels = '';
   lons.forEach((lon,i)=>{
     const dlon=displayLon(lon);
-    h+=`<text x="${cx+rP*Math.cos(rad(dlon-90))}" y="${cy+rP*Math.sin(rad(dlon-90))}" text-anchor="middle" dominant-baseline="middle" font-size="12" fill="${PLANETS[i].col}" font-family="serif">${PLANETS[i].sym}</text>`;
+    const angle=rad(dlon-90);
+    const originalX=cx+rP*Math.cos(angle),originalY=cy+rP*Math.sin(angle);
+    let label;
+    for(const radius of [100,124,80,145,60]){
+      for(const offset of [0, .18, -.18, .36, -.36, .54, -.54, .72, -.72]){
+        const x=cx+radius*Math.cos(angle+offset),y=cy+radius*Math.sin(angle+offset);
+        if(labelBoxes.some(box=>Math.abs(box.x-x)<37&&Math.abs(box.y-y)<24)) continue;
+        label={x,y};
+        break;
+      }
+      if(label) break;
+    }
+    const {x,y}=label||{x:originalX,y:originalY};
+    labelBoxes.push({x,y});
+    const planet=planetData[i];
+    const degrees=`${planet.deg}°${String(planet.min).padStart(2,'0')}′`;
+    const {col,sym}=PLANETS[i];
+    const displaced = Math.hypot(x-originalX,y-originalY) > 0.1;
+    degreeLabels+=`<g class="zoom-degree-label" ${displaced?'data-displaced=""':''} aria-label="${planet.name} ${planet.signName} ${degrees}" data-chart-name="${planet.name}｜${planet.signName} ${degrees}" data-chart-description="${BODY_EXPLANATION[planet.name]}を表します。">
+      ${displaced?`<line class="chart-degree-leader" x1="${originalX}" y1="${originalY}" x2="${x}" y2="${y}" stroke="${col}" stroke-width=".85"/>`:''}
+      <rect x="${x-17}" y="${y-10}" width="34" height="22" rx="3" fill="#08081a"/>
+      <text x="${x}" y="${y-1}" text-anchor="middle" font-size="11" fill="${col}" font-family="serif">${sym}</text>
+      <text x="${x}" y="${y+9}" text-anchor="middle" font-size="8" fill="${col}">${degrees}</text>
+    </g>`;
+    h+=`<text class="chart-planet-symbol" x="${cx+rP*Math.cos(rad(dlon-90))}" y="${cy+rP*Math.sin(rad(dlon-90))}" text-anchor="middle" dominant-baseline="middle" font-size="12" fill="${PLANETS[i].col}" font-family="serif">${PLANETS[i].sym}</text>`;
     h+=`<line x1="${cx+42*Math.cos(rad(dlon-90))}" y1="${cy+42*Math.sin(rad(dlon-90))}" x2="${cx+rI*Math.cos(rad(dlon-90))}" y2="${cy+rI*Math.sin(rad(dlon-90))}" stroke="${PLANETS[i].col}55" stroke-width=".8"/>`;
   });
   h+=`<text x="${cx}" y="${cy-6}" text-anchor="middle" font-size="10" fill="#7b5ea7">HOROSCOPE</text><text x="${cx}" y="${cy+8}" text-anchor="middle" font-size="8" fill="#5050a0">✦ ✦ ✦</text>`;
-  svg.innerHTML=h;
+  for(const [name,longitude,sign] of [['ASC',asc,ascSign],['MC',mcLon,mcSign]]){
+    const angle=rad(displayLon(longitude)-90);
+    const x=cx+181*Math.cos(angle), y=cy+181*Math.sin(angle);
+    const degrees=`${sign.deg}°${String(sign.min).padStart(2,'0')}′`;
+    degreeLabels+=`<g class="zoom-degree-label" aria-label="${name} ${sign.name} ${degrees}" data-chart-name="${name==='ASC'?'ASC（上昇点）':'MC（天頂）'}｜${sign.name} ${degrees}" data-chart-description="${name==='ASC'?'第一印象や、初めての場面での振る舞いを見る目印です。':'仕事や社会で、どんな役割を目指すかを見る目印です。'}">
+      <rect x="${x-18}" y="${y-10}" width="36" height="22" rx="3" fill="#08081a"/>
+      <text x="${x}" y="${y-1}" text-anchor="middle" font-size="8" fill="#f0c040">${name}</text>
+      <text x="${x}" y="${y+9}" text-anchor="middle" font-size="8" fill="#f0c040">${degrees}</text>
+    </g>`;
+  }
+  svg.innerHTML=h+degreeLabels;
 }
 
 // ─── コピー ───
@@ -1387,7 +1513,7 @@ async function runHoroscopeCalculation(){
   }
 
   // チャート描画
-  drawChart(rawLons,ascLon,houses);
+  drawChart(rawLons,ascLon,houses,planetData,ascSign,mcLon,mcSign);
 
   // ─── 命式テキスト生成 ───
   let txt='';
