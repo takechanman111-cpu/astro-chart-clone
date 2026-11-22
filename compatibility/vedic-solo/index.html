@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>インド占星術｜学びのアトリエ</title><meta name="description" content="生まれ持った資質や強み、今の時期を、出生図に合わせた日本語の解説で確かめるインド占星術アプリ。"><link rel="stylesheet" href="/style.css"><script type="module" src="/app.mjs"></script></head>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>インド占星術｜学びのアトリエ</title><meta name="description" content="生まれ持った資質や強み、今の時期を、出生図に合わせた日本語の解説で確かめるインド占星術アプリ。"><link rel="stylesheet" href="./style.css"><script type="module" src="./app.mjs"></script></head>
 <body>
 <header class="topbar"><a href="#" class="brand"><span class="brand-mark" aria-hidden="true">✧</span><span>学びのアトリエ<small>INDIAN ASTROLOGY</small></span></a><span class="header-note">星の配置から、自分を知る。</span></header>
 <main>
@@ -17,10 +17,10 @@
 <label for="as-of">運勢を見る日<span class="required">必須</span></label><input id="as-of" name="asOf" type="date" min="1900-01-01" max="2199-12-31" required><p class="hint">今日以外の日も選べます。運勢の基準日は日本時間です。</p>
 <details class="settings"><summary>詳しい計算設定</summary><label for="ayanamsa">星座の基準（アヤナムシャ）</label><select id="ayanamsa" name="ayanamsa"><option value="lahiri">ラヒリ（初期設定）</option><option value="raman">ラーマン</option><option value="krishnamurti">クリシュナムルティ</option></select><label for="node">ラーフ・ケートゥ</label><select id="node" name="node"><option value="mean">平均交点（初期設定）</option><option value="true">真交点</option></select><label for="yearDays">ダシャーの1年</label><select id="yearDays" name="yearDays"><option value="365.25">365.25日（初期設定）</option><option value="365.256364">365.256364日（恒星年）</option><option value="360">360日</option></select><label for="fold">夏時間で同じ時刻が2回ある場合</label><select id="fold" name="fold"><option value="earlier">先に来る時刻</option><option value="later">後に来る時刻</option></select><p class="hint">通常は初期設定のまま使えます。他のソフトと比較するときは設定を揃えてください。</p></details>
 <button class="primary" type="submit" id="calculate">星の配置を読み解く <span aria-hidden="true">→</span></button><p id="error" class="error" role="alert" hidden></p><p id="busy" class="hint" aria-live="polite" hidden>星の配置と時刻の幅を計算しています…</p>
-<button id="sample" type="button" class="sample-button">架空の入力例で試す</button><p class="privacy">出生情報はこの端末で計算します。<br>入力履歴の保存や外部サービスへの送信はしません。</p>
+<button id="sample" type="button" class="sample-button">架空の入力例で試す</button><p class="privacy">入力した出生情報は、星の配置を計算するためにこのアプリの計算サーバーへ送信します。</p>
 </form></aside>
 <div class="result-column"><section id="empty" class="empty-state"><span class="empty-symbol" aria-hidden="true">☽</span><p class="eyebrow">YOUR PERSONAL READING</p><h2>星の名前を知らなくても、<br>自分のこととして読めるように。</h2><p>左の出生情報を入力すると、<br>あなたの結果に合わせた解説がここに表示されます。</p><div class="empty-features"><div><b>01</b><h3>生まれ持った資質</h3><p>取りかかり方、心の動き、力を発揮しやすい場面。</p></div><div><b>02</b><h3>強みの生かし方</h3><p>仕事や人間関係での使いどころと、具体的な工夫。</p></div><div><b>03</b><h3>今の運勢</h3><p>現在のテーマ、追い風、注意点、次の時期への移り変わり。</p></div></div><p class="empty-caption">出生時刻が分からない場合も、分かる範囲を丁寧にお伝えします。</p></section>
 <section id="results" hidden aria-live="polite"></section></div>
 </div>
 <footer><p>インド占星術の伝統的な解釈をもとに、自分の傾向や時期を考えるためのアプリです。</p><p>配置は人格や将来を確定するものではありません。</p><a href="https://www.vedicastrologer.org/articles/vedic_astro_textbook.pdf" target="_blank" rel="noopener">解釈の参考資料</a><span> · </span><a href="https://www.astro.com/swisseph/swephprg.htm" target="_blank" rel="noopener">計算の参考資料</a></footer>
-</main><p><a href="https://github.com/takechanman111-cpu/astro-chart-clone/tree/compatibility-release-preview" target="_blank" rel="noopener noreferrer">計算・アプリの公開ソースコード</a></p></body></html>
+</main><p><a href="https://github.com/takechanman111-cpu/astro-chart-clone/tree/main" target="_blank" rel="noopener noreferrer">計算・アプリの公開ソースコード</a></p></body></html>
