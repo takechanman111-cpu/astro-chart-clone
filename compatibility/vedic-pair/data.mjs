@@ -83,8 +83,8 @@ export function birthdateISO(year,month,day){
 }
 
 export const ZODIAC_IMAGE_KEYS=['aries','taurus','gemini','cancer','leo','virgo','libra','scorpio','sagittarius','capricorn','aquarius','pisces'];
-export function zodiacImagePath(sign){return Number.isInteger(sign)&&sign>=0&&sign<12?`/images/zodiac/${ZODIAC_IMAGE_KEYS[sign]}.jpg`:null;}
+export function zodiacImagePath(sign){return Number.isInteger(sign)&&sign>=0&&sign<12?`./images/zodiac/${ZODIAC_IMAGE_KEYS[sign]}.jpg`:null;}
 export function topicImagePath(topic){
- if(['sun','moon','mercury','venus','mars','jupiter','saturn','lagna','nakshatra','dasha','navamsa','rahu','ketu'].includes(topic))return `/images/vedic/${topic}.jpg`;
+ if(['sun','moon','mercury','venus','mars','jupiter','saturn','lagna','nakshatra','dasha','navamsa','rahu','ketu'].includes(topic))return `./images/vedic/${topic}.jpg`;
  return null;
 }
