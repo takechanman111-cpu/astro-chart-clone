@@ -16,9 +16,9 @@ export async function handler(event) {
   try {
     return json(200, await calculate(JSON.parse(body)));
   } catch (e) {
-    if (e?.code === 'ENOENT' || e?.code === 'EACCES' || e?.killed) {
+    if (e?.syscall || e?.stderr !== undefined || e?.killed) {
       return json(503, {error: '計算エンジンを利用できません。'});
     }
-    return json(400, {error: '二人の入力内容を確認してください。'});
+    return json(400, {error: '出生情報を確認してください。'});
   }
 }
