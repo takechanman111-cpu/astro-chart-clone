@@ -1,7 +1,7 @@
 [build]
   publish = "."
   functions = "netlify/functions"
-  command = "npm run build:netlify && npm run check:deploy"
+  command = "npm run build:netlify && npm run check:deploy && bash compatibility/western/build.sh && (cd engine && npm run build && node --test tests/core.test.mjs tests/compatibility.test.mjs)"
 
 [build.environment]
   NODE_VERSION = "22"
@@ -13,6 +13,9 @@
   node_bundler = "esbuild"
   included_files = [
     "netlify/swiss/**",
+    "compatibility/western/runtime/**",
+    "engine/bin/vedic-swiss",
+    "engine/vendor/swiss/ephe/**",
     "reference-fixtures/**",
     "reference-additional-validation-data.json"
   ]

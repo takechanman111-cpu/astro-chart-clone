@@ -1,0 +1,376 @@
+{
+  "checkedAt": "2026-11-22T20:16:22.242Z",
+  "checks": [
+    "12 sign boundaries + 108 D9/pada boundaries",
+    "Rao D9 Mercury 11 Gemini/Jupiter 19 Scorpio; Vimshottari 2.24875-year balance",
+    "Japan 1950 DST; Kolkata +5:30; New York 23/25-hour days and folds/gaps",
+    {
+      "realCharts": 88,
+      "all12Lagnas": true,
+      "all27MoonStars": true,
+      "outputs": [
+        {
+          "hour": 0,
+          "asc": 5,
+          "theme": "創作・学び・楽しみ",
+          "title": "気づきと工夫で、使いやすく整える"
+        },
+        {
+          "hour": 1,
+          "asc": 6,
+          "theme": "住まい・安心・生活",
+          "title": "違いを聞き、納得できる形を探す"
+        },
+        {
+          "hour": 2,
+          "asc": 6,
+          "theme": "住まい・安心・生活",
+          "title": "違いを聞き、納得できる形を探す"
+        },
+        {
+          "hour": 3,
+          "asc": 6,
+          "theme": "住まい・安心・生活",
+          "title": "違いを聞き、納得できる形を探す"
+        },
+        {
+          "hour": 4,
+          "asc": 7,
+          "theme": "発信・練習・身近な挑戦",
+          "title": "表面の奥にあるものを、深く確かめる"
+        },
+        {
+          "hour": 5,
+          "asc": 7,
+          "theme": "発信・練習・身近な挑戦",
+          "title": "表面の奥にあるものを、深く確かめる"
+        },
+        {
+          "hour": 6,
+          "asc": 8,
+          "theme": "自分自身・行動",
+          "title": "視野を広げ、可能性を探す"
+        },
+        {
+          "hour": 7,
+          "asc": 8,
+          "theme": "自分自身・行動",
+          "title": "視野を広げ、可能性を探す"
+        },
+        {
+          "hour": 8,
+          "asc": 9,
+          "theme": "休息・整理・離れた場所",
+          "title": "現実的な手順で、信頼を積み上げる"
+        },
+        {
+          "hour": 9,
+          "asc": 9,
+          "theme": "休息・整理・離れた場所",
+          "title": "現実的な手順で、信頼を積み上げる"
+        },
+        {
+          "hour": 10,
+          "asc": 10,
+          "theme": "仲間・成果・希望",
+          "title": "違う見方から、仕組みを変える"
+        },
+        {
+          "hour": 11,
+          "asc": 11,
+          "theme": "仕事・責任・社会での役割",
+          "title": "感じ取ったことを、やさしく形にする"
+        },
+        {
+          "hour": 12,
+          "asc": 11,
+          "theme": "仕事・責任・社会での役割",
+          "title": "感じ取ったことを、やさしく形にする"
+        },
+        {
+          "hour": 13,
+          "asc": 0,
+          "theme": "専門の学び・視野・指針",
+          "title": "まず動き、道をつくる"
+        },
+        {
+          "hour": 14,
+          "asc": 1,
+          "theme": "共有・変化・深い理解",
+          "title": "確かなものを、じっくり育てる"
+        },
+        {
+          "hour": 15,
+          "asc": 1,
+          "theme": "共有・変化・深い理解",
+          "title": "確かなものを、じっくり育てる"
+        },
+        {
+          "hour": 16,
+          "asc": 2,
+          "theme": "共有・変化・深い理解",
+          "title": "知り、伝え、つなげる"
+        },
+        {
+          "hour": 17,
+          "asc": 2,
+          "theme": "共有・変化・深い理解",
+          "title": "知り、伝え、つなげる"
+        },
+        {
+          "hour": 18,
+          "asc": 3,
+          "theme": "パートナー・協力・契約",
+          "title": "大切な人と、安心を育てる"
+        },
+        {
+          "hour": 19,
+          "asc": 3,
+          "theme": "パートナー・協力・契約",
+          "title": "大切な人と、安心を育てる"
+        },
+        {
+          "hour": 20,
+          "asc": 3,
+          "theme": "自分自身・行動",
+          "title": "大切な人と、安心を育てる"
+        },
+        {
+          "hour": 21,
+          "asc": 4,
+          "theme": "日々の仕事・調整・習慣",
+          "title": "自分の思いを、形にして届ける"
+        },
+        {
+          "hour": 22,
+          "asc": 4,
+          "theme": "日々の仕事・調整・習慣",
+          "title": "自分の思いを、形にして届ける"
+        },
+        {
+          "hour": 23,
+          "asc": 5,
+          "theme": "創作・学び・楽しみ",
+          "title": "気づきと工夫で、使いやすく整える"
+        }
+      ]
+    },
+    "unknown time: no invented ASC/house/D9/dasha; Moon candidates continuous"
+  ],
+  "reference": [
+    {
+      "iso": "1900-01-01T03:00:00Z",
+      "node": "mean",
+      "maxLongitudeDifferenceDegrees": 4.760499905387405e-8,
+      "ascDifferenceDegrees": 4.211699433653848e-8
+    },
+    {
+      "iso": "1900-01-01T03:00:00Z",
+      "node": "true",
+      "maxLongitudeDifferenceDegrees": 3.202799803148082e-8,
+      "ascDifferenceDegrees": 4.211699433653848e-8
+    },
+    {
+      "iso": "1950-07-01T02:00:00Z",
+      "node": "mean",
+      "maxLongitudeDifferenceDegrees": 4.695100130902574e-8,
+      "ascDifferenceDegrees": 3.149401095470239e-8
+    },
+    {
+      "iso": "1950-07-01T02:00:00Z",
+      "node": "true",
+      "maxLongitudeDifferenceDegrees": 4.695100130902574e-8,
+      "ascDifferenceDegrees": 3.149401095470239e-8
+    },
+    {
+      "iso": "1990-01-01T03:00:00Z",
+      "node": "mean",
+      "maxLongitudeDifferenceDegrees": 4.502300043895957e-8,
+      "ascDifferenceDegrees": 4.781099960382562e-8
+    },
+    {
+      "iso": "1990-01-01T03:00:00Z",
+      "node": "true",
+      "maxLongitudeDifferenceDegrees": 4.502300043895957e-8,
+      "ascDifferenceDegrees": 4.781099960382562e-8
+    },
+    {
+      "iso": "2000-02-29T06:34:56Z",
+      "node": "mean",
+      "maxLongitudeDifferenceDegrees": 4.077899973253807e-8,
+      "ascDifferenceDegrees": 7.251998113133595e-9
+    },
+    {
+      "iso": "2000-02-29T06:34:56Z",
+      "node": "true",
+      "maxLongitudeDifferenceDegrees": 4.4634006712840346e-8,
+      "ascDifferenceDegrees": 7.251998113133595e-9
+    },
+    {
+      "iso": "2026-11-14T03:00:00Z",
+      "node": "mean",
+      "maxLongitudeDifferenceDegrees": 4.742599912788137e-8,
+      "ascDifferenceDegrees": 1.1727024684660137e-8
+    },
+    {
+      "iso": "2026-11-14T03:00:00Z",
+      "node": "true",
+      "maxLongitudeDifferenceDegrees": 4.742599912788137e-8,
+      "ascDifferenceDegrees": 1.1727024684660137e-8
+    },
+    {
+      "iso": "2099-12-31T03:00:00Z",
+      "node": "mean",
+      "maxLongitudeDifferenceDegrees": 4.576600076688919e-8,
+      "ascDifferenceDegrees": 2.998501713591395e-8
+    },
+    {
+      "iso": "2099-12-31T03:00:00Z",
+      "node": "true",
+      "maxLongitudeDifferenceDegrees": 4.517000018466888e-8,
+      "ascDifferenceDegrees": 2.998501713591395e-8
+    }
+  ],
+  "independent": [
+    {
+      "iso": "1900-01-01T12:00:00Z",
+      "body": "Sun",
+      "differenceArcsec": 0.28558869209973636
+    },
+    {
+      "iso": "1900-01-01T12:00:00Z",
+      "body": "Moon",
+      "differenceArcsec": 2.2422621466830606
+    },
+    {
+      "iso": "1900-01-01T12:00:00Z",
+      "body": "Mercury",
+      "differenceArcsec": -0.17862589027117792
+    },
+    {
+      "iso": "1900-01-01T12:00:00Z",
+      "body": "Venus",
+      "differenceArcsec": -0.39100682479329407
+    },
+    {
+      "iso": "1900-01-01T12:00:00Z",
+      "body": "Mars",
+      "differenceArcsec": -0.24419550127277034
+    },
+    {
+      "iso": "1900-01-01T12:00:00Z",
+      "body": "Jupiter",
+      "differenceArcsec": 1.5827722335075123
+    },
+    {
+      "iso": "1900-01-01T12:00:00Z",
+      "body": "Saturn",
+      "differenceArcsec": -6.525059167620384
+    },
+    {
+      "iso": "1950-07-01T12:00:00Z",
+      "body": "Sun",
+      "differenceArcsec": -0.08062088832048175
+    },
+    {
+      "iso": "1950-07-01T12:00:00Z",
+      "body": "Moon",
+      "differenceArcsec": -0.19156813709741982
+    },
+    {
+      "iso": "1950-07-01T12:00:00Z",
+      "body": "Mercury",
+      "differenceArcsec": 2.438753154569895
+    },
+    {
+      "iso": "1950-07-01T12:00:00Z",
+      "body": "Venus",
+      "differenceArcsec": -1.6113740482865069
+    },
+    {
+      "iso": "1950-07-01T12:00:00Z",
+      "body": "Mars",
+      "differenceArcsec": 0.3041253032961322
+    },
+    {
+      "iso": "1950-07-01T12:00:00Z",
+      "body": "Jupiter",
+      "differenceArcsec": -2.494919945570473
+    },
+    {
+      "iso": "1950-07-01T12:00:00Z",
+      "body": "Saturn",
+      "differenceArcsec": -2.1161174770099933
+    },
+    {
+      "iso": "2000-01-01T12:00:00Z",
+      "body": "Sun",
+      "differenceArcsec": -0.6631915626712725
+    },
+    {
+      "iso": "2000-01-01T12:00:00Z",
+      "body": "Moon",
+      "differenceArcsec": 0.32498799535005674
+    },
+    {
+      "iso": "2000-01-01T12:00:00Z",
+      "body": "Mercury",
+      "differenceArcsec": -1.3369532147862628
+    },
+    {
+      "iso": "2000-01-01T12:00:00Z",
+      "body": "Venus",
+      "differenceArcsec": -2.0174820477905087
+    },
+    {
+      "iso": "2000-01-01T12:00:00Z",
+      "body": "Mars",
+      "differenceArcsec": 2.136110759533949
+    },
+    {
+      "iso": "2000-01-01T12:00:00Z",
+      "body": "Jupiter",
+      "differenceArcsec": 4.004994262425043
+    },
+    {
+      "iso": "2000-01-01T12:00:00Z",
+      "body": "Saturn",
+      "differenceArcsec": 1.6586062430178572
+    },
+    {
+      "iso": "2026-11-14T12:00:00Z",
+      "body": "Sun",
+      "differenceArcsec": -0.49071585926867556
+    },
+    {
+      "iso": "2026-11-14T12:00:00Z",
+      "body": "Moon",
+      "differenceArcsec": 2.4224578110761286
+    },
+    {
+      "iso": "2026-11-14T12:00:00Z",
+      "body": "Mercury",
+      "differenceArcsec": 2.0652275361726424
+    },
+    {
+      "iso": "2026-11-14T12:00:00Z",
+      "body": "Venus",
+      "differenceArcsec": -9.90273268294004
+    },
+    {
+      "iso": "2026-11-14T12:00:00Z",
+      "body": "Mars",
+      "differenceArcsec": -0.33418464846590723
+    },
+    {
+      "iso": "2026-11-14T12:00:00Z",
+      "body": "Jupiter",
+      "differenceArcsec": -1.857045588485562
+    },
+    {
+      "iso": "2026-11-14T12:00:00Z",
+      "body": "Saturn",
+      "differenceArcsec": -10.215112923935976
+    }
+  ]
+}

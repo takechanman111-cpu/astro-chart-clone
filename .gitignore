@@ -33,3 +33,9 @@ birth-data/
 *.db
 sessions/
 uploads/
+
+/compatibility/western/runtime/
+/compatibility/western/swiss-source/*.o
+/compatibility/western/swiss-source/*.a
+/compatibility/western/swiss-source/swetest
+/engine/bin/vedic-swiss
