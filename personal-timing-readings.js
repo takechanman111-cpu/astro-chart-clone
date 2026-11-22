@@ -42,12 +42,18 @@ function monthlyTimingParagraphs(row,houses){
   const lord=row.monthly_transits.find(t=>t.body_ja===p.lord_of_month),lordHouse=lord?getHouseNum(lord.longitude,houses):null;
   const hits=(row.notable_transits||[]).filter(a=>NATAL_TIMING_TARGET[a.natal_body]).slice(0,3);
   const moon=row.progressed_moon;
-  return [`<b>この期間は「${act[0]}」を予定に入れましょう。</b>${act[1]}気をつけたいのは、${act[2]}です。${lord&&lordHouse===p.activated_house?`<br><small>月主星の${p.lord_of_month}も、期間初日は${lord.sign_ja}・出生図の第${lordHouse}ハウスにあり、同じ生活分野が重なっています。</small>`:''}`,
+  const changes=row.profection_changes||[];
+  const opening=changes.length?`<b>${row.active_from}から${changes[0].date}の前日まで：</b>`:'';
+  return [`${opening}<b>この期間は「${act[0]}」を予定に入れましょう。</b>${act[1]}気をつけたいのは、${act[2]}です。${lord&&lordHouse===p.activated_house?`<br><small>月主星の${p.lord_of_month}も、期間初日は${lord.sign_ja}・出生図の第${lordHouse}ハウスにあり、同じ生活分野が重なっています。</small>`:''}`,
   `<b>進めるときのコツ：</b>${SIGN_BEHAVIOR[p.activated_sign]}${SIGN_ADVICE[p.activated_sign]}<br><small>月別プロフェクション：${p.activated_sign}・第${p.activated_house}ハウス。</small>`,
   ...(lord&&lordHouse!==p.activated_house?[`<b>今月のテーマを、${HOUSE_PLAIN[lordHouse]}にもつなげるなら：</b>${TIMING_ACTIONS[lordHouse][1]}<br><small>月主星の${p.lord_of_month}は期間初日に${lord.sign_ja}・出生図の第${lordHouse}ハウス。</small>`]:[]),
+  ...changes.map(change=>{
+    const next=TIMING_ACTIONS[change.activated_house];
+    return `<b>${change.date}からは「${next[0]}」。</b>${next[1]}気をつけたいのは、${next[2]}です。<br><small>月別プロフェクション：${change.activated_sign}・第${change.activated_house}ハウス。月主星は${change.lord_of_month}。</small>`;
+  }),
   ...hits.map(a=>timingAspectParagraph(a,houses)),
   ...(moon?[`<b>気持ちを整えるには：</b>${SIGN_COMFORT[moon.sign_ja]}${TIMING_ACTIONS[getHouseNum(moon.longitude,houses)][1]}<br><small>期間初日の進行した月：${moon.sign_ja}・出生図の第${getHouseNum(moon.longitude,houses)}ハウス。</small>`]:[]),
-  `<b>この期間の読み方：</b>${row.active_from}〜${row.active_to}の予定を考える欄です。年齢と誕生日から求める月別テーマに、期間初日の天体位置と進行した月を合わせています。角度は初日の状態で、この期間ずっと続くことや、出来事の発生日を示すものではありません。誕生日をまたぐ区間では、月別テーマが途中で切り替わる場合があります。`];
+  `<b>この期間の読み方：</b>${row.active_from}〜${row.active_to}の予定を考える欄です。年齢と誕生日から求める月別テーマに、期間初日の天体位置と進行した月を合わせています。角度は初日の状態で、この期間ずっと続くことや、出来事の発生日を示すものではありません。途中でテーマが切り替わる場合は、切り替わる日とその後の過ごし方を上に載せています。`];
 }
 const PROGRESS_GOALS={
 '牡羊座':['自分で決めて始めたい','誰かの賛成を待っていた計画を、小さく試す','早く結果を出そうとして、相手の準備を置き去りにしない'],

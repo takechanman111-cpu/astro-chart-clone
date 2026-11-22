@@ -702,6 +702,18 @@ export function pastPresentFutureFlow(input, targetDate, ascLongitude, engine = 
 }
 
 function monthlyTimingRow(input, ascLongitude, engine, natalRows, periodStart, periodEnd, offsetFromTarget) {
+  const age = ageAtDate(input, periodStart);
+  const anniversary = anniversaryDate(input, age);
+  const boundaries = [
+    ...Array.from({ length: 11 }, (_, index) => addMonthsToYmd(anniversary, index + 1)),
+    anniversaryDate(input, age + 1)
+  ];
+  const profectionChanges = boundaries
+    .filter(date => compareYmd(date, periodStart) > 0 && compareYmd(date, periodEnd) < 0)
+    .map(date => ({
+      date: ymd(date.year, date.month, date.day),
+      ...monthlyProfection(input, date, ascLongitude)
+    }));
   const profection = monthlyProfection(input, periodStart, ascLongitude);
   const progressions = secondaryProgressions(input, periodStart, engine, PROGRESSED_YEAR_MARKERS);
   const monthTransits = transits(periodStart, engine, BODIES);
@@ -714,6 +726,7 @@ function monthlyTimingRow(input, ascLongitude, engine, natalRows, periodStart, p
     active_from: ymd(periodStart.year, periodStart.month, periodStart.day),
     active_to: ymd(periodEnd.year, periodEnd.month, periodEnd.day),
     monthly_profection: profection,
+    profection_changes: profectionChanges,
     secondary_progressions: progressions,
     progressed_sun: pickPlanet(progressions.planets, 'Sun'),
     progressed_moon: pickPlanet(progressions.planets, 'Moon'),

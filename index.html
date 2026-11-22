@@ -1171,9 +1171,9 @@ async function runHoroscopeCalculation(){
     grpCount[p.group]++;
     const ht=[1,4,7,10].includes(p.house)?'角':[2,5,8,11].includes(p.house)?'続':'果て';
     houseType[ht]++;
-    // 半球（東=1〜6H、西=7〜12H、上=7〜12H逆転思考→ハウス位置で近似）
-    if(p.house>=1&&p.house<=6)hemi['東']++;else hemi['西']++;
-    if(p.house>=10||p.house<=3)hemi['上']++;else hemi['下']++;
+    // 左右は第1・第7カスプの軸、上下は第4・第10カスプの軸で区分。
+    if(p.house>=10||p.house<=3)hemi['東']++;else hemi['西']++;
+    if(p.house>=7)hemi['上']++;else hemi['下']++;
     sex[['火','風'].includes(p.elem)?'男性':'女性']++;
     signConc[p.signName]=(signConc[p.signName]||0)+1;
     houseConc[p.house]=(houseConc[p.house]||0)+1;
@@ -1192,8 +1192,8 @@ async function runHoroscopeCalculation(){
       <div style="padding:3px 0">果てハウス（3/6/9/12）：<span style="color:var(--gold)">${houseType['果て']}</span></div>
     </div>
     <div><div style="color:var(--muted);font-size:.72rem;margin-bottom:6px">半球バランス</div>
-      <div style="padding:3px 0">東（1〜6H）：<span style="color:var(--gold)">${hemi['東']}</span> ／ 西（7〜12H）：<span style="color:var(--gold)">${hemi['西']}</span></div>
-      <div style="padding:3px 0">上（10〜3H）：<span style="color:var(--gold)">${hemi['上']}</span> ／ 下（4〜9H）：<span style="color:var(--gold)">${hemi['下']}</span></div>
+      <div style="padding:3px 0">東（10〜3H）：<span style="color:var(--gold)">${hemi['東']}</span> ／ 西（4〜9H）：<span style="color:var(--gold)">${hemi['西']}</span></div>
+      <div style="padding:3px 0">上（7〜12H）：<span style="color:var(--gold)">${hemi['上']}</span> ／ 下（1〜6H）：<span style="color:var(--gold)">${hemi['下']}</span></div>
     </div>
     <div><div style="color:var(--muted);font-size:.72rem;margin-bottom:6px">男女星座バランス</div>
       <div style="padding:3px 0">男性（火・風）：<span style="color:var(--gold)">${sex['男性']}</span></div>
@@ -1369,9 +1369,9 @@ async function runHoroscopeCalculation(){
     const progressMoon=planetByBody(data.secondary_progressions.planets,'Moon');
     const returnSun=planetByBody(data.solar_return.planets,'Sun');
     const returnMoon=planetByBody(data.solar_return.planets,'Moon');
-    document.getElementById('readingArea').innerHTML=`<h3>今のテーマ</h3><p>今年は「${HOUSE_PLAIN[annual.activated_house]}」が年齢から読むテーマです。${currentMonth?`今月（${currentMonth.active_from}〜${currentMonth.active_to}）は「${HOUSE_PLAIN[currentMonth.monthly_profection.activated_house]}」に目を向けます。`:''}</p><p>下では、現在の天体から読む話、誕生日からの一年、月ごとのテーマ、長い時間の気持ちの変化を、それぞれの計算方法と一緒に読めます。</p>`;
+    document.getElementById('readingArea').innerHTML=`<h3>今のテーマ</h3><p>今年は「${HOUSE_PLAIN[annual.activated_house]}」が年齢から読むテーマです。${currentMonth?`基準日（${currentMonth.active_from}）の月別テーマは「${HOUSE_PLAIN[currentMonth.monthly_profection.activated_house]}」に目を向けます。`:''}</p><p>下では、現在の天体から読む話、誕生日からの一年、月ごとのテーマ、長い時間の気持ちの変化を、それぞれの計算方法と一緒に読めます。</p>`;
     const yearCard=explanationCard('今年｜誕生日からの一年の過ごし方',solarReturnParagraphs(data.active_solar_return||data.solar_return),['solar-return']);
-    const monthDetails=months.map(row=>explanationCard(`${row.active_from}〜${row.active_to}｜${HOUSE_PLAIN[row.monthly_profection.activated_house]}`,monthlyTimingParagraphs(row,houses),[])).join('');
+    const monthDetails=months.map(row=>explanationCard(`${row.active_from}〜${row.active_to}｜${[row.monthly_profection,...(row.profection_changes||[])].map(p=>HOUSE_PLAIN[p.activated_house]).join(" → ")}`,monthlyTimingParagraphs(row,houses),[])).join('');
     const monthlyCard=`<details class="explain-item"><summary>月別｜未来12か月のテーマ</summary>${detailIllustrations('未来12か月のテーマ',['profection'])}<p><b>今年の年齢から読むテーマ：</b>${annual.age}歳の年は第${annual.activated_house}ハウス「${HOUSE_PLAIN[annual.activated_house]}」。年主星は${annual.lord_of_year}です。</p><p><b>計算方法：プロフェクション</b>誕生日ごとに注目するハウスを一つ進め、年の中でも月ごとに注目先を進めます。下の各月は、そのハウス・星座・月主星を使った今回の解説です。</p><div class="explain-grid">${monthDetails}</div></details>`;
     const progressCard=explanationCard('長期｜目標や安心できる条件の変化',longTimingParagraphs(data,houses),['progression']);
     document.getElementById('timingExplanations').innerHTML=explanationCard('現在｜今の天体から読む生活のテーマ',currentTimingParagraphs(data,houses),['transit'])+yearCard+monthlyCard+progressCard;
@@ -1461,6 +1461,7 @@ async function runHoroscopeCalculation(){
         const mp=row.monthly_profection;
         const aspects=(row.notable_transits||[]).slice(0,3).map(transitAspectLine).join('／')||'該当なし';
         txt+=`　${row.period}：第${mp.activated_house}H ${mp.activated_sign}／月主星 ${mp.lord_of_month}\n`;
+        for(const change of row.profection_changes||[]) txt+=`　　${change.date}から：第${change.activated_house}H ${change.activated_sign}／月主星 ${change.lord_of_month}\n`;
         txt+=`　　P月：${establishedPlanetLine(row.progressed_moon)}\n`;
         txt+=`　　月初T：${(row.long_term_transits||[]).map(establishedPlanetLine).join('／')||'取得なし'}\n`;
         txt+=`　　主要Tアスペクト：${aspects}\n`;
