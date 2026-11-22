@@ -1,6 +1,5 @@
 import path from 'node:path';
 import { accessSync, constants } from 'node:fs';
-import { timingSafeEqual } from 'node:crypto';
 import { calculatePair } from '../../scripts/pair.mjs';
 
 function response(statusCode, body) {
@@ -12,11 +11,6 @@ function response(statusCode, body) {
 }
 
 export async function handler(event) {
-  const secret = process.env.SYNASTRY_PROXY_TOKEN || '';
-  const expected = Buffer.from(secret);
-  const received = Buffer.from(event.headers?.['x-synastry-proxy-token'] || '');
-  if (expected.length < 32) return response(503,{message:'計算サービスの設定を確認してください。'});
-  if (received.length !== expected.length || !timingSafeEqual(received,expected)) return response(403,{message:'アクセスできません。'});
   if (event.httpMethod !== 'POST') return response(405,{message:'POSTが必要です。'});
   const body = event.body ?? '';
   if (event.isBase64Encoded || Buffer.byteLength(body) > 4096 || !/^application\/json(?:\s*;|$)/i.test(event.headers?.['content-type'] ?? '')) {

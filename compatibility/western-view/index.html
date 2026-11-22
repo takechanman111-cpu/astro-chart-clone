@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>二人の相性｜西洋占星術</title>
+<link rel="stylesheet" href="./style.css">
+<script type="module" src="./ui.mjs"></script>
+</head>
+<body>
+<main>
+<header>
+<h1 class="visually-hidden">西洋占星術 相性占い</h1>
+<img src="./assets/synastry-hero-reading.jpg" alt="" width="1500" height="600">
+<p>会話が弾むところ、ペースがずれやすいところ。<br>二人が生まれたときの星の位置を比べて読みます。</p>
+</header>
+<form id="birth-form">
+<div class="people" id="people"></div>
+<p class="muted">1952〜2099年の日本標準時に対応しています。二人の出生時刻を入力してください。</p>
+<button type="submit">二人の相性を読む</button>
+<p id="status" role="status"></p>
+</form>
+<section id="result" aria-labelledby="result-title" hidden>
+<h2 id="result-title" tabindex="-1">二人の相性結果</h2>
+<p id="summary"></p>
+<div id="matches"></div>
+<details class="panel"><summary>二人の天体の位置</summary><div id="positions" class="people"></div></details>
+</section>
+<details class="panel"><summary>何を比べているの？</summary>
+<p>生まれたときの太陽・月・水星・金星・火星を、相手の5天体と一つずつ比べます。二人の星の間でできる角度を読む西洋占星術の方法を、シナストリーと呼びます。</p>
+<p>角度は0°・60°・90°・120°・180°の5種類です。60°は前後6°、ほかは前後8°までを表示します。「ずれ」は基準の角度との差です。結果はその差が小さい順に並びます。</p>
+<p>この版で読むのは日常の会話、安心できる距離、好み、行動のペースです。計算にはSwiss Ephemerisの地心・トロピカル黄経を使います。</p>
+</details>
+</main>
+<p><a href="https://github.com/takechanman111-cpu/astro-chart-clone/tree/compatibility-release-preview" target="_blank" rel="noopener noreferrer">計算・アプリの公開ソースコード</a></p></body>
+</html>

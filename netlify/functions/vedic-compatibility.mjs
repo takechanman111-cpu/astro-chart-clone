@@ -1,4 +1,3 @@
-import { timingSafeEqual } from 'node:crypto';
 import { calculateCompatibility } from '../../engine/lib/compatibility.mjs';
 
 const json = (statusCode, result) => ({
@@ -8,12 +7,6 @@ const json = (statusCode, result) => ({
 });
 
 export async function handler(event) {
-  const expected = Buffer.from(process.env.VEDIC_PROXY_TOKEN ?? '');
-  const provided = Buffer.from(event.headers?.['x-vedic-proxy-token'] ?? '');
-  if (expected.length < 32) return json(503, {error: '計算サービスの設定が必要です。'});
-  if (provided.length !== expected.length || !timingSafeEqual(provided, expected)) {
-    return json(403, {error: 'アクセスできません。'});
-  }
   if (event.httpMethod !== 'POST') return json(405, {error: 'POSTが必要です。'});
   const body = event.body ?? '';
   if (event.isBase64Encoded || Buffer.byteLength(body) > 16000 ||

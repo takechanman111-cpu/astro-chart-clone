@@ -29,3 +29,18 @@
   from = "/healthz"
   to = "/.netlify/functions/healthz"
   status = 200
+
+[[redirects]]
+  from = "/api/synastry"
+  to = "/.netlify/functions/synastry"
+  status = 200
+
+[[redirects]]
+  from = "/api/vedic-natal"
+  to = "/.netlify/functions/vedic-natal"
+  status = 200
+
+[[redirects]]
+  from = "/api/vedic-compatibility"
+  to = "/.netlify/functions/vedic-compatibility"
+  status = 200
